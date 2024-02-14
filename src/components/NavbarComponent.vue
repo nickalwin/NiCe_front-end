@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar bg-base-300">
+    <div class="navbar bg-green-200">
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -17,28 +17,30 @@
                     </li>
                 </ul>
             </div>
+
+            <img src="/LeftNavIcon.png" alt="" width="50"/>
         </div>
         <div class="navbar-center hidden lg:flex">
-            <strong>CE Scanning Tool</strong>
-
-            <ul class="menu menu-horizontal px-1">
+            <ul class="menu menu-horizontal px-1 text-xl font-bold text-gray-500">
                 <li>
-                    <a>Home</a>
+                    <a>
+                        Home
+                    </a>
                 </li>
                 <li>
-                    <a>About</a>
+                    <a>
+                        About
+                    </a>
                 </li>
                 <li>
-                    <a>Contact</a>
+                    <a>
+                        Contact
+                    </a>
                 </li>
             </ul>
         </div>
         <div class="navbar-end">
-            <div class="form-control mr-4">
-                <input type="text" placeholder="Search" class="input input-bordered" />
-            </div>
-
-            <a class="btn">Button</a>
+            <img src="/RightNavIcon.png" alt="" width="140"/>
         </div>
     </div>
 </template>
