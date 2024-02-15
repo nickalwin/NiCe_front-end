@@ -4,20 +4,22 @@
             <h2 class="text-2xl text-black mb-4">Contact information</h2>
             <p class="mb-4">We'd love to hear from you!</p>
             <p class="mb-4">
-                <FontAwesomeIcon icon="fa-envelope" class="mr-2"/>
+                <FontAwesomeIcon icon="fa-envelope" class="mr-2" />
                 <a href="mailto:a.van.vulpen@windesheim.nl">a.van.vulpen@windesheim.nl</a>
             </p>
             <p class="mb-4">
-                <FontAwesomeIcon icon="fa-phone" class="mr-2"/>
+                <FontAwesomeIcon icon="fa-phone" class="mr-2" />
                 <a href="callto:+31612345678">+31 6 12345678</a>
             </p>
             <p class="mb-4">
-                <FontAwesomeIcon icon="fa-map-marker-alt" class="mr-2"/>
+                <FontAwesomeIcon icon="fa-map-marker-alt" class="mr-2" />
                 123 Main St, Deventer, NL
             </p>
         </div>
         <div class="card-body w-3/5 text-end">
             <h2 class="text-2xl text-center text-black mb-4">Send us a message</h2>
+            <div v-if="successMessage" class="mb-4 text-green-500">{{ successMessage }}</div>
+            <div v-if="errorMessage" class="mb-4 text-red-500">{{ errorMessage }}</div>
             <form @submit.prevent="submitForm" ref="contactForm">
                 <div class="flex">
                     <div class="w-1/2 mr-3">
@@ -25,7 +27,7 @@
                             <label class="block text-red-500 text-lg font-bold mb-2" for="firstName">*</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="firstName" v-model="formData.firstName" type="text" placeholder="Your first name">
+                                id="firstName" v-model="formData.firsName" type="text" placeholder="Your first name">
                         </div>
                     </div>
                     <div class="w-1/2">
@@ -57,10 +59,10 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-red-500 text-lg font-bold mb-2" for="subject">*</label>
-                            <input
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="subject" v-model="formData.subject" type="text" placeholder="Subject">
-                        </div>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
+                        id="subject" v-model="formData.subject" type="text" placeholder="Subject">
+                </div>
                 <div class="mb-4">
                     <label class="block text-gray-500 text-xs mb-2" for="message">Max. 500 characters</label>
                     <textarea
@@ -108,24 +110,58 @@
 </style>
     
 <script>
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 export default {
     name: 'ContactInfoComponent',
     data() {
         return {
-            formData: {}
+            formData: {
+                firsName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                subject: '',
+                message: ''
+            },
+            successMessage: '',
+            errorMessage: ''
+
         };
     },
     methods: {
         async submitForm() {
-            // Add your form submission logic here
-            console.log('Form submitted:', this.formData);
-            // Reset the form
-            this.$refs.contactForm.reset();
+            try {
+                // Verzend de formuliergegevens naar de API
+                const response = await fetch('https://localhost:44333/api/Mail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.formData) // Stuur de formData rechtstreeks naar de API als JSON
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    throw new Error(`Failed to submit form: ${errorMessage}`);
+                }
+
+
+                this.successMessage = 'Form submitted successfully'; // Stel het succesbericht in
+
+                // Verberg het succesbericht na 3 seconden
+                setTimeout(() => {
+                    this.successMessage = '';
+                }, 3000);
+                // Reset het formulier na een succesvolle verzending
+                this.$refs.contactForm.reset();
+            } catch (error) {
+                // Handel eventuele fouten af bij het verzenden van het formulier
+                console.error('Error submitting form:', error);
+                this.errorMessage = 'Form unsuccesfull'; // Stel het succesbericht in
+                setTimeout(() => {
+                    this.errorMessage = '';
+                }, 3000);
+            }
         }
-    },
-    components: { FontAwesomeIcon }
-}
+    }
+};
 </script>
