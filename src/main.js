@@ -12,7 +12,7 @@ import router from './router'
 // library.add(fas);
 // VueElement.component('font-awesome-icon', FontAwesomeIcon)
 
-import { FontAwesomeIcon } from './fontawesome.js';
+import FontAwesomeIcon from './fontawesome.js';
 
 const app = createApp(App)
 

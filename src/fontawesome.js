@@ -10,11 +10,11 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
-    faAsterisk, faGear, faPhone
+    faPhone, faEnvelope, faMapMarkerAlt, 
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
-    faAsterisk, faGear, faPhone
+    faPhone, faEnvelope, faMapMarkerAlt, 
 );
 
 export default FontAwesomeIcon;

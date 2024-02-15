@@ -4,12 +4,15 @@
             <h2 class="text-2xl text-black mb-4">Contact information</h2>
             <p class="mb-4">We'd love to hear from you!</p>
             <p class="mb-4">
+                <FontAwesomeIcon icon="fa-envelope" class="mr-2"/>
                 <a href="mailto:a.van.vulpen@windesheim.nl">a.van.vulpen@windesheim.nl</a>
             </p>
             <p class="mb-4">
+                <FontAwesomeIcon icon="fa-phone" class="mr-2"/>
                 <a href="callto:+31612345678">+31 6 12345678</a>
             </p>
             <p class="mb-4">
+                <FontAwesomeIcon icon="fa-map-marker-alt" class="mr-2"/>
                 123 Main St, Deventer, NL
             </p>
         </div>
@@ -106,23 +109,23 @@
     
 <script>
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
     name: 'ContactInfoComponent',
     data() {
         return {
-            formData: {
-            }
-        }
+            formData: {}
+        };
     },
     methods: {
         async submitForm() {
             // Add your form submission logic here
             console.log('Form submitted:', this.formData);
-
             // Reset the form
             this.$refs.contactForm.reset();
         }
-    }
+    },
+    components: { FontAwesomeIcon }
 }
 </script>
