@@ -3,11 +3,15 @@
         <div class="card-info w-2/5 text-sm text-gray-700 p-10" style="background-color: var(--color-primary)">
             <h2 class="text-2xl text-black mb-4">Contact information</h2>
             <p class="mb-4">We'd love to hear from you!</p>
-            <p class="mb-4">Email:
+            <p class="mb-4">
                 <a href="mailto:a.van.vulpen@windesheim.nl">a.van.vulpen@windesheim.nl</a>
             </p>
-            <p class="mb-4">Phone: 06-12345678</p>
-            <p class="mb-4">Address: 123 Main St, Deventer, NL</p>
+            <p class="mb-4">
+                <a href="callto:+31612345678">+31 6 12345678</a>
+            </p>
+            <p class="mb-4">
+                123 Main St, Deventer, NL
+            </p>
         </div>
         <div class="card-body w-3/5 text-end">
             <h2 class="text-2xl text-center text-black mb-4">Send us a message</h2>
@@ -15,7 +19,7 @@
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-sm font-bold mb-2" for="firstName">*</label>
+                            <label class="block text-red-500 text-lg font-bold mb-2" for="firstName">*</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="firstName" v-model="formData.firstName" type="text" placeholder="Your first name">
@@ -23,7 +27,7 @@
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-sm font-bold mb-2" for="lastName">*</label>
+                            <label class="block text-red-500 text-lg font-bold mb-2" for="lastName">*</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="lastName" v-model="formData.lastName" type="text" placeholder="Your last name">
@@ -33,30 +37,36 @@
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-sm font-bold mb-2" for="email">*</label>
+                            <label class="block text-red-500 text-lg font-bold mb-2" for="email">*</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="email" v-model="formData.email" type="text" placeholder="Your email">
+                                id="email" v-model="formData.email" type="email" placeholder="Your email">
                         </div>
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-end text-gray-500 text-sm mb-2" for="phone">optional</label>
+                            <label class="block text-end text-gray-500 text-xs mb-2" for="phone">optional</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="phone" v-model="formData.phone" type="text" placeholder="Your phonenumber">
+                                id="phone" v-model="formData.phone" type="tel" placeholder="Your phonenumber">
                         </div>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-500 text-sm mb-2" for="message">Max. 500 characters</label>
+                    <label class="block text-red-500 text-lg font-bold mb-2" for="subject">*</label>
+                            <input
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
+                                id="subject" v-model="formData.subject" type="text" placeholder="Subject">
+                        </div>
+                <div class="mb-4">
+                    <label class="block text-gray-500 text-xs mb-2" for="message">Max. 500 characters</label>
                     <textarea
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                         id="message" v-model="formData.message" placeholder="Your message"></textarea>
                 </div>
                 <div class="flex items-center justify-end">
                     <button
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        class="submit-button bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
                         Send
                     </button>
@@ -65,16 +75,43 @@
         </div>
     </div>
 </template>
+
+<style>
+/* homepage */
+.card-body label {
+    line-height: 1rem;
+}
+
+@media(max-width: 768px) {
+    .card {
+        flex-direction: column;
+    }
+
+    .card-info,
+    .card-body {
+        width: 100%;
+    }
+
+    #firstName,
+    #lastName,
+    #email,
+    #phone,
+    #subject,
+    #message,
+    .submit-button {
+        font-size: small;
+    }
+}
+</style>
     
 <script>
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
 export default {
     name: 'ContactInfoComponent',
     data() {
         return {
             formData: {
-                name: '',
-                email: '',
-                message: ''
             }
         }
     },
