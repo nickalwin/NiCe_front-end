@@ -23,3 +23,12 @@
         padding: 0 2rem;
     }
 } */
+
+@media(max-width: 768px) {
+  .card {
+    flex-direction: column;
+  }
+  .card-info, .card-body {
+    width: 100%;
+  }
+}
