@@ -87,6 +87,15 @@
     line-height: 1rem;
 }
 
+.submit-button {
+    transition: all 0.3s ease;
+    background-color: var(--button-primary);
+    color: var(--button-primary-text);
+}
+.submit-button:hover {
+    background-color: var(--button-primary-hover);
+}
+
 @media(max-width: 768px) {
     .card {
         flex-direction: column;

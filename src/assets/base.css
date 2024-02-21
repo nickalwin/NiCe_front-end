@@ -38,6 +38,16 @@
     --color-primary: #45B97C;
     --color-secondary: #B1D249;
     --color-tertiary: #D5E05B;
+
+    --button-primary: rgba(0, 0, 255, 0.685);
+    --button-primary-hover: #3A8A5C;
+    --button-primary-text: white;
+
+    --button-secondary: white;
+    --button-secondary-hover: #E5E5E5;
+    --button-secondary-text: rgba(0, 0, 255, 0.685)
+
+
 }
 
 /* @media (prefers-color-scheme: dark) {
