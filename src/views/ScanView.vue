@@ -3,32 +3,43 @@
         <div class="flex justify-center">
             <div class="overflow-x-auto">
                 <ul class="steps">
-                    <li v-for="question in current_category.questions"
+                    <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
-                        :data-content="`${isQuestionAnswered(question) ? '✓' : '●'}`"
+                        :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
                         v-on:click="() => { jumpToQuestion(question.id) }"
-                    />
+                    >
+                        {{ index + 1 }}
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div class="flex w-full mt-10">
-            <div class="grid h-96 flex-grow card">
+        <div class="flex w-full my-10">
+            <div class="grid flex-grow card">
                 <div class="card w-full bg-base-100 shadow-xl">
                     <div class="card-body">
-                        <h2 class="card-title">
-                            {{ current_question.is_statement ? 'Statement' : 'Question'}}
-                        </h2>
+                        <div class="flex items-center justify-between">
+                            <h2 class="card-title">
+                                {{ current_question.is_statement ? 'Statement' : 'Question'}}
+                            </h2>
+                            <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
+                                <button class="btn btn-info rounded-full">
+                                    <FontAwesomeIcon icon="fa-info" />
+                                </button>
+                            </div>
+                        </div>
 
                         <p>{{ current_question.text }}</p>
 
+                        <img src="https://placehold.co/600x400" alt=""/>
+
                         <div class="rating rating-lg">
-                            <input type="radio" name="rating-9" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
+                            <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
                         </div>
 
                         <div class="card-actions justify-end">
@@ -59,12 +70,17 @@
                 </div>
             </div>
         </div>
+
+        <SummaryComponent />
     </div>
 </template>
 
-
 <script>
+import SummaryComponent from "@/components/SummaryComponent.vue";
+import PopupHelper from "@/helpers/PopupHelper.js";
+
 export default {
+    components: {SummaryComponent},
     data() {
         return {
             categories: [],
@@ -115,7 +131,9 @@ export default {
             }
         },
         onScanCompleted() {
-            console.log('Scan completed');
+            PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
+                this.$router.push('/results');
+            });
         }
     },
     mounted() {
@@ -126,10 +144,10 @@ export default {
                 name: "Category 1",
                 is_completed: false,
                 questions: [
-                    { id: 1, text: "Just test text question 1?", is_statement: false, answer: -1 },
-                    { id: 2, text: "Just test text question 2?", is_statement: false, answer: -1 },
-                    { id: 3, text: "Just test text question 3?", is_statement: false, answer: -1 },
-                    { id: 4, text: "Just test text question 4?", is_statement: false, answer: -1 }
+                    { id: 1, text: "Just test text question 1?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
+                    { id: 2, text: "Just test text question 2?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
+                    { id: 3, text: "Just test text question 3?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
+                    { id: 4, text: "Just test text question 4?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
                 ]
             },
             {
@@ -137,8 +155,8 @@ export default {
                 name: "Category 2",
                 is_completed: false,
                 questions: [
-                    { id: 5, text: "Just test text question 5?", is_statement: false, answer: -1 },
-                    { id: 6, text: "Just test text question 6?", is_statement: false, answer: -1 }
+                    { id: 5, text: "Just test text question 5?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
+                    { id: 6, text: "Just test text question 6?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
                 ]
             },
             {
@@ -146,8 +164,8 @@ export default {
                 name: "Category 3",
                 is_completed: false,
                 questions: [
-                    { id: 7, text: "Just test text question 7?", is_statement: false, answer: -1 },
-                    { id: 8, text: "Just test text question 8?", is_statement: false, answer: -1 }
+                    { id: 7, text: "Just test text question 7?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
+                    { id: 8, text: "Just test text question 8?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
                 ]
             }
         ];
