@@ -81,43 +81,6 @@
     </div>
 </template>
 
-<style>
-/* homepage */
-.card-body label {
-    line-height: 1rem;
-}
-
-.submit-button {
-    transition: all 0.3s ease;
-    background-color: var(--button-primary);
-    color: var(--button-primary-text);
-}
-.submit-button:hover {
-    background-color: var(--button-primary-hover);
-}
-
-@media(max-width: 768px) {
-    .card {
-        flex-direction: column;
-    }
-
-    .card-info,
-    .card-body {
-        width: 100%;
-    }
-
-    #firstName,
-    #lastName,
-    #email,
-    #phone,
-    #subject,
-    #message,
-    .submit-button {
-        font-size: small;
-    }
-}
-</style>
-    
 <script>
 export default {
     name: 'ContactInfoComponent',
@@ -174,3 +137,39 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+    .card-body label {
+        line-height: 1rem;
+    }
+
+    .submit-button {
+        transition: all 0.3s ease;
+        background-color: var(--button-primary);
+        color: var(--button-primary-text);
+    }
+    .submit-button:hover {
+        background-color: var(--button-primary-hover);
+    }
+
+    @media(max-width: 768px) {
+        .card {
+            flex-direction: column;
+        }
+
+        .card-info,
+        .card-body {
+            width: 100%;
+        }
+
+        #firstName,
+        #lastName,
+        #email,
+        #phone,
+        #subject,
+        #message,
+        .submit-button {
+            font-size: small;
+        }
+    }
+</style>

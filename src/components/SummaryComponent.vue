@@ -1,19 +1,20 @@
 <template>
     <div class="text-center">
         <h3 class="text-2xl font-bold mb-2">All-in-one platform</h3>
-        <p class="text-gray-500 text-sm max-w-md mx-auto">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p class="text-gray-500 text-sm max-w-md mx-auto">
+            From adaptive questions to detailed performance reports, we've got everything you need to make
+            a usefull scan for your company. Enjoy a user-friendly interface, accessible on both mobile and
+            desktop, and get the support you need, when you need it.
+        </p>
     </div>
     <div class="py-12">
         <div class="container mx-auto">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                <div v-for="(title, index) in platformInfo.titles" :key="index" class="p-4 flex">
-
+                <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-4 flex">
                     <span class="text-green-500 mr-2">&#10003;</span>
                     <div>
-                        <h3 class="text-xl font-bold mb-2">{{ title }}</h3>
-                        <p class="text-gray-500 text-sm">{{ platformInfo.descriptions[index] }}</p>
+                        <h3 class="text-xl font-bold mb-2">{{ infoBox.title }}</h3>
+                        <p class="text-gray-500 text-sm">{{ infoBox.description }}</p>
                     </div>
                 </div>
             </div>
@@ -25,13 +26,46 @@
 export default {
     data() {
         return {
-            platformInfo: {
-                titles: ["Detailed results", "Graphs and Plots", "PDF Report", "Internationality", "Asaptive questions", "Reporting and Feedback", "disability Friendly", "mobile Friendly"],
-                descriptions: ["Get detailed results of your test", "View graphs and plots of your performance", "Download a PDF report of your test", "Internationality", "Adaptive questions", "Reporting and Feedback", "Disability Friendly", "Mobile Friendly"],
-            }
+            // TODO: translations
+            infoBoxes: [
+                {
+                    title: "Detailed results",
+                    description: "Access comprehensive results of your test for a deep analysis"
+                },
+                {
+                    title: "Graphs and Plots",
+                    description: "Visualize your performance through interactive graphs and plots"
+                },
+                {
+                    title: "PDF Report",
+                    description: "Download a detailed PDF report of your test for offline review"
+                },
+                {
+                    title: "Internationality",
+                    description: "Experience a globally accessible platform with multi-language support"
+                },
+                {
+                    title: "Adaptive questions",
+                    description: "Engage with adaptive questions that adjust to your skill level"
+                },
+                {
+                    title: "Reporting and Feedback",
+                    description: "Receive insightful reporting and constructive feedback on your performance"
+                },
+                {
+                    title: "Disability Features",
+                    description: "Enjoy a platform designed with features to support users with disabilities"
+                },
+                {
+                    title: "Mobile Friendly",
+                    description: "Use our mobile-friendly interface for learning on the go"
+                }
+            ],
         };
     }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

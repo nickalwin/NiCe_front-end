@@ -7,8 +7,9 @@
 </template>
 
 <script>
-import NavbarComponent from './components/NavbarComponent.vue';
+import NavbarComponent from '@/components/NavbarComponent.vue';
 import { RouterView } from 'vue-router';
+
 export default {
     components: {
         NavbarComponent, RouterView,
