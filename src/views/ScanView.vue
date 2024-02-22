@@ -4,7 +4,8 @@
             <div class="overflow-x-auto">
                 <ul class="steps">
                     <li v-for="question in current_category.questions"
-                        :class="`step ${question.answer !== -1 ? 'step-primary' : 'hover:step-neutral'} ${question.id === current_question.id ? 'step-info' : ''}`"
+                        :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
+                        :data-content="`${isQuestionAnswered(question) ? '✓' : '●'}`"
                         v-on:click="() => { jumpToQuestion(question.id) }"
                     />
                 </ul>
@@ -23,15 +24,18 @@
 
                         <div class="rating rating-lg">
                             <input type="radio" name="rating-9" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2" value="1" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2" value="2" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2" value="3" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2" value="4" v-model="current_question.answer" />
-                            <input type="radio" name="rating-9" class="mask mask-star-2" value="5" v-model="current_question.answer" />
+                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
+                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
+                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
+                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
+                            <input type="radio" name="rating-9" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
                         </div>
 
                         <div class="card-actions justify-end">
-                            <button v-on:click="jumpToNextQuestion" class="btn btn-primary" :disabled="current_question.answer === -1">
+                            <button v-on:click="jumpToNextQuestion"
+                                class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                                :disabled="current_question.answer === -1"
+                            >
                                 Next
                             </button>
                         </div>
@@ -44,7 +48,7 @@
                     <div class="overflow-x-auto">
                         <ul class="steps steps-vertical">
                             <li v-for="category in categories"
-                                :class="`step ${category.is_completed ? 'step-primary' : 'hover:step-neutral'} ${category.id === current_category.id ? 'step-info' : ''}`"
+                                :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                                 :data-content="`${category.is_completed ? '✓' : '●'}`"
                                 v-on:click="() => { jumpToCategory(category.id) }"
                             >
@@ -69,21 +73,37 @@ export default {
         }
     },
     methods: {
+        isQuestionAnswered(question) {
+            return question.answer !== -1;
+        },
+        isQuestionPicked(question) {
+            return question.id === this.current_question.id;
+        },
+        isCategoryCompleted(category) {
+            return category.is_completed;
+        },
+        isCategoryPicked(category) {
+            return category.id === this.current_category.id;
+        },
         jumpToQuestion(questionId) {
             this.current_question = this.current_category.questions.find((q) => q.id === questionId);
         },
         jumpToCategory(categoryId) {
             this.current_category = this.categories.find((c) => c.id === categoryId);
-            this.current_question = this.current_category.questions[0];
+            this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         jumpToNextQuestion() {
-            const currentQuestionIndex = this.current_category.questions.findIndex((q) => q.id === this.current_question.id);
-
-            if (currentQuestionIndex + 1 >= this.current_category.questions.length) {
+            if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.jumpToNextCategory();
             } else {
-                this.current_question = this.current_category.questions.at(currentQuestionIndex + 1);
+                this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
             }
+        },
+        areAllQuestionsFromCategoryAnswered(category) {
+            return category.questions.every((q) => q.answer !== -1);
+        },
+        getFirstNonAnsweredQuestion(category) {
+            return category.questions.find((q) => q.answer === -1);
         },
         jumpToNextCategory() {
             const currentCategoryIndex = this.categories.findIndex((c) => c.id === this.current_category.id);
@@ -104,7 +124,7 @@ export default {
             {
                 id: 1,
                 name: "Category 1",
-                is_completed: true,
+                is_completed: false,
                 questions: [
                     { id: 1, text: "Just test text question 1?", is_statement: false, answer: -1 },
                     { id: 2, text: "Just test text question 2?", is_statement: false, answer: -1 },
@@ -119,6 +139,15 @@ export default {
                 questions: [
                     { id: 5, text: "Just test text question 5?", is_statement: false, answer: -1 },
                     { id: 6, text: "Just test text question 6?", is_statement: false, answer: -1 }
+                ]
+            },
+            {
+                id: 3,
+                name: "Category 3",
+                is_completed: false,
+                questions: [
+                    { id: 7, text: "Just test text question 7?", is_statement: false, answer: -1 },
+                    { id: 8, text: "Just test text question 8?", is_statement: false, answer: -1 }
                 ]
             }
         ];
