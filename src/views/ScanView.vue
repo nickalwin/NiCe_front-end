@@ -114,6 +114,8 @@ export default {
             }
         },
         jumpToNextQuestion() {
+            this.saveAnswersToLocalStorage();
+
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.jumpToNextCategory();
             } else {
@@ -126,6 +128,9 @@ export default {
         getFirstNonAnsweredQuestion(category) {
             return category.questions.find((q) => q.answer === -1);
         },
+        getFirstNonCompletedCategory() {
+            return this.categories.find((c) => !c.is_completed);
+        },
         jumpToNextCategory() {
             const currentCategoryIndex = this.categories.findIndex((c) => c.id === this.current_category.id);
             this.current_category.is_completed = true;
@@ -134,6 +139,41 @@ export default {
                 this.onScanCompleted();
             } else {
                 this.current_category = this.categories.at(currentCategoryIndex + 1);
+            }
+        },
+        saveAnswersToLocalStorage() {
+            var answers = this.categories.map((c) => {
+                return {
+                    category_id: c.id,
+                    questions: c.questions.map((q) => {
+                        return {
+                            question_id: q.id,
+                            answer: q.answer
+                        }
+                    })
+                }
+            });
+
+            localStorage.setItem('answers', JSON.stringify(answers));
+        },
+        loadFromLocalStorageIfExists() {
+            var answers = localStorage.getItem('answers');
+
+            if (answers) {
+                answers = JSON.parse(answers);
+
+                this.categories.forEach((c) => {
+                    var categoryAnswers = answers.find((a) => a.category_id === c.id);
+                    if (categoryAnswers) {
+                        c.questions.forEach((q) => {
+                            var questionAnswer = categoryAnswers.questions.find((qa) => qa.question_id === q.id);
+
+                            if (questionAnswer) {
+                                q.answer = questionAnswer.answer;
+                            }
+                        });
+                    }
+                });
             }
         },
         onScanCompleted() {
@@ -176,8 +216,10 @@ export default {
             }
         ];
 
-        this.current_category = this.categories[0];
-        this.current_question = this.current_category.questions[0];
+        this.loadFromLocalStorageIfExists();
+
+        this.current_category = this.getFirstNonCompletedCategory();
+        this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
     }
 }
 </script>
