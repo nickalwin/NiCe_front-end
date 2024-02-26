@@ -106,7 +106,12 @@ export default {
         },
         jumpToCategory(categoryId) {
             this.current_category = this.categories.find((c) => c.id === categoryId);
-            this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+
+            if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
+                this.current_question = this.current_category.questions[0];
+            } else {
+                this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+            }
         },
         jumpToNextQuestion() {
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
@@ -123,6 +128,7 @@ export default {
         },
         jumpToNextCategory() {
             const currentCategoryIndex = this.categories.findIndex((c) => c.id === this.current_category.id);
+            this.current_category.is_completed = true;
 
             if (currentCategoryIndex + 1 >= this.categories.length) {
                 this.onScanCompleted();
