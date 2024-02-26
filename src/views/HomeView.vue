@@ -8,12 +8,20 @@
                         Understanding your environmental impact is the first step towards making more sustainable choices.
                     </p>
                     <div>
-                        <button id="btn-getStarted" class="btn btn-primary mx-4 px-8" style="background-color: rgba(0, 0, 255, 0.685); color: white;" >
+                        <RouterLink
+                            class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                            to="/scan"
+
+                        >
                             Get Started
-                        </button>
-                        <button id="btn-showGuide" class="btn btn-secondary mx-4 px-8">
-                            Show guide
-                        </button>
+                        </RouterLink>
+                        <RouterLink
+                            class="submit-button bg-white hover:bg-gray-300 text-blue-500 text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                            to="/guide"
+
+                        >
+                            Show Guide
+                        </RouterLink>
                     </div>
                 </div>
             </div>
@@ -33,22 +41,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-    #btn-getStarted {
-        background-color: var(--button-primary);
-        color: var(--button-primary-text);
-    }
-    #btn-getStarted:hover {
-        background-color: var(--button-primary-hover);
-    }
-    #btn-showGuide {
-        background-color: var(--button-secondary);
-        color: var(--button-secondary-text);
-        border: none;
-        box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.2);
-    }
-    #btn-showGuide:hover {
-        background-color: var(--button-secondary-hover);
-    }
-</style>

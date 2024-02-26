@@ -11,7 +11,7 @@
         <div class="container mx-auto">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                 <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-4 flex">
-                    <span class="text-green-500 mr-2">&#10003;</span>
+                    <span class="mr-2 text-blue-600">&#10003;</span>
                     <div>
                         <h3 class="text-xl font-bold mb-2">{{ infoBox.title }}</h3>
                         <p class="text-gray-500 text-sm">{{ infoBox.description }}</p>

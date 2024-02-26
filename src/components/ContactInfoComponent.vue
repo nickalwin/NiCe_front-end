@@ -1,5 +1,5 @@
 <template>
-    <div class="card flex-row glass overflow-hidden">
+    <div class="card flex-row overflow-hidden shadow-2xl rounded">
         <div class="card-info w-2/5 text-sm text-gray-700 p-10" style="background-color: var(--color-primary)">
             <h2 class="text-2xl text-black mb-4">Contact information</h2>
             <p class="mb-4">We'd love to hear from you!</p>
@@ -16,7 +16,7 @@
                 123 Main St, Deventer, NL
             </p>
         </div>
-        <div class="card-body w-3/5 text-end">
+        <div class="card-body w-3/5 bg-white">
             <h2 class="text-2xl text-center text-black mb-4">Send us a message</h2>
             <div v-if="successMessage" class="mb-4 text-green-500">{{ successMessage }}</div>
             <div v-if="errorMessage" class="mb-4 text-red-500">{{ errorMessage }}</div>
@@ -24,7 +24,7 @@
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-lg font-bold mb-2" for="firstName">*</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">First name</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="firstName" v-model="formData.firsName" type="text" placeholder="Your first name">
@@ -32,7 +32,7 @@
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-lg font-bold mb-2" for="lastName">*</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Last name</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="lastName" v-model="formData.lastName" type="text" placeholder="Your last name">
@@ -42,7 +42,7 @@
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-red-500 text-lg font-bold mb-2" for="email">*</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Email</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="email" v-model="formData.email" type="email" placeholder="Your email">
@@ -50,21 +50,27 @@
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-end text-gray-500 text-xs mb-2" for="phone">optional</label>
+                            <div class="flex justify-between items-center">
+                                <label class="text-gray-500 text-lg font-bold mb-2" for="firstName">Phone number</label>
+                                <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Optional</label>
+                            </div>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="phone" v-model="formData.phone" type="tel" placeholder="Your phonenumber">
+                                id="phone" v-model="formData.phone" type="tel" placeholder="Your phone number">
                         </div>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-red-500 text-lg font-bold mb-2" for="subject">*</label>
+                    <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Subject</label>
                     <input
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                         id="subject" v-model="formData.subject" type="text" placeholder="Subject">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-500 text-xs mb-2" for="message">Max. 500 characters</label>
+                    <div class="flex justify-between items-center">
+                        <label class="text-gray-500 text-lg font-bold mb-2" for="firstName">Message</label>
+                        <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Max. 500 characters</label>
+                    </div>
                     <textarea
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                         id="message" v-model="formData.message" placeholder="Your message"></textarea>
