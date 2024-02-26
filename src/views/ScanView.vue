@@ -43,12 +43,11 @@
                         </div>
 
                         <div class="card-actions justify-end">
-                            <button v-on:click="jumpToNextQuestion"
-                                class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                            <PrimaryButton
+                                :label="'Next'"
                                 :disabled="current_question.answer === -1"
-                            >
-                                Next
-                            </button>
+                                @onClick="jumpToNextQuestion"
+                            />
                         </div>
                     </div>
                 </div>
@@ -78,9 +77,12 @@
 <script>
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
+import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 
 export default {
-    components: {SummaryComponent},
+    components: {
+        SummaryComponent, PrimaryButton,
+    },
     data() {
         return {
             categories: [],
@@ -131,14 +133,17 @@ export default {
         getFirstNonCompletedCategory() {
             return this.categories.find((c) => !c.is_completed);
         },
+        areAllCategoriesCompleted() {
+            return this.categories.every((c) => c.is_completed);
+        },
         jumpToNextCategory() {
-            const currentCategoryIndex = this.categories.findIndex((c) => c.id === this.current_category.id);
             this.current_category.is_completed = true;
 
-            if (currentCategoryIndex + 1 >= this.categories.length) {
+            if (this.areAllCategoriesCompleted()) {
                 this.onScanCompleted();
             } else {
-                this.current_category = this.categories.at(currentCategoryIndex + 1);
+                this.current_category = this.getFirstNonCompletedCategory();
+                this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
             }
         },
         saveAnswersToLocalStorage() {
@@ -176,8 +181,13 @@ export default {
                 });
             }
         },
+        clearAnswersFromLocalStorage() {
+            localStorage.removeItem('answers');
+        },
         onScanCompleted() {
             PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
+                localStorage.removeItem('answers');
+
                 this.$router.push('/results');
             });
         }
