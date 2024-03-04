@@ -6,7 +6,7 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.id) }"
+                        v-on:click="() => { jumpToQuestion(question.uuid) }"
                     >
                         {{ index + 1 }}
                     </li>
@@ -14,8 +14,8 @@
             </div>
         </div>
 
-        <div class="flex w-full my-10">
-            <div class="grid flex-grow card">
+        <div class="flex flex-col md:flex-row w-full my-10">
+            <div class="grid flex-grow card md:w-3/4">
                 <div class="card w-full bg-base-100 shadow-xl">
                     <div class="card-body">
                         <div class="flex items-center justify-between">
@@ -31,7 +31,7 @@
 
                         <p>{{ current_question.text }}</p>
 
-                        <img src="https://placehold.co/600x400" alt=""/>
+                        <img :src="current_question.image" alt="No image provided"/>
 
                         <div class="rating rating-lg">
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
@@ -53,14 +53,14 @@
                 </div>
             </div>
 
-            <div class="grid h-20 flex-grow card place-items-center">
+            <div class="grid h-20 md:flex-grow card place-items-center md:w-1/4">
                 <div class="flex">
                     <div class="overflow-x-auto">
                         <ul class="steps steps-vertical">
                             <li v-for="category in categories"
                                 :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                                 :data-content="`${category.is_completed ? '✓' : '●'}`"
-                                v-on:click="() => { jumpToCategory(category.id) }"
+                                v-on:click="() => { jumpToCategory(category.uuid) }"
                             >
                                 {{ category.name }}
                             </li>
@@ -95,19 +95,19 @@ export default {
             return question.answer !== -1;
         },
         isQuestionPicked(question) {
-            return question.id === this.current_question.id;
+            return question.uuid === this.current_question.uuid;
         },
         isCategoryCompleted(category) {
             return category.is_completed;
         },
         isCategoryPicked(category) {
-            return category.id === this.current_category.id;
+            return category.uuid === this.current_category.uuid;
         },
-        jumpToQuestion(questionId) {
-            this.current_question = this.current_category.questions.find((q) => q.id === questionId);
+        jumpToQuestion(questionUuid) {
+            this.current_question = this.current_category.questions.find((q) => q.uuid === questionUuid);
         },
-        jumpToCategory(categoryId) {
-            this.current_category = this.categories.find((c) => c.id === categoryId);
+        jumpToCategory(categoryUuid) {
+            this.current_category = this.categories.find((c) => c.uuid === categoryUuid);
 
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.current_question = this.current_category.questions[0];
@@ -116,13 +116,13 @@ export default {
             }
         },
         jumpToNextQuestion() {
-            this.saveAnswersToLocalStorage();
-
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.jumpToNextCategory();
             } else {
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
             }
+
+            this.saveAnswersToLocalStorage();
         },
         areAllQuestionsFromCategoryAnswered(category) {
             return category.questions.every((q) => q.answer !== -1);
@@ -145,15 +145,23 @@ export default {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
             }
+
+            this.saveAnswersToLocalStorage();
         },
         saveAnswersToLocalStorage() {
             var answers = this.categories.map((c) => {
                 return {
-                    category_id: c.id,
+                    category_uuid: c.uuid,
+                    category_name: c.name,
+                    is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
-                            question_id: q.id,
-                            answer: q.answer
+                            question_uuid: q.uuid,
+                            answer: q.answer,
+                            is_statement: q.is_statement,
+                            text: q.text,
+                            tooltip: q.tooltip,
+                            image: q.image,
                         }
                     })
                 }
@@ -161,25 +169,80 @@ export default {
 
             localStorage.setItem('answers', JSON.stringify(answers));
         },
-        loadFromLocalStorageIfExists() {
+        loadQuestions() {
             var answers = localStorage.getItem('answers');
 
             if (answers) {
-                answers = JSON.parse(answers);
+                this.loadQuestionsFromLocalStorage(answers);
+            } else {
+                this.loadQuestionsFromApi();
+            }
+        },
+        loadQuestionsFromLocalStorage(answers) {
+            answers = JSON.parse(answers);
 
-                this.categories.forEach((c) => {
-                    var categoryAnswers = answers.find((a) => a.category_id === c.id);
-                    if (categoryAnswers) {
-                        c.questions.forEach((q) => {
-                            var questionAnswer = categoryAnswers.questions.find((qa) => qa.question_id === q.id);
+            answers.forEach((c) => {
+                var category = {
+                    uuid: c.category_uuid,
+                    name: c.category_name,
+                    is_completed: c.is_completed,
+                    questions: c.questions.map((q) => {
+                        return {
+                            uuid: q.question_uuid,
+                            answer: q.answer,
+                            is_statement: q.is_statement,
+                            text: q.text,
+                            tooltip: q.tooltip,
+                            image: q.image,
+                        }
+                    })
+                }
 
-                            if (questionAnswer) {
-                                q.answer = questionAnswer.answer;
-                            }
-                        });
+                this.categories.push(category);
+            });
+
+            this.current_category = this.getFirstNonCompletedCategory();
+            this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+        },
+        loadQuestionsFromApi() {
+            axios.get('/api/Question', {
+
+            }).then((response) => {
+                var questions = response.data;
+
+                questions.forEach((q) => {
+                    var questionData = JSON.parse(q.data);
+
+                    var question = {
+                        uuid: q.uuid,
+                        image: q.image,
+                        is_statement: q.statement,
+                        text: questionData.nl.question,
+                        tooltip: questionData.nl.tooltip,
+                        answer: -1,
+                    }
+
+                    var category = this.categories.find((c) => c.uuid === q.category_uuid);
+
+                    if (category) {
+                        category.questions.push(question);
+                    } else {
+                        category = {
+                            uuid: q.category_uuid,
+                            name: q.category_name,
+                            is_completed: false,
+                            questions: [question]
+                        }
+
+                        this.categories.push(category);
                     }
                 });
-            }
+            }).then(() => {
+                this.current_category = this.getFirstNonCompletedCategory();
+                this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+            }) .catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
         },
         clearAnswersFromLocalStorage() {
             localStorage.removeItem('answers');
@@ -190,46 +253,10 @@ export default {
 
                 this.$router.push('/results');
             });
-        }
+        },
     },
     mounted() {
-        // for testing purposes - dummy data TODO: connect to actual API
-        this.categories = [
-            {
-                id: 1,
-                name: "Category 1",
-                is_completed: false,
-                questions: [
-                    { id: 1, text: "Just test text question 1?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
-                    { id: 2, text: "Just test text question 2?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
-                    { id: 3, text: "Just test text question 3?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
-                    { id: 4, text: "Just test text question 4?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
-                ]
-            },
-            {
-                id: 2,
-                name: "Category 2",
-                is_completed: false,
-                questions: [
-                    { id: 5, text: "Just test text question 5?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
-                    { id: 6, text: "Just test text question 6?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
-                ]
-            },
-            {
-                id: 3,
-                name: "Category 3",
-                is_completed: false,
-                questions: [
-                    { id: 7, text: "Just test text question 7?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 },
-                    { id: 8, text: "Just test text question 8?", tooltip: "This is a test tooltip!", is_statement: false, answer: -1 }
-                ]
-            }
-        ];
-
-        this.loadFromLocalStorageIfExists();
-
-        this.current_category = this.getFirstNonCompletedCategory();
-        this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+        this.loadQuestions();
     }
 }
 </script>
