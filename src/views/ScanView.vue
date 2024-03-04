@@ -6,21 +6,25 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.id) }"
-                    >
+                        v-on:click="() => { jumpToQuestion(question.id) }">
                         {{ index + 1 }}
                     </li>
                 </ul>
             </div>
         </div>
 
+        <div class="flex justify-center">
+            <h1 class="text-5xl font-bold mt-10 first-letter:uppercase">
+                {{ $route.query.name }}'s scan
+            </h1>
+        </div>
         <div class="flex w-full my-10">
             <div class="grid flex-grow card">
                 <div class="card w-full bg-base-100 shadow-xl">
                     <div class="card-body">
                         <div class="flex items-center justify-between">
                             <h2 class="card-title">
-                                {{ current_question.is_statement ? 'Statement' : 'Question'}}
+                                {{ current_question.is_statement ? 'Statement' : 'Question' }}
                             </h2>
                             <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
                                 <button class="btn btn-info rounded-full">
@@ -31,22 +35,26 @@
 
                         <p>{{ current_question.text }}</p>
 
-                        <img src="https://placehold.co/600x400" alt=""/>
+                        <img src="https://placehold.co/600x400" alt="" />
 
                         <div class="rating rating-lg">
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
+                                v-model="current_question.answer" />
                         </div>
 
                         <div class="card-actions justify-end">
                             <button v-on:click="jumpToNextQuestion"
                                 class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                                :disabled="current_question.answer === -1"
-                            >
+                                :disabled="current_question.answer === -1">
                                 Next
                             </button>
                         </div>
@@ -61,8 +69,7 @@
                             <li v-for="category in categories"
                                 :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                                 :data-content="`${category.is_completed ? '✓' : '●'}`"
-                                v-on:click="() => { jumpToCategory(category.id) }"
-                            >
+                                v-on:click="() => { jumpToCategory(category.id) }">
                                 {{ category.name }}
                             </li>
                         </ul>
@@ -76,12 +83,11 @@
 </template>
 
 <script>
-console.log(scanData);
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 
 export default {
-    components: {SummaryComponent},
+    components: { SummaryComponent },
     data() {
         return {
             categories: [],
@@ -138,6 +144,7 @@ export default {
         }
     },
     mounted() {
+
         // for testing purposes - dummy data TODO: connect to actual API
         this.categories = [
             {
@@ -177,6 +184,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

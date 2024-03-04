@@ -52,15 +52,15 @@ export default {
         handleGetStarted() {
             PopupHelper.DisplaySectorPopup('Enter scan information', sectors, (Result) => {
                 console.log('Sector selected: ', Result);
-                this.$router.push(
-                    {
-                        name: 'scan',
-                        params: {
-                            scanData: Result
-                        }
-                    }
-                );
-            });        }
+                this.$router.push({
+                    name: 'scan',
+                    query: { 
+                        name: Result[0],
+                        email: Result[1],
+                        sector: Result[2] }
+                });
+            });
+        }
     }
 };
 </script>

@@ -14,7 +14,12 @@ const router = createRouter({
         {
             path: '/scan',
             name: 'scan',
-            component: ScanView
+            component: ScanView,
+            props: route => ({
+                sector: route.query.sector,
+                name: route.query.name,
+                email: route.query.email
+              })
         },
         {
             path: '/guide',
