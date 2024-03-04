@@ -27,7 +27,7 @@
                 <li>
                     <RouterLink to="/">Home</RouterLink>
                 </li>
-                <li v-if="!isScanPage">
+                <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
                         Green Theme <FontAwesomeIcon icon="fa-leaf" />
                     </a>
@@ -53,9 +53,6 @@ export default {
         }
     },
     computed: {
-        isScanPage() {
-            return this.$route.path === '/scan';
-        },
         theme() {
             var theme = localStorage.getItem('theme');
 

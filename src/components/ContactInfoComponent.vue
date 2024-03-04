@@ -32,7 +32,7 @@
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Last name</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="lastName">Last name</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="lastName" v-model="formData.lastName" type="text" placeholder="Your last name">
@@ -42,7 +42,7 @@
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Email</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="email">Email</label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                                 id="email" v-model="formData.email" type="email" placeholder="Your email">
@@ -51,7 +51,7 @@
                     <div class="w-1/2">
                         <div class="mb-4">
                             <div class="flex justify-between items-center">
-                                <label class="text-gray-500 text-lg font-bold mb-2" for="firstName">Phone number</label>
+                                <label class="text-gray-500 text-lg font-bold mb-2" for="phone">Phone number</label>
                                 <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Optional</label>
                             </div>
                             <input
@@ -61,14 +61,14 @@
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">Subject</label>
+                    <label class="block text-gray-500 text-lg font-bold mb-2" for="subject">Subject</label>
                     <input
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
                         id="subject" v-model="formData.subject" type="text" placeholder="Subject">
                 </div>
                 <div class="mb-4">
                     <div class="flex justify-between items-center">
-                        <label class="text-gray-500 text-lg font-bold mb-2" for="firstName">Message</label>
+                        <label class="text-gray-500 text-lg font-bold mb-2" for="message">Message</label>
                         <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Max. 500 characters</label>
                     </div>
                     <textarea
@@ -76,11 +76,10 @@
                         id="message" v-model="formData.message" placeholder="Your message"></textarea>
                 </div>
                 <div class="flex items-center justify-end">
-                    <button
-                        class="submit-button bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                        type="submit">
-                        Send
-                    </button>
+                    <PrimaryButton
+                        :label="'Send'"
+                        @onClick="submitForm"
+                    />
                 </div>
             </form>
         </div>
@@ -88,8 +87,13 @@
 </template>
 
 <script>
+import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
+
 export default {
     name: 'ContactInfoComponent',
+    components: {
+        PrimaryButton,
+    },
     data() {
         return {
             formData: {
@@ -108,13 +112,12 @@ export default {
     methods: {
         async submitForm() {
             try {
-                // Verzend de formuliergegevens naar de API
                 const response = await fetch('https://localhost:44333/api/Mail', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.formData) // Stuur de formData rechtstreeks naar de API als JSON
+                    body: JSON.stringify(this.formData)
                 });
 
                 if (!response.ok) {
@@ -123,18 +126,18 @@ export default {
                 }
 
 
-                this.successMessage = 'Form submitted successfully'; // Stel het succesbericht in
+                this.successMessage = 'Form submitted successfully';
 
-                // Verberg het succesbericht na 3 seconden
                 setTimeout(() => {
                     this.successMessage = '';
                 }, 3000);
-                // Reset het formulier na een succesvolle verzending
+
                 this.$refs.contactForm.reset();
             } catch (error) {
-                // Handel eventuele fouten af bij het verzenden van het formulier
                 console.error('Error submitting form:', error);
-                this.errorMessage = 'Form unsuccesfull'; // Stel het succesbericht in
+
+                this.errorMessage = 'Form unsuccesfull';
+
                 setTimeout(() => {
                     this.errorMessage = '';
                 }, 3000);

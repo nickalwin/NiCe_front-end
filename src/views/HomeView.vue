@@ -8,20 +8,14 @@
                         Understanding your environmental impact is the first step towards making more sustainable choices.
                     </p>
                     <div>
-                        <RouterLink
-                            class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                            to="/scan"
-
-                        >
-                            Get Started
-                        </RouterLink>
-                        <RouterLink
-                            class="submit-button bg-white hover:bg-gray-300 text-blue-500 text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                            to="/guide"
-
-                        >
-                            Show Guide
-                        </RouterLink>
+                        <PrimaryRouterLink
+                            :to="'/scan'"
+                            :label="'Get Started'"
+                        />
+                        <TernaryRouterLink
+                            :to="'/guide'"
+                            :label="'Show Guide'"
+                        />
                     </div>
                 </div>
             </div>
@@ -34,10 +28,12 @@
 <script>
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import SummaryComponent from "@/components/SummaryComponent.vue";
+import PrimaryRouterLink from "@/components/router-links/PrimaryRouterLink.vue";
+import TernaryRouterLink from "@/components/router-links/TernaryRouterLink.vue";
 
 export default {
     components: {
-        ContactInfoComponent, SummaryComponent,
+        ContactInfoComponent, SummaryComponent, PrimaryRouterLink, TernaryRouterLink,
     },
 };
 </script>

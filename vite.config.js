@@ -14,5 +14,9 @@ export default defineConfig({
     },
     optimizeDeps: {
         exclude: ['source-map-js']
-    }
+    },
+    server: {
+        host: true,
+        port: 3000,
+    },
 });
