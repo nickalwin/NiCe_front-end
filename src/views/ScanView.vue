@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <div class="flex items-center justify-between">
                             <h2 class="card-title">
-                                {{ current_question.is_statement ? 'Statement' : 'Question'}}
+                                {{ current_question.is_statement ? 'Statement' : 'Question' }}
                             </h2>
                             <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
                                 <button class="btn btn-info rounded-full">
@@ -35,11 +35,31 @@
 
                         <div class="rating rating-lg">
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
+                                v-model="current_question.answer" />
+                        </div>
+
+                        <div class="tooltip-container">
+                            <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
+                                <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
+                                    <FontAwesomeIcon icon="fa-eye" />
+                                </span>
+                                <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
+                                    <FontAwesomeIcon icon="fa-eye-slash" />
+                                </span>
+                            </div>
+                            <div>
+                                <textarea v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                    placeholder="Add a comment..."></textarea>
+                            </div>
                         </div>
 
                         <div class="card-actions justify-end">
@@ -78,16 +98,16 @@
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 export default {
-    components: {
-        SummaryComponent, PrimaryButton,
-    },
+    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
+            isEyeOpen: true
         }
     },
     methods: {
@@ -254,6 +274,9 @@ export default {
                 this.$router.push('/results');
             });
         },
+        toggleEye(isOpen) {
+            this.isEyeOpen = isOpen;
+        }
     },
     mounted() {
         this.loadQuestions();
@@ -261,6 +284,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
