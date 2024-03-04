@@ -76,6 +76,7 @@
 </template>
 
 <script>
+console.log(scanData);
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 
