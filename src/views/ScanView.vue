@@ -6,8 +6,7 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.id) }"
-                    >
+                        v-on:click="() => { jumpToQuestion(question.id) }">
                         {{ index + 1 }}
                     </li>
                 </ul>
@@ -20,7 +19,7 @@
                     <div class="card-body">
                         <div class="flex items-center justify-between">
                             <h2 class="card-title">
-                                {{ current_question.is_statement ? 'Statement' : 'Question'}}
+                                {{ current_question.is_statement ? 'Statement' : 'Question' }}
                             </h2>
                             <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
                                 <button class="btn btn-info rounded-full">
@@ -31,22 +30,41 @@
 
                         <p>{{ current_question.text }}</p>
 
-                        <img src="https://placehold.co/600x400" alt=""/>
+                        <img src="https://placehold.co/600x400" alt="" />
 
                         <div class="rating rating-lg">
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5" v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4"
+                                v-model="current_question.answer" />
+                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
+                                v-model="current_question.answer" />
+                        </div>
+
+                        <div class="tooltip-container">
+                            <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
+                                <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
+                                    <FontAwesomeIcon icon="fa-eye" />
+                                </span>
+                                <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
+                                    <FontAwesomeIcon icon="fa-eye-slash" />
+                                </span>
+                            </div>
+                            <div>
+                                <textarea v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                    placeholder="Add a comment..."></textarea>
+                            </div>
                         </div>
 
                         <div class="card-actions justify-end">
                             <button v-on:click="jumpToNextQuestion"
                                 class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                                :disabled="current_question.answer === -1"
-                            >
+                                :disabled="current_question.answer === -1">
                                 Next
                             </button>
                         </div>
@@ -61,8 +79,7 @@
                             <li v-for="category in categories"
                                 :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                                 :data-content="`${category.is_completed ? '✓' : '●'}`"
-                                v-on:click="() => { jumpToCategory(category.id) }"
-                            >
+                                v-on:click="() => { jumpToCategory(category.id) }">
                                 {{ category.name }}
                             </li>
                         </ul>
@@ -78,14 +95,17 @@
 <script>
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
+import { text } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 export default {
-    components: {SummaryComponent},
+    components: { SummaryComponent, FontAwesomeIcon, text },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
+            isEyeOpen: true
         }
     },
     methods: {
@@ -134,6 +154,9 @@ export default {
             PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                 this.$router.push('/results');
             });
+        },
+        toggleEye(isOpen) {
+            this.isEyeOpen = isOpen;
         }
     },
     mounted() {
@@ -176,6 +199,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
