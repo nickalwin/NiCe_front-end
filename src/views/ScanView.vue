@@ -22,7 +22,7 @@
                             <h2 class="card-title">
                                 {{ current_question.is_statement ? 'Statement' : 'Question' }}
                             </h2>
-                            <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
+                            <div v-if="current_question.tooltip" class="tooltip tooltip-info" :data-tip="current_question.tooltip">
                                 <button class="btn btn-info rounded-full">
                                     <FontAwesomeIcon icon="fa-info" />
                                 </button>
@@ -225,7 +225,7 @@ export default {
             this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         loadQuestionsFromApi() {
-            axios.get('/api/Question', {
+            axios.get('/api/scans/getQuestions', {
 
             }).then((response) => {
                 var questions = response.data;
@@ -268,10 +268,36 @@ export default {
             localStorage.removeItem('answers');
         },
         onScanCompleted() {
-            PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
-                localStorage.removeItem('answers');
+            this.sendAnswersToApi();
 
-                this.$router.push('/results');
+            PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
+                // localStorage.removeItem('answers');
+
+                // this.$router.push('/results');
+            });
+        },
+        sendAnswersToApi() {
+            var questionsWithAnswers = [];
+
+            this.categories.forEach((c) => {
+                c.questions.forEach((q) => {
+                    questionsWithAnswers.push({
+                        question_uuid: q.uuid,
+                        answer: q.answer
+                    });
+                });
+            });
+
+            console.log(questionsWithAnswers);
+
+            axios.post('/api/scans', {
+                answers: questionsWithAnswers,
+                contact_name: 'John Doe',
+                contact_email: 'john@doe.gmail.com',
+            }).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         },
         toggleEye(isOpen) {
