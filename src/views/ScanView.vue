@@ -57,7 +57,7 @@
                                 </span>
                             </div>
                             <div>
-                                <textarea v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                <textarea v-model="current_question.comment" v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
                                     placeholder="Add a comment..."></textarea>
                             </div>
                         </div>
@@ -178,6 +178,7 @@ export default {
                         return {
                             question_uuid: q.uuid,
                             answer: q.answer,
+                            comment: q.comment ?? null,
                             is_statement: q.is_statement,
                             text: q.text,
                             tooltip: q.tooltip,
@@ -210,6 +211,7 @@ export default {
                         return {
                             uuid: q.question_uuid,
                             answer: q.answer,
+                            comment: q.comment,
                             is_statement: q.is_statement,
                             text: q.text,
                             tooltip: q.tooltip,
@@ -240,6 +242,7 @@ export default {
                         text: questionData.nl.question,
                         tooltip: questionData.nl.tooltip,
                         answer: -1,
+                        comment: null
                     }
 
                     var category = this.categories.find((c) => c.uuid === q.category_uuid);
@@ -260,8 +263,8 @@ export default {
             }).then(() => {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
-            }) .catch((error) => {
-                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            }).catch(() => {
+                PopupHelper.DisplayErrorPopup("Failed to load questions.");
             });
         },
         clearAnswersFromLocalStorage() {
@@ -283,7 +286,8 @@ export default {
                 c.questions.forEach((q) => {
                     questionsWithAnswers.push({
                         question_uuid: q.uuid,
-                        answer: q.answer
+                        answer: q.answer,
+                        comment: q.comment ?? null
                     });
                 });
             });
@@ -292,6 +296,7 @@ export default {
 
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
+                sector_id: 1,
                 contact_name: 'John Doe',
                 contact_email: 'john@doe.gmail.com',
             }).then((response) => {
