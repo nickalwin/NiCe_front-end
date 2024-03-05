@@ -8,12 +8,6 @@
                         Understanding your environmental impact is the first step towards making more sustainable choices.
                     </p>
                     <div>
-                        <!-- <RouterLink
-                            class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
-                            to="/scan"
-                        >
-                            Get Started
-                        </RouterLink> -->
                         <button
                             class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
                             v-on:click="handleGetStarted"
@@ -39,6 +33,8 @@
 <script>
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import SummaryComponent from "@/components/SummaryComponent.vue";
+import PrimaryRouterLink from "@/components/router-links/PrimaryRouterLink.vue";
+import TernaryRouterLink from "@/components/router-links/TernaryRouterLink.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import { Result } from "postcss";
 
@@ -46,7 +42,7 @@ const sectors = ['Technology', 'Finance', 'Healthcare'];
 
 export default {
     components: {
-        ContactInfoComponent, SummaryComponent,
+        ContactInfoComponent, SummaryComponent, PrimaryRouterLink, TernaryRouterLink,
     },
     methods: {
         handleGetStarted() {
