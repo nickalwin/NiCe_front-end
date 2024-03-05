@@ -63,6 +63,10 @@
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
                                 v-model="current_question.answer" />
                         </div>
+                        <div class="flex justify-between w-52  min-w-min">
+                                <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
+                                <div class="text-xs w-1/3">Volledig van toepassing</div>
+                            </div>
 
                         <div class="tooltip-container">
                             <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
@@ -105,7 +109,7 @@
                 </div>
             </div>
         </div>
-
+    </div>
         <SummaryComponent />
     </div>
 </template>
@@ -123,7 +127,9 @@ export default {
             categories: [],
             current_category: {},
             current_question: {},
-            isEyeOpen: true
+            isEyeOpen: true,
+            sectors: ['Technology', 'Finance', 'Healthcare'],
+            selectedSector: this.$route.query.sector
         }
     },
     methods: {
@@ -292,6 +298,18 @@ export default {
         },
         toggleEye(isOpen) {
             this.isEyeOpen = isOpen;
+        },
+        handleEditEmail() {
+            PopupHelper.DisplayEmailEditPopup('Change your email', this.$route.query.email, (Result) => {
+                this.$router.push({
+                    name: 'scan',
+                    query: {
+                        name: this.$route.query.name,
+                        email: Result,
+                        sector: this.$route.query.sector
+                    }
+                });
+            });
         }
     },
     mounted() {
