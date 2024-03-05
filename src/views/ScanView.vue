@@ -1,5 +1,21 @@
 <template>
     <div>
+        <div class="flex justify-between">
+            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase">
+                {{ $route.query.name }}'s scan
+            </h1>
+            <div class="flex m-1">
+            <div class="input input-disabled mx-1">
+                <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
+                <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
+                    <FontAwesomeIcon icon="fa-edit" />
+                </span>
+            </div>
+            <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
+                <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
+            </select>
+        </div>
+        </div>
         <div class="flex justify-center">
             <div class="overflow-x-auto">
                 <ul class="steps">
@@ -11,12 +27,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-
-        <div class="flex justify-center">
-            <h1 class="text-5xl font-bold mt-10 first-letter:uppercase">
-                {{ $route.query.name }}'s scan
-            </h1>
         </div>
         <div class="flex w-full my-10">
             <div class="grid flex-grow card">
@@ -37,10 +47,11 @@
 
                         <img src="https://placehold.co/600x400" alt="" />
 
-                        <div class="rating rating-lg">
+                        <div class="rating rating-lg flex flex-col">
+                            <div>
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
-                                v-model="current_question.answer" />
+                                v-model="current_question.answer"/>
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="2"
                                 v-model="current_question.answer" />
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="3"
@@ -49,8 +60,12 @@
                                 v-model="current_question.answer" />
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
                                 v-model="current_question.answer" />
+                            </div>
+                            <div class="flex justify-between w-52  min-w-min">
+                                <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
+                                <div class="text-xs w-1/3">Volledig van toepassing</div>
+                            </div>
                         </div>
-
                         <div class="card-actions justify-end">
                             <button v-on:click="jumpToNextQuestion"
                                 class="submit-button mr-4 bg-blue-500 hover:bg-blue-700 disabled:bg-gray-500 text-white text-lg font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
@@ -93,6 +108,8 @@ export default {
             categories: [],
             current_category: {},
             current_question: {},
+            sectors: ['Technology', 'Finance', 'Healthcare'],
+            selectedSector: this.$route.query.sector
         }
     },
     methods: {
@@ -141,10 +158,21 @@ export default {
             PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                 this.$router.push('/results');
             });
+        },
+        handleEditEmail() {
+            PopupHelper.DisplayEmailEditPopup('Change your email', this.$route.query.email, (Result) => {
+                this.$router.push({
+                    name: 'scan',
+                    query: {
+                        name: this.$route.query.name,
+                        email: Result,
+                        sector: this.$route.query.sector
+                    }
+                });
+            });
         }
     },
     mounted() {
-
         // for testing purposes - dummy data TODO: connect to actual API
         this.categories = [
             {

@@ -54,6 +54,21 @@ class SwalHelper
             }
         });
     }
+
+    static DisplayEmailEditPopup(text = 'Operation was successful!', email = '', afterCallback = () => {}) {
+        Swal.fire({
+            text: text,
+            input: 'email',
+            inputValue: email,
+            confirmButtonText: 'Save',
+            showCancelButton: true,
+            allowOutsideClick: () => !Swal.isLoading() // Disable clicking outside to close the modal while loading
+        }).then((result) => {
+            if (result.isConfirmed) {
+                afterCallback(result.value);
+            }
+        });
+    }
     
     
 
