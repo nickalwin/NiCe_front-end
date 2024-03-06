@@ -64,7 +64,7 @@ class SwalHelper {
                     return false;
                 }
     
-                if (emailInput.indexOf('@') === -1 || emailInput.indexOf('.') === -1 || emailInput.indexOf('@') > emailInput.indexOf('.') || !emailInput.split('@')[0] || !emailInput.split('@')[1] || !emailInput.split('@')[1].split('.')[0] || !emailInput.split('@')[1].split('.')[1] || emailInput.split('@')[1].split('.')[1].length < 2 || emailInput.split('@')[1].split('.')[1].length > 4){
+                if (!emailInput.match(/^\S+@\S+\.\S+$/)) {
                     Swal.showValidationMessage('Please enter a valid email address');
                     return false;
                 }
