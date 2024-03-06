@@ -10,11 +10,11 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
-    faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash
+    faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
-    faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash
+    faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit
 );
 
 export default FontAwesomeIcon;

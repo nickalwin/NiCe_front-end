@@ -1,5 +1,21 @@
 <template>
     <div>
+        <div class="flex justify-between">
+            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase">
+                {{ $route.query.name }}'s scan
+            </h1>
+            <div class="flex m-1">
+            <div class="input input-disabled mx-1">
+                <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
+                <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
+                    <FontAwesomeIcon icon="fa-edit" />
+                </span>
+            </div>
+            <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
+                <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
+            </select>
+        </div>
+        </div>
         <div class="flex justify-center">
             <div class="overflow-x-auto">
                 <ul class="steps">
@@ -33,7 +49,8 @@
 
                         <img :src="current_question.image" alt="No image provided"/>
 
-                        <div class="rating rating-lg">
+                        <div class="rating rating-lg flex flex-col">
+                            <div>
                             <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
                                 v-model="current_question.answer" />
@@ -46,6 +63,10 @@
                             <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
                                 v-model="current_question.answer" />
                         </div>
+                        <div class="flex justify-between w-52  min-w-min">
+                                <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
+                                <div class="text-xs w-1/3">Volledig van toepassing</div>
+                            </div>
 
                         <div class="tooltip-container">
                             <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
@@ -61,7 +82,6 @@
                                     placeholder="Add a comment..."></textarea>
                             </div>
                         </div>
-
                         <div class="card-actions justify-end">
                             <PrimaryButton
                                 :label="'Next'"
@@ -89,7 +109,7 @@
                 </div>
             </div>
         </div>
-
+    </div>
         <SummaryComponent />
     </div>
 </template>
@@ -107,7 +127,9 @@ export default {
             categories: [],
             current_category: {},
             current_question: {},
-            isEyeOpen: true
+            isEyeOpen: true,
+            sectors: ['Technology', 'Finance', 'Healthcare'],
+            selectedSector: this.$route.query.sector
         }
     },
     methods: {
@@ -276,6 +298,18 @@ export default {
         },
         toggleEye(isOpen) {
             this.isEyeOpen = isOpen;
+        },
+        handleEditEmail() {
+            PopupHelper.DisplayEmailEditPopup('Change your email', this.$route.query.email, (Result) => {
+                this.$router.push({
+                    name: 'scan',
+                    query: {
+                        name: this.$route.query.name,
+                        email: Result,
+                        sector: this.$route.query.sector
+                    }
+                });
+            });
         }
     },
     mounted() {
