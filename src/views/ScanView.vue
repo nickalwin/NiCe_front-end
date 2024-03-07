@@ -100,6 +100,7 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
+import RouteList from "@/helpers/RouteList.js";
 
 export default {
     components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
@@ -109,7 +110,7 @@ export default {
             current_category: {},
             current_question: {},
             isEyeOpen: true,
-            loadingQuestions: true,
+            loadingQuestions: false,
         }
     },
     methods: {
@@ -267,10 +268,12 @@ export default {
             }).then(() => {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
-            }).catch(() => {
-                PopupHelper.DisplayErrorPopup("Failed to load questions.");
-            }).finally(() => {
+
                 this.loadingQuestions = false;
+            }).catch(() => {
+                PopupHelper.DisplayErrorPopup("Failed to load questions.", () => {
+                    this.$router.push(RouteList.Home);
+                });
             });
         },
         clearAnswersFromLocalStorage() {
@@ -280,9 +283,9 @@ export default {
             this.sendAnswersToApi();
 
             PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
-                // localStorage.removeItem('answers');
+                localStorage.removeItem('answers');
 
-                // this.$router.push('/results');
+                this.$router.push(RouteList.Result);
             });
         },
         sendAnswersToApi() {
@@ -298,15 +301,13 @@ export default {
                 });
             });
 
-            console.log(questionsWithAnswers);
-
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
                 sector_id: 1,
                 contact_name: 'John Doe',
                 contact_email: 'john@doe.gmail.com',
             }).then((response) => {
-                console.log(response);
+
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
