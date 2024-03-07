@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
         <div class="flex justify-center">
             <div class="overflow-x-auto">
                 <ul class="steps">
@@ -91,7 +91,7 @@
         </div>
 
         <SummaryComponent />
-    </div>
+    </LoadingTemplate>
 </template>
 
 <script>
@@ -99,15 +99,17 @@ import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 
 export default {
-    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon },
+    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
-            isEyeOpen: true
+            isEyeOpen: true,
+            loadingQuestions: true,
         }
     },
     methods: {
@@ -227,6 +229,8 @@ export default {
             this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         loadQuestionsFromApi() {
+            this.loadingQuestions = true;
+
             axios.get('/api/scans/getQuestions', {
 
             }).then((response) => {
@@ -265,6 +269,8 @@ export default {
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
             }).catch(() => {
                 PopupHelper.DisplayErrorPopup("Failed to load questions.");
+            }).finally(() => {
+                this.loadingQuestions = false;
             });
         },
         clearAnswersFromLocalStorage() {
