@@ -232,7 +232,7 @@ export default {
         loadQuestionsFromApi() {
             this.loadingQuestions = true;
 
-            axios.get('/api/scans/getQuestions', {
+            axios.get('/api/questions', {
 
             }).then((response) => {
                 var questions = response.data;
