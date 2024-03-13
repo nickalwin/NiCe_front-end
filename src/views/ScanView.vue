@@ -294,6 +294,7 @@ export default {
             this.categories.forEach((c) => {
                 c.questions.forEach((q) => {
                     questionsWithAnswers.push({
+                        category_uuid: c.uuid,
                         question_uuid: q.uuid,
                         answer: q.answer,
                         comment: q.comment ?? null
@@ -307,7 +308,7 @@ export default {
                 contact_name: 'John Doe',
                 contact_email: 'john@doe.gmail.com',
             }).then((response) => {
-
+                console.log(response);
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });

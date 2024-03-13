@@ -19,7 +19,7 @@ const router = createRouter({
             component: () => import('@/views/GuideView.vue'),
         },
         {
-            path: '/result/:uuid',
+            path: '/results/:uuid',
             name: 'result',
             component: () => import('@/views/ResultsView.vue'),
         },
