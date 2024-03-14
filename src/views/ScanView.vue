@@ -1,17 +1,17 @@
 <template>
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
-        <div class="flex justify-between">
-            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase">
-                {{ $route.query.name }}'s scan
+        <div v-if="name && email && selectedSector" class="flex justify-between p-5">
+            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
+                {{ name }}'s scan
             </h1>
             <div class="flex m-1">
                 <div class="input input-disabled mx-1">
-                    <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
-                    <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
+                    <input class="input border-none rounded p-2 text-blue-900" type="email" :value="email" disabled />
+                    <span v-on:click="handleEditEmail" class="hover:text-gray-400 font-bold py-2 cursor-pointer hover:bg-blue-200 rounded">
                         <FontAwesomeIcon icon="fa-edit" />
                     </span>
                 </div>
-                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
+                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
                     <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
                 </select>
             </div>
@@ -120,6 +120,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import RouteList from "@/helpers/RouteList.js";
+import LocalStorage from "@/helpers/LocalStorage";
 
 export default {
     components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
@@ -131,7 +132,9 @@ export default {
             isEyeOpen: true,
             loadingQuestions: false,
             sectors: ['Technology', 'Finance', 'Healthcare'],
-            selectedSector: this.$route.query.sector
+            name: null,
+            email: null,
+            selectedSector: null,
         }
     },
     methods: {
@@ -212,10 +215,10 @@ export default {
                 }
             });
 
-            localStorage.setItem('answers', JSON.stringify(answers));
+            LocalStorage.SetScanResults(answers);
         },
         loadQuestions() {
-            var answers = localStorage.getItem('answers');
+            var answers = LocalStorage.GetScanResults();
 
             if (answers) {
                 this.loadQuestionsFromLocalStorage(answers);
@@ -224,8 +227,6 @@ export default {
             }
         },
         loadQuestionsFromLocalStorage(answers) {
-            answers = JSON.parse(answers);
-
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
@@ -297,9 +298,6 @@ export default {
                 });
             });
         },
-        clearAnswersFromLocalStorage() {
-            localStorage.removeItem('answers');
-        },
         onScanCompleted() {
             this.sendAnswersToApi();
         },
@@ -320,11 +318,12 @@ export default {
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
                 sector_id: 1,
-                contact_name: 'John Doe',
-                contact_email: 'john@doe.gmail.com',
+                contact_name: this.name,
+                contact_email: this.email,
             }).then((response) => {
                 PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
-                    localStorage.removeItem('answers');
+                    LocalStorage.ClearScanResults();
+                    LocalStorage.ClearContactInfo();
 
                     this.$router.push(RouteList.Result + "/" + response.data.uuid);
                 });
@@ -336,24 +335,44 @@ export default {
             this.isEyeOpen = isOpen;
         },
         handleEditEmail() {
-            PopupHelper.DisplayEmailEditPopup('Change your email', this.$route.query.email, (Result) => {
-                this.$router.push({
-                    name: 'scan',
-                    query: {
-                        name: this.$route.query.name,
-                        email: Result,
-                        sector: this.$route.query.sector
-                    }
+            PopupHelper.DisplayEmailEditPopup('Change your email', this.email, (result) => {
+                LocalStorage.SetContactInfo({
+                    name: this.name,
+                    email: result,
+                    sector: this.selectedSector
                 });
+
+                this.email = result;
             });
         }
     },
     mounted() {
+        LocalStorage.ActiveCheck();
+
+        let data = LocalStorage.GetContactInfo();
+
+        if (data) {
+            this.name = data.name;
+            this.email = data.email;
+            this.selectedSector = data.sector;
+        } else {
+            PopupHelper.DisplaySectorPopup('Enter scan information', this.sectors, false, (Result) => {
+                LocalStorage.SetContactInfo({
+                    name: Result[0],
+                    email: Result[1],
+                    sector: Result[2]
+                });
+
+                this.name = Result[0];
+                this.email = Result[1];
+                this.selectedSector = Result[2];
+            }, () => {
+                this.$router.push(RouteList.Home);
+            });
+        }
+
         this.loadQuestions();
     }
 }
 </script>
 
-<style scoped>
-
-</style>

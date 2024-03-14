@@ -36,6 +36,7 @@ import SummaryComponent from "@/components/SummaryComponent.vue";
 import PrimaryRouterLink from "@/components/router-links/PrimaryRouterLink.vue";
 import TernaryRouterLink from "@/components/router-links/TernaryRouterLink.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
+import LocalStorage from "@/helpers/LocalStorage";
 
 const sectors = ['Technology', 'Finance', 'Healthcare'];
 
@@ -45,15 +46,19 @@ export default {
     },
     methods: {
         handleGetStarted() {
-            PopupHelper.DisplaySectorPopup('Enter scan information', sectors, (Result) => {
-                console.log('Sector selected: ', Result);
-                this.$router.push({
-                    name: 'scan',
-                    query: {
-                        name: Result[0],
-                        email: Result[1],
-                        sector: Result[2] }
+            if (LocalStorage.GetContactInfo()) {
+                this.$router.push('/scan');
+                return;
+            }
+
+            PopupHelper.DisplaySectorPopup('Enter scan information', sectors, true, (Result) => {
+                LocalStorage.SetContactInfo({
+                    name: Result[0],
+                    email: Result[1],
+                    sector: Result[2]
                 });
+
+                this.$router.push('/scan');
             });
         }
     }

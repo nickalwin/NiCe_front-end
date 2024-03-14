@@ -12,11 +12,6 @@ const router = createRouter({
             path: '/scan',
             name: 'scan',
             component: () => import('@/views/ScanView.vue'),
-            props: route => ({
-                sector: route.query.sector,
-                name: route.query.name,
-                email: route.query.email
-            })
         },
         {
             path: '/guide',
