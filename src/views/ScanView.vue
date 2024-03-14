@@ -1,17 +1,17 @@
 <template>
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
-        <div class="flex justify-between">
-            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase">
-                {{ $route.query.name }}'s scan
+        <div v-if="name && email && selectedSector" class="flex justify-between p-5">
+            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
+                {{ name }}'s scan
             </h1>
             <div class="flex m-1">
                 <div class="input input-disabled mx-1">
-                    <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
-                    <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
+                    <input class="input border-none rounded p-2 text-blue-900" type="email" :value="email" disabled />
+                    <span v-on:click="handleEditEmail" class="hover:text-gray-400 font-bold py-2 cursor-pointer hover:bg-blue-200 rounded">
                         <FontAwesomeIcon icon="fa-edit" />
                     </span>
                 </div>
-                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
+                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
                     <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
                 </select>
             </div>
@@ -22,95 +22,94 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.uuid) }"
-                    >
+                        v-on:click="() => { jumpToQuestion(question.uuid) }">
                         {{ index + 1 }}
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row w-full my-10">
-            <div class="grid flex-grow card md:w-3/4">
-                <div class="card w-full bg-base-100 shadow-xl">
-                    <div class="card-body">
-                        <div class="flex items-center justify-between">
-                            <h2 class="card-title">
-                                {{ current_question.is_statement ? 'Statement' : 'Question' }}
-                            </h2>
-                            <div v-if="current_question.tooltip" class="tooltip tooltip-info" :data-tip="current_question.tooltip">
-                                <button class="btn btn-info rounded-full">
-                                    <FontAwesomeIcon icon="fa-info" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <p>{{ current_question.text }}</p>
-
-                        <img :src="current_question.image" alt="No image provided"/>
-
-                        <div class="rating rating-lg flex flex-col">
-                            <div>
-                            <input type="radio" class="rating-hidden" value="-1" v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="1"
-                                v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="2"
-                                v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="3"
-                                v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="4"
-                                v-model="current_question.answer" />
-                            <input type="radio" class="mask mask-star-2 bg-gray-500" value="5"
-                                v-model="current_question.answer" />
-                        </div>
-                        <div class="flex justify-between w-52  min-w-min">
-                                <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
-                                <div class="text-xs w-1/3">Volledig van toepassing</div>
+        <div class="flex w-full mt-10">
+            <div class="flex-grow md:flex-shrink md:w-2/3">
+                <div class="card flex-grow">
+                    <div class="bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <h2 class="card-title">
+                                    {{ current_question.is_statement ? 'Statement' : 'Question' }}
+                                </h2>
+                                <div v-if="current_question.tooltip" class="tooltip tooltip-info"
+                                    :data-tip="current_question.tooltip">
+                                    <button class="btn btn-info rounded-full">
+                                        <FontAwesomeIcon icon="fa-info" />
+                                    </button>
+                                </div>
                             </div>
 
-                        <div class="tooltip-container">
-                            <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
-                                <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
-                                    <FontAwesomeIcon icon="fa-eye" />
-                                </span>
-                                <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
-                                    <FontAwesomeIcon icon="fa-eye-slash" />
-                                </span>
+                            <p>{{ current_question.text }}</p>
+
+                            <img :src="current_question.image" alt="No image provided" />
+
+                            <div class="rating rating-lg flex flex-col">
+                                <div>
+                                    <input type="radio" class="rating-hidden text-xl" value="-1"
+                                        v-model="current_question.answer" />
+                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-5xl" value="1"
+                                        v-model="current_question.answer" />
+                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="2"
+                                        v-model="current_question.answer" />
+                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="3"
+                                        v-model="current_question.answer" />
+                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="4"
+                                        v-model="current_question.answer" />
+                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
+                                        v-model="current_question.answer" />
+                                </div>
+                                <div class="flex justify-between w-52  min-w-min">
+                                    <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
+                                    <div class="text-xs w-1/3">Volledig van toepassing</div>
+                                </div>
+
+                                <div class="tooltip-container">
+                                    <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
+                                        <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
+                                            <FontAwesomeIcon icon="fa-eye" />
+                                        </span>
+                                        <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
+                                            <FontAwesomeIcon icon="fa-eye-slash" />
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <textarea v-model="current_question.comment" v-if="!isEyeOpen"
+                                            class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                            placeholder="Add a comment..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="card-actions justify-end">
+                                    <PrimaryButton :label="'Next'" :disabled="current_question.answer === -1"
+                                        @onClick="jumpToNextQuestion" />
+                                </div>
                             </div>
-                            <div>
-                                <textarea v-model="current_question.comment" v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                    placeholder="Add a comment..."></textarea>
-                            </div>
-                        </div>
-                        <div class="card-actions justify-end">
-                            <PrimaryButton
-                                :label="'Next'"
-                                :disabled="current_question.answer === -1"
-                                @onClick="jumpToNextQuestion"
-                            />
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="grid h-20 md:flex-grow card place-items-center md:w-1/4">
-                <div class="flex">
-                    <div class="overflow-x-auto">
-                        <ul class="steps steps-vertical">
-                            <li v-for="category in categories"
-                                :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
-                                :data-content="`${category.is_completed ? '✓' : '●'}`"
-                                v-on:click="() => { jumpToCategory(category.uuid) }"
-                            >
-                                {{ category.name }}
-                            </li>
-                        </ul>
-                    </div>
+            <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
+                <div class="flex-grow md:max-w-1/4">
+                    <ul class="steps steps-vertical">
+                        <li v-for="category in categories"
+                            :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
+                            :data-content="`${category.is_completed ? '✓' : '●'}`"
+                            v-on:click="() => { jumpToCategory(category.uuid) }">
+                            {{ category.name }}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-        <SummaryComponent />
+        <div class="mt-10">
+            <SummaryComponent />
+        </div>
     </LoadingTemplate>
 </template>
 
@@ -121,6 +120,7 @@ import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import RouteList from "@/helpers/RouteList.js";
+import LocalStorage from "@/helpers/LocalStorage";
 
 export default {
     components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
@@ -132,7 +132,9 @@ export default {
             isEyeOpen: true,
             loadingQuestions: false,
             sectors: ['Technology', 'Finance', 'Healthcare'],
-            selectedSector: this.$route.query.sector
+            name: null,
+            email: null,
+            selectedSector: null,
         }
     },
     methods: {
@@ -213,10 +215,10 @@ export default {
                 }
             });
 
-            localStorage.setItem('answers', JSON.stringify(answers));
+            LocalStorage.SetScanResults(answers);
         },
         loadQuestions() {
-            var answers = localStorage.getItem('answers');
+            var answers = LocalStorage.GetScanResults();
 
             if (answers) {
                 this.loadQuestionsFromLocalStorage(answers);
@@ -225,8 +227,6 @@ export default {
             }
         },
         loadQuestionsFromLocalStorage(answers) {
-            answers = JSON.parse(answers);
-
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
@@ -254,7 +254,7 @@ export default {
         loadQuestionsFromApi() {
             this.loadingQuestions = true;
 
-            axios.get('/api/scans/getQuestions', {
+            axios.get('/api/questions', {
 
             }).then((response) => {
                 var questions = response.data;
@@ -298,17 +298,8 @@ export default {
                 });
             });
         },
-        clearAnswersFromLocalStorage() {
-            localStorage.removeItem('answers');
-        },
         onScanCompleted() {
             this.sendAnswersToApi();
-
-            PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
-                localStorage.removeItem('answers');
-
-                this.$router.push(RouteList.Result);
-            });
         },
         sendAnswersToApi() {
             var questionsWithAnswers = [];
@@ -327,10 +318,15 @@ export default {
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
                 sector_id: 1,
-                contact_name: 'John Doe',
-                contact_email: 'john@doe.gmail.com',
+                contact_name: this.name,
+                contact_email: this.email,
             }).then((response) => {
-                console.log(response);
+                PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
+                    LocalStorage.ClearScanResults();
+                    LocalStorage.ClearContactInfo();
+
+                    this.$router.push(RouteList.Result + "/" + response.data.uuid);
+                });
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
@@ -339,22 +335,44 @@ export default {
             this.isEyeOpen = isOpen;
         },
         handleEditEmail() {
-            PopupHelper.DisplayEmailEditPopup('Change your email', this.$route.query.email, (Result) => {
-                this.$router.push({
-                    name: 'scan',
-                    query: {
-                        name: this.$route.query.name,
-                        email: Result,
-                        sector: this.$route.query.sector
-                    }
+            PopupHelper.DisplayEmailEditPopup('Change your email', this.email, (result) => {
+                LocalStorage.SetContactInfo({
+                    name: this.name,
+                    email: result,
+                    sector: this.selectedSector
                 });
+
+                this.email = result;
             });
         }
     },
     mounted() {
+        LocalStorage.ActiveCheck();
+
+        let data = LocalStorage.GetContactInfo();
+
+        if (data) {
+            this.name = data.name;
+            this.email = data.email;
+            this.selectedSector = data.sector;
+        } else {
+            PopupHelper.DisplaySectorPopup('Enter scan information', this.sectors, false, (Result) => {
+                LocalStorage.SetContactInfo({
+                    name: Result[0],
+                    email: Result[1],
+                    sector: Result[2]
+                });
+
+                this.name = Result[0];
+                this.email = Result[1];
+                this.selectedSector = Result[2];
+            }, () => {
+                this.$router.push(RouteList.Home);
+            });
+        }
+
         this.loadQuestions();
     }
 }
 </script>
 
-<style scoped></style>

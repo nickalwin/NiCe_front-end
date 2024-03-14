@@ -40,8 +40,11 @@ class SwalHelper {
             afterCallback();
         })
     }
-    
-    static DisplaySectorPopup(text = 'Operation was successful!', sectors = [], afterCallback = () => {}) {
+
+    static DisplaySectorPopup(
+        text = 'Operation was successful!', sectors = [], skippable = true,
+        confirmedCallback = () => {}, dismissedCallback = () => {}
+    ) {
         Swal.fire({
             title: 'Fill in info',
             text: text,
@@ -55,28 +58,33 @@ class SwalHelper {
                     </select>
                 </div>`,
             confirmButtonText: 'Continue',
-            focusConfirm: false,
+            showCancelButton: true,
+            allowOutsideClick: skippable,
+            customClass: {
+                container: 'nice-swal-container'
+            },
             preConfirm: () => {
                 const nameInput = document.getElementById('swal-input-name').value;
                 const emailInput = document.getElementById('swal-input-email').value;
                 const sectorInput = document.getElementById('swal-dropdown').value;
-    
+
                 if (!nameInput || !emailInput || !sectorInput) {
                     Swal.showValidationMessage('Please fill in all fields');
                     return false;
                 }
-    
+
                 if (!emailInput.match(/^\S+@\S+\.\S+$/)) {
                     Swal.showValidationMessage('Please enter a valid email address');
                     return false;
                 }
-    
+
                 return [nameInput, emailInput, sectorInput];
             },
-            allowOutsideClick: () => !Swal.isLoading() // Disable clicking outside to close the modal while loading
         }).then((result) => {
             if (result.isConfirmed) {
-                afterCallback(result.value); // Pass the input values to the callback
+                confirmedCallback(result.value); // Pass the input values to the callback
+            } else if (result.isDismissed) {
+                dismissedCallback();
             }
         });
     }
@@ -99,7 +107,7 @@ class SwalHelper {
             }
         });
     }
-    
+
 
     static DisplayEmailEditPopup(text = 'Operation was successful!', email = '', afterCallback = () => {}) {
         Swal.fire({
@@ -115,8 +123,8 @@ class SwalHelper {
             }
         });
     }
-    
-    
+
+
 
 }
 
