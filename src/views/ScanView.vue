@@ -1,20 +1,20 @@
 <template>
-    <div>
+    <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
         <div class="flex justify-between">
             <h1 class="text-5xl font-bold mb-10 first-letter:uppercase">
                 {{ $route.query.name }}'s scan
             </h1>
             <div class="flex m-1">
-            <div class="input input-disabled mx-1">
-                <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
-                <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
-                    <FontAwesomeIcon icon="fa-edit" />
-                </span>
+                <div class="input input-disabled mx-1">
+                    <input class="input border-none w-4/5" type="email" :value="$route.query.email" disabled />
+                    <span v-on:click="handleEditEmail" class="w-1/5 hover:text-gray-400 font-bold py-2 cursor-pointer">
+                        <FontAwesomeIcon icon="fa-edit" />
+                    </span>
+                </div>
+                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
+                    <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
+                </select>
             </div>
-            <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1">
-                <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
-            </select>
-        </div>
         </div>
         <div class="flex justify-center">
             <div class="overflow-x-auto">
@@ -38,7 +38,7 @@
                             <h2 class="card-title">
                                 {{ current_question.is_statement ? 'Statement' : 'Question' }}
                             </h2>
-                            <div class="tooltip tooltip-info" :data-tip="current_question.tooltip">
+                            <div v-if="current_question.tooltip" class="tooltip tooltip-info" :data-tip="current_question.tooltip">
                                 <button class="btn btn-info rounded-full">
                                     <FontAwesomeIcon icon="fa-info" />
                                 </button>
@@ -78,7 +78,7 @@
                                 </span>
                             </div>
                             <div>
-                                <textarea v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                <textarea v-model="current_question.comment" v-if="!isEyeOpen" class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
                                     placeholder="Add a comment..."></textarea>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
         </div>
     </div>
         <SummaryComponent />
-    </div>
+    </LoadingTemplate>
 </template>
 
 <script>
@@ -119,15 +119,18 @@ import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
+import RouteList from "@/helpers/RouteList.js";
 
 export default {
-    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon },
+    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
             isEyeOpen: true,
+            loadingQuestions: false,
             sectors: ['Technology', 'Finance', 'Healthcare'],
             selectedSector: this.$route.query.sector
         }
@@ -200,6 +203,7 @@ export default {
                         return {
                             question_uuid: q.uuid,
                             answer: q.answer,
+                            comment: q.comment ?? null,
                             is_statement: q.is_statement,
                             text: q.text,
                             tooltip: q.tooltip,
@@ -232,6 +236,7 @@ export default {
                         return {
                             uuid: q.question_uuid,
                             answer: q.answer,
+                            comment: q.comment,
                             is_statement: q.is_statement,
                             text: q.text,
                             tooltip: q.tooltip,
@@ -247,6 +252,8 @@ export default {
             this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         loadQuestionsFromApi() {
+            this.loadingQuestions = true;
+
             axios.get('/api/scans/getQuestions', {
 
             }).then((response) => {
@@ -262,6 +269,7 @@ export default {
                         text: questionData.nl.question,
                         tooltip: questionData.nl.tooltip,
                         answer: -1,
+                        comment: null
                     }
 
                     var category = this.categories.find((c) => c.uuid === q.category_uuid);
@@ -282,18 +290,49 @@ export default {
             }).then(() => {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
-            }) .catch((error) => {
-                PopupHelper.DisplayErrorPopup(error.response.data.message);
+
+                this.loadingQuestions = false;
+            }).catch(() => {
+                PopupHelper.DisplayErrorPopup("Failed to load questions.", () => {
+                    this.$router.push(RouteList.Home);
+                });
             });
         },
         clearAnswersFromLocalStorage() {
             localStorage.removeItem('answers');
         },
         onScanCompleted() {
+            this.sendAnswersToApi();
+
             PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                 localStorage.removeItem('answers');
 
-                this.$router.push('/results');
+                this.$router.push(RouteList.Result);
+            });
+        },
+        sendAnswersToApi() {
+            var questionsWithAnswers = [];
+
+            this.categories.forEach((c) => {
+                c.questions.forEach((q) => {
+                    questionsWithAnswers.push({
+                        category_uuid: c.uuid,
+                        question_uuid: q.uuid,
+                        answer: q.answer,
+                        comment: q.comment ?? null
+                    });
+                });
+            });
+
+            axios.post('/api/scans', {
+                answers: questionsWithAnswers,
+                sector_id: 1,
+                contact_name: 'John Doe',
+                contact_email: 'john@doe.gmail.com',
+            }).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         },
         toggleEye(isOpen) {
