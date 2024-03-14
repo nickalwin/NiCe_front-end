@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 import Swal from 'sweetalert2';
 
 /**
@@ -78,6 +80,26 @@ class SwalHelper {
             }
         });
     }
+    static DisplayUniqueCodePopup(text, afterCallback = () => {}) {
+        Swal.fire({
+            title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${text}`,
+            input: 'text',
+            confirmButtonText: 'Visit',
+            preConfirm: (uniqueCode) => {
+                if (!uniqueCode) {
+                    Swal.showValidationMessage('Please enter a unique code');
+                    return false;
+                }
+                return ["test", "test@test.nl", "Technology"];
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                afterCallback(result.value);
+            }
+        });
+    }
+    
 
     static DisplayEmailEditPopup(text = 'Operation was successful!', email = '', afterCallback = () => {}) {
         Swal.fire({

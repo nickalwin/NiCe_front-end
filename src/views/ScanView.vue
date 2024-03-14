@@ -254,7 +254,7 @@ export default {
         loadQuestionsFromApi() {
             this.loadingQuestions = true;
 
-            axios.get('/api/questions', {
+            axios.get('/api/scans/getQuestions', {
 
             }).then((response) => {
                 var questions = response.data;

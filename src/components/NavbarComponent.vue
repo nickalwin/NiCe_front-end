@@ -28,6 +28,9 @@
                     <RouterLink to="/">Home</RouterLink>
                 </li>
                 <li>
+                    <a v-on:click="HandleUniqueCode">Unieke code</a>
+                </li>
+                <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
                         Green Theme <FontAwesomeIcon icon="fa-leaf" />
                     </a>
@@ -44,12 +47,27 @@
 </template>
 
 <script>
+import PopupHelper from "@/helpers/PopupHelper.js";
+
 export default {
     name: 'NavbarComponent',
     methods: {
         setTheme(theme) {
             localStorage.setItem('theme', theme);
             window.location.reload();
+        },
+        HandleUniqueCode() {
+            PopupHelper.DisplayUniqueCodePopup('Voeg uw unieke code in', (Result) => {
+                console.log(Result);
+                //TODO: Add API call to get the unique code checked and data of that scan
+                this.$router.push({
+                    name: 'scan',
+                    query: { 
+                        name: Result[0],
+                        email: Result[1],
+                        sector: Result[2] }
+                });
+            });
         }
     },
     computed: {
