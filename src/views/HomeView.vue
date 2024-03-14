@@ -36,7 +36,6 @@ import SummaryComponent from "@/components/SummaryComponent.vue";
 import PrimaryRouterLink from "@/components/router-links/PrimaryRouterLink.vue";
 import TernaryRouterLink from "@/components/router-links/TernaryRouterLink.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
-import { Result } from "postcss";
 
 const sectors = ['Technology', 'Finance', 'Healthcare'];
 
@@ -50,7 +49,7 @@ export default {
                 console.log('Sector selected: ', Result);
                 this.$router.push({
                     name: 'scan',
-                    query: { 
+                    query: {
                         name: Result[0],
                         email: Result[1],
                         sector: Result[2] }
