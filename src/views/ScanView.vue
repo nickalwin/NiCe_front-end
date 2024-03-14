@@ -247,7 +247,7 @@ export default {
             this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         loadQuestionsFromApi() {
-            axios.get('/api/Question', {
+            axios.get('/api/scans/getQuestions', {
 
             }).then((response) => {
                 var questions = response.data;
