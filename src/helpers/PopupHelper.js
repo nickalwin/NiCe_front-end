@@ -1,6 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
 import Swal from 'sweetalert2';
+import i18n from '../i18n/index.js';
 
 /**
  * Helper class for displaying Swal popups.
@@ -46,18 +45,19 @@ class SwalHelper {
         confirmedCallback = () => {}, dismissedCallback = () => {}
     ) {
         Swal.fire({
-            title: 'Fill in info',
+            title: i18n.global.t('utils.fill_in_info'),
             text: text,
             html:
                 `<div class="swal2-content">
-                    <input id="swal-input-name" class="swal2-input" placeholder="Scan Name" type="text">
-                    <input id="swal-input-email" class="swal2-input" placeholder="Email Address" type="email">
+                    <input id="swal-input-name" class="swal2-input" placeholder="${i18n.global.t('fields.scan_name')}" type="text">
+                    <input id="swal-input-email" class="swal2-input" placeholder="${i18n.global.t('fields.email')}" type="email">
                     <select id="swal-dropdown" class="swal2-select">
-                        <option value="" disabled selected>Select sector</option>
+                        <option value="" disabled selected>${i18n.global.t('utils.select_sector')}</option>
                         ${sectors.map(sector => `<option value="${sector}">${sector}</option>`).join('')}
                     </select>
                 </div>`,
-            confirmButtonText: 'Continue',
+            confirmButtonText: i18n.global.t('utils.continue'),
+            cancelButtonText: i18n.global.t('utils.cancel'),
             showCancelButton: true,
             allowOutsideClick: skippable,
             customClass: {
@@ -69,12 +69,12 @@ class SwalHelper {
                 const sectorInput = document.getElementById('swal-dropdown').value;
 
                 if (!nameInput || !emailInput || !sectorInput) {
-                    Swal.showValidationMessage('Please fill in all fields');
+                    Swal.showValidationMessage(i18n.global.t('errors.missing_fields'));
                     return false;
                 }
 
                 if (!emailInput.match(/^\S+@\S+\.\S+$/)) {
-                    Swal.showValidationMessage('Please enter a valid email address');
+                    Swal.showValidationMessage(i18n.global.t('errors.invalid_email'));
                     return false;
                 }
 
@@ -88,17 +88,19 @@ class SwalHelper {
             }
         });
     }
-    static DisplayUniqueCodePopup(text, afterCallback = () => {}) {
+    static DisplayUniqueCodePopup(afterCallback = () => {}) {
         Swal.fire({
-            title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${text}`,
+            title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${
+                i18n.global.t('utils.fill_in_ucode')
+            }`,
             input: 'text',
-            confirmButtonText: 'Visit',
+            confirmButtonText: i18n.global.t('utils.continue'),
             preConfirm: (uniqueCode) => {
                 if (!uniqueCode) {
-                    Swal.showValidationMessage('Please enter a unique code');
+                    Swal.showValidationMessage(i18n.global.t('errors.missing_ucode'));
+
                     return false;
                 }
-                return ["test", "test@test.nl", "Technology"];
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {

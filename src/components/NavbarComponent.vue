@@ -9,13 +9,21 @@
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li>
-                        <a>Home</a>
+                        <a>{{ $t('navbar_component.home_route') }}</a>
                     </li>
                     <li>
-                        <a>About</a>
+                        <a v-on:click="HandleUniqueCode">{{ $t('navbar_component.unique_code') }}</a>
                     </li>
                     <li>
-                        <a>Contact</a>
+                        <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
+                            {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
+                        </a>
+                        <a v-else v-on:click="setTheme('yellow')">
+                            {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
+                        </a>
+                    </li>
+                    <li v-for="(lang, i) in langs" :key="`Lang${i}`" v-on:click="setLang(lang)">
+                        <strong>{{ lang }}</strong>
                     </li>
                 </ul>
             </div>
@@ -25,18 +33,28 @@
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1 text-xl font-bold text-gray-500">
                 <li>
-                    <RouterLink to="/">Home</RouterLink>
+                    <RouterLink to="/">{{ $t('navbar_component.home_route') }}</RouterLink>
                 </li>
                 <li>
-                    <a v-on:click="HandleUniqueCode">Unieke code</a>
+                    <a v-on:click="HandleUniqueCode">{{ $t('navbar_component.unique_code') }}</a>
                 </li>
                 <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                        Green Theme <FontAwesomeIcon icon="fa-leaf" />
+                        {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
                     </a>
                     <a v-else v-on:click="setTheme('yellow')">
-                        Yellow Theme <FontAwesomeIcon icon="fa-sun" />
+                        {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
                     </a>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <div tabindex="0" role="button">{{ $i18n.locale }}</div>
+                        <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+                            <li v-for="(lang, i) in langs" :key="`Lang${i}`" v-on:click="setLang(lang)">
+                                <strong>{{ lang }}</strong>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -51,22 +69,22 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 
 export default {
     name: 'NavbarComponent',
+    data() {
+        return {
+            langs: ['en', 'nl']
+        }
+    },
     methods: {
         setTheme(theme) {
             localStorage.setItem('theme', theme);
             window.location.reload();
         },
+        setLang(lang) {
+            this.$i18n.locale = lang;
+        },
         HandleUniqueCode() {
-            PopupHelper.DisplayUniqueCodePopup('Voeg uw unieke code in', (Result) => {
-                console.log(Result);
-                //TODO: Add API call to get the unique code checked and data of that scan
-                this.$router.push({
-                    name: 'scan',
-                    query: { 
-                        name: Result[0],
-                        email: Result[1],
-                        sector: Result[2] }
-                });
+            PopupHelper.DisplayUniqueCodePopup((Result) => {
+                //TODO: Handle unique code
             });
         }
     },

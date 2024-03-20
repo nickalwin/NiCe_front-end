@@ -1,8 +1,12 @@
 <template>
     <div class="card flex-row overflow-hidden shadow-2xl rounded">
         <div class="card-info w-2/5 text-sm text-gray-700 p-10" style="background-color: var(--color-primary)">
-            <h2 class="text-2xl text-black mb-4">Contact information</h2>
-            <p class="mb-4">We'd love to hear from you!</p>
+            <h2 class="text-2xl text-black mb-4">
+                {{ $t("contact_info_component.contact_info") }}
+            </h2>
+            <p class="mb-4">
+                {{ $t("contact_info_component.contact_info_desc") }}
+            </p>
             <p class="mb-4">
                 <FontAwesomeIcon icon="fa-envelope" class="mr-2" />
                 <a href="mailto:a.van.vulpen@windesheim.nl">a.van.vulpen@windesheim.nl</a>
@@ -17,67 +21,89 @@
             </p>
         </div>
         <div class="card-body w-3/5 bg-white">
-            <h2 class="text-2xl text-center text-black mb-4">Send us a message</h2>
-            <div v-if="successMessage" class="mb-4 text-green-500">{{ successMessage }}</div>
-            <div v-if="errorMessage" class="mb-4 text-red-500">{{ errorMessage }}</div>
+            <h2 class="text-2xl text-center text-black mb-4">
+                {{ $t("contact_info_component.send_us_a_message") }}
+            </h2>
+            <div v-if="successMessage" class="mb-4 text-green-500"> <!-- TODO - add error popups instead of this -->
+                {{ successMessage }}
+            </div>
+            <div v-if="errorMessage" class="mb-4 text-red-500">
+                {{ errorMessage }}
+            </div>
             <form @submit.prevent="submitForm" ref="contactForm">
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">First name</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="firstName">
+                                {{ $t("fields.first_name") }}
+                            </label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="firstName" v-model="formData.firsName" type="text" placeholder="Your first name">
+                                id="firstName" v-model="formData.firsName" type="text" :placeholder="$t('fields.your_first_name')">
                         </div>
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
-                            <label class="block text-gray-500 text-lg font-bold mb-2" for="lastName">Last name</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="lastName">
+                                {{ $t("fields.last_name") }}
+                            </label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="lastName" v-model="formData.lastName" type="text" placeholder="Your last name">
+                                id="lastName" v-model="formData.lastName" type="text" :placeholder="$t('fields.your_last_name')">
                         </div>
                     </div>
                 </div>
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
-                            <label class="block text-gray-500 text-lg font-bold mb-2" for="email">Email</label>
+                            <label class="block text-gray-500 text-lg font-bold mb-2" for="email">
+                                {{ $t("fields.email") }}
+                            </label>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="email" v-model="formData.email" type="email" placeholder="Your email">
+                                id="email" v-model="formData.email" type="email" :placeholder="$t('fields.your_email')">
                         </div>
                     </div>
                     <div class="w-1/2">
                         <div class="mb-4">
                             <div class="flex justify-between items-center">
-                                <label class="text-gray-500 text-lg font-bold mb-2" for="phone">Phone number</label>
-                                <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Optional</label>
+                                <label class="text-gray-500 text-lg font-bold mb-2" for="phone">
+                                    {{ $t("fields.phone_number") }}
+                                </label>
+                                <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">
+                                    {{ $t("utils.optional") }}
+                                </label>
                             </div>
                             <input
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                                id="phone" v-model="formData.phone" type="tel" placeholder="Your phone number">
+                                id="phone" v-model="formData.phone" type="tel" :placeholder="$t('fields.your_phone_number')">
                         </div>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-500 text-lg font-bold mb-2" for="subject">Subject</label>
+                    <label class="block text-gray-500 text-lg font-bold mb-2" for="subject">
+                        {{ $t("fields.subject") }}
+                    </label>
                     <input
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="subject" v-model="formData.subject" type="text" placeholder="Subject">
+                        id="subject" v-model="formData.subject" type="text" :placeholder="$t('fields.your_subject')">
                 </div>
                 <div class="mb-4">
                     <div class="flex justify-between items-center">
-                        <label class="text-gray-500 text-lg font-bold mb-2" for="message">Message</label>
-                        <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">Max. 500 characters</label>
+                        <label class="text-gray-500 text-lg font-bold mb-2" for="message">
+                            {{ $t("fields.message") }}
+                        </label>
+                        <label class="text-end text-gray-500 font-bold text-sm mb-2" for="phone">
+                            {{ $t("utils.optional") }}
+                        </label>
                     </div>
                     <textarea
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline"
-                        id="message" v-model="formData.message" placeholder="Your message"></textarea>
+                        id="message" v-model="formData.message" :placeholder="$t('fields.your_message')"></textarea>
                 </div>
                 <div class="flex items-center justify-end">
                     <PrimaryButton
-                        :label="'Send'"
+                        :label="$t('utils.send')"
                         @onClick="submitForm"
                     />
                 </div>

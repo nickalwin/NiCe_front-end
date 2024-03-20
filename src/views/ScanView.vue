@@ -2,7 +2,7 @@
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
         <div v-if="name && email && selectedSector" class="flex justify-between p-5">
             <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
-                {{ name }}'s scan
+                {{ name }} {{ $t('fields.somebodys_scan') }}
             </h1>
             <div class="flex m-1">
                 <div class="input input-disabled mx-1">
@@ -36,7 +36,11 @@
                         <div class="card-body">
                             <div class="flex items-center justify-between">
                                 <h2 class="card-title">
-                                    {{ current_question.is_statement ? 'Statement' : 'Question' }}
+                                    {{
+                                        current_question.is_statement ?
+                                        $t('fields.statement') :
+                                        $t('fields.question')
+                                    }}
                                 </h2>
                                 <div v-if="current_question.tooltip" class="tooltip tooltip-info"
                                     :data-tip="current_question.tooltip">
@@ -50,8 +54,11 @@
 
                             <img :src="current_question.image" alt="No image provided" />
 
-                            <div class="rating rating-lg flex flex-col">
-                                <div>
+                            <div class="rating rating-lg flex items-center justify-center">
+                                <div class="text-xl2 font-bold text-blue-600">
+                                    {{ $t('scan_page.low_score') }}
+                                </div>
+                                <div class="flex justify-center mx-4">
                                     <input type="radio" class="rating-hidden text-xl" value="-1"
                                         v-model="current_question.answer" />
                                     <input type="radio" class="mask mask-star-2 bg-gray-500 text-5xl" value="1"
@@ -65,30 +72,29 @@
                                     <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
                                         v-model="current_question.answer" />
                                 </div>
-                                <div class="flex justify-between w-52  min-w-min">
-                                    <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
-                                    <div class="text-xs w-1/3">Volledig van toepassing</div>
+                                <div class="text-xl2 font-bold text-blue-600">
+                                    {{ $t('scan_page.high_score') }}
                                 </div>
 
-                                <div class="tooltip-container">
-                                    <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
-                                        <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
-                                            <FontAwesomeIcon icon="fa-eye" />
-                                        </span>
-                                        <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
-                                            <FontAwesomeIcon icon="fa-eye-slash" />
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <textarea v-model="current_question.comment" v-if="!isEyeOpen"
-                                            class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                            placeholder="Add a comment..."></textarea>
-                                    </div>
+                            </div>
+                            <div class="tooltip-container">
+                                <div class="tooltip tooltip-info" :data-tip="$t('scan_page.give_extra_feedback')">
+                                    <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
+                                        <FontAwesomeIcon icon="fa-eye" />
+                                    </span>
+                                    <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
+                                        <FontAwesomeIcon icon="fa-eye-slash" />
+                                    </span>
                                 </div>
-                                <div class="card-actions justify-end">
-                                    <PrimaryButton :label="'Next'" :disabled="current_question.answer === -1"
-                                        @onClick="jumpToNextQuestion" />
+                                <div>
+                                    <textarea v-model="current_question.comment" v-if="!isEyeOpen"
+                                        class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                        :placeholder="$t('scan_page.add_a_comment')"></textarea>
                                 </div>
+                            </div>
+                            <div class="card-actions justify-end">
+                                <PrimaryButton :label="$t('utils.next')" :disabled="current_question.answer === -1"
+                                    @onClick="jumpToNextQuestion" />
                             </div>
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 <template>
     <div class="text-center">
-        <h3 class="text-2xl font-bold mb-2">All-in-one platform</h3>
+        <h3 class="text-2xl font-bold mb-2">
+            {{ $t("summary_component.all_in_one") }}
+        </h3>
         <p class="text-gray-500 text-sm max-w-md mx-auto">
-            From adaptive questions to detailed performance reports, we've got everything you need to make
-            a usefull scan for your company. Enjoy a user-friendly interface, accessible on both mobile and
-            desktop, and get the support you need, when you need it.
+            {{ $t("summary_component.all_in_one_desc") }}
         </p>
     </div>
     <div class="py-12">
@@ -13,8 +13,8 @@
                 <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-4 flex">
                     <span class="mr-2 text-blue-600">&#10003;</span>
                     <div>
-                        <h3 class="text-xl font-bold mb-2">{{ infoBox.title }}</h3>
-                        <p class="text-gray-500 text-sm">{{ infoBox.description }}</p>
+                        <h3 class="text-xl font-bold mb-2">{{ $t("summary_component." + infoBox.title) }}</h3>
+                        <p class="text-gray-500 text-sm">{{ $t("summary_component." + infoBox.description) }}</p>
                     </div>
                 </div>
             </div>
@@ -26,39 +26,38 @@
 export default {
     data() {
         return {
-            // TODO: translations
             infoBoxes: [
                 {
-                    title: "Detailed results",
-                    description: "Access comprehensive results of your test for a deep analysis"
+                    title: "detailed_results",
+                    description: "detailed_results_desc"
                 },
                 {
-                    title: "Graphs and Plots",
-                    description: "Visualize your performance through interactive graphs and plots"
+                    title: "graphs_and_plots",
+                    description: "graphs_and_plots_desc"
                 },
                 {
-                    title: "PDF Report",
-                    description: "Download a detailed PDF report of your test for offline review"
+                    title: "pdf_reports",
+                    description: "pdf_reports_desc"
                 },
                 {
-                    title: "Internationality",
-                    description: "Experience a globally accessible platform with multi-language support"
+                    title: "internationality",
+                    description: "internationality_desc"
                 },
                 {
-                    title: "Adaptive questions",
-                    description: "Engage with adaptive questions that adjust to your skill level"
+                    title: "adaptive_questions",
+                    description: "adaptive_questions_desc"
                 },
                 {
-                    title: "Reporting and Feedback",
-                    description: "Receive insightful reporting and constructive feedback on your performance"
+                    title: "reporting_and_feedback",
+                    description: "reporting_and_feedback_desc"
                 },
                 {
-                    title: "Disability Features",
-                    description: "Enjoy a platform designed with features to support users with disabilities"
+                    title: "disability_features",
+                    description: "disability_features_desc"
                 },
                 {
-                    title: "Mobile Friendly",
-                    description: "Use our mobile-friendly interface for learning on the go"
+                    title: "mobile_friendly",
+                    description: "mobile_friendly_desc"
                 }
             ],
         };
