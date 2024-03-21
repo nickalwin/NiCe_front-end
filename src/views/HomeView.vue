@@ -37,29 +37,60 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 import LocalStorage from "@/helpers/LocalStorage";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 
-const sectors = ['Technology', 'Finance', 'Healthcare'];
-
 export default {
     components: {
         ContactInfoComponent, SummaryComponent, PrimaryRouterLink, TernaryRouterLink, PrimaryButton,
         TernaryRouterLink,
     },
+    data() {
+        return {
+            sectors: []
+        };
+    },
     methods: {
-        handleGetStarted() {
+        loadSectorsFromAPI() {
+            return axios.get('/api/sectors', {
+
+            }).then((response) => {
+                let sectors = response.data;
+
+                sectors.forEach((sector) => {
+                    this.sectors.push({
+                        id: sector.id,
+                        data: JSON.parse(sector.data),
+                    });
+                });
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
+        },
+        async handleGetStarted() {
             if (LocalStorage.GetContactInfo()) {
                 this.$router.push('/scan');
                 return;
             }
 
-            PopupHelper.DisplaySectorPopup('Enter scan information', sectors, true, (Result) => {
+            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
+                'Enter scan information', sectors, this.$i18n.locale, true,
+                (Result) =>
+            {
+                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
+
                 LocalStorage.SetContactInfo({
                     name: Result[0],
                     email: Result[1],
-                    sector: Result[2]
+                    sector: sector,
                 });
 
                 this.$router.push('/scan');
             });
+
+            if (!this.sectors.length)
+                this.loadSectorsFromAPI().then(() => {
+                    popup(this.sectors);
+                });
+            else
+                popup(this.sectors);
         }
     }
 };

@@ -41,7 +41,7 @@ class SwalHelper {
     }
 
     static DisplaySectorPopup(
-        text = 'Operation was successful!', sectors = [], skippable = true,
+        text = 'Operation was successful!', sectors = [], locale = 'nl', skippable = true,
         confirmedCallback = () => {}, dismissedCallback = () => {}
     ) {
         Swal.fire({
@@ -53,7 +53,8 @@ class SwalHelper {
                     <input id="swal-input-email" class="swal2-input" placeholder="${i18n.global.t('fields.email')}" type="email">
                     <select id="swal-dropdown" class="swal2-select">
                         <option value="" disabled selected>${i18n.global.t('utils.select_sector')}</option>
-                        ${sectors.map(sector => `<option value="${sector}">${sector}</option>`).join('')}
+                        ${sectors.map(sector => `<option value="${sector.id}">
+                        ${sector.data[locale].name}</option>`).join('')}
                     </select>
                 </div>`,
             confirmButtonText: i18n.global.t('utils.continue'),

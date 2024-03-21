@@ -48,6 +48,11 @@ export default {
         high_score: "Volledig van toepassing",
         give_extra_feedback: "Geef extra feedback",
     },
+    results_page: {
+        main_header: "Rapport Circulaire scan",
+        download_pdf: "Download PDF",
+        main_text: "Bedankt voor het invullen van de circulaire scan. In dit document kun u uw resultaten vinden. Het rapport is ingedeeld in de 6 hoofd categorieën van de test innovatie, productie, ketensamenwerking, arbeid, facilitair en ambitie. Het model kunt u hieronder vinden. Hoe hoger u op een categorie scoort, hoe beter u al bezig bent met de circulaire economie op dat gebied.",
+    },
     fields: {
         first_name: "Voornaam",
         your_first_name: "Uw voornaam",

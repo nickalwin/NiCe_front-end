@@ -1,21 +1,23 @@
 <template>
     <LoadingTemplate :isLoading="isLoadingResults" :center="true" :size="'4x'">
         <div class="hero mt-10">
-            <h1 class="text-4xl font-bold">Rapport Circulaire scan</h1>
+            <h1 class="text-4xl font-bold">
+                {{ $t('results_page.main_header') }}
+            </h1>
         </div>
         <div class="hero mt-10">
-            <PrimaryButton :label="'Download PDF'" />
+            <PrimaryButton :label="$t('results_page.download_pdf')" />
         </div>
         <div class="hero mt-10">
             <p class="text-lg">
-                Bedankt voor het invullen van de circulaire scan. In dit document kun u uw resultaten vinden. Het rapport is ingedeeld in de 6 hoofd categorieën van de test innovatie, productie, ketensamenwerking, arbeid, facilitair en ambitie. Het model kunt u hieronder vinden. Hoe hoger u op een categorie scoort, hoe beter u al bezig bent met de circulaire economie op dat gebied.
+                {{ $t('results_page.main_text') }}
             </p>
         </div>
         <div class="hero mt-10">
             <img src="/info.png" width="700" alt="No image provided" />
         </div>
         <div class="card mt-10 bg-base-100 shadow-xl">
-            <div class="card-body items-center text-center">
+            <div class="items-center text-center md:p-10">
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
@@ -46,16 +48,28 @@ export default {
                 maintainAspectRatio: false,
                 barThickness: 50,
                 scale: {
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 0,
+                            minRotation: 0
+                        }
+                    },
                     y: {
                         beginAtZero: true,
                         max: 5
                     }
-                }
+                },
             },
             isLoadingResults: false
         }
     },
     methods: {
+        getLocalizedCategoryName(data) {
+            return data[this.$i18n.locale] ?
+                    data[this.$i18n.locale].name :
+                    data['nl'].name;
+        },
         loadScanWithResults(uuid) {
             this.isLoadingResults = true;
 
@@ -68,7 +82,7 @@ export default {
                 results.forEach((category) => {
                     this.categories.push({
                         uuid: category.category_uuid,
-                        name: category.category_name,
+                        data: JSON.parse(category.category_data),
                     });
                 });
 
@@ -76,7 +90,11 @@ export default {
                 let allData = [];
 
                 results.forEach((category) => {
-                    allLabels.push(category.category_name);
+                    var data = JSON.parse(category.category_data);
+
+                    allLabels.push(
+                        this.getLocalizedCategoryName(data)
+                    );
                     allData.push(category.mean);
                 });
 
@@ -119,6 +137,32 @@ export default {
             }).finally(() => {
                 this.isLoadingResults = false;
             });
+        },
+        reloadBarChartTranslations() {
+            let copy = this.plotData;
+            this.plotData = [];
+
+            let allLabels = [];
+
+            let results = JSON.parse(this.scan.results);
+
+            results.forEach((category) => {
+                var data = JSON.parse(category.category_data);
+
+                allLabels.push(
+                    this.getLocalizedCategoryName(data)
+                );
+            });
+
+            this.plotData = {
+                labels: allLabels,
+                datasets: copy.datasets
+            }
+        }
+    },
+    watch: {
+        '$i18n.locale': function() {
+            this.reloadBarChartTranslations();
         }
     },
     mounted() {

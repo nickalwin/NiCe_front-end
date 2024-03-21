@@ -11,9 +11,15 @@
                         <FontAwesomeIcon icon="fa-edit" />
                     </span>
                 </div>
-                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
-                    <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
-                </select>
+                <span class="select select-bordered bg-transparent mx-1 rounded p-2">
+                    {{ getLocalizedSectorName(selectedSector) }}
+                </span>
+                <!-- TODO proper email and sector change! -->
+                <!-- <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
+                    <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
+                        {{ getLocalizedSectorName(sector) }}
+                    </option>
+                </select> -->
             </div>
         </div>
         <div class="flex justify-center">
@@ -22,7 +28,8 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.uuid) }">
+                        v-on:click="() => { jumpToQuestion(question.uuid) }"
+                    >
                         {{ index + 1 }}
                     </li>
                 </ul>
@@ -33,7 +40,7 @@
             <div class="flex-grow md:flex-shrink md:w-2/3">
                 <div class="card flex-grow">
                     <div class="bg-base-100 shadow-xl">
-                        <div class="card-body">
+                        <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
                                 <h2 class="card-title">
                                     {{
@@ -42,15 +49,17 @@
                                         $t('fields.question')
                                     }}
                                 </h2>
-                                <div v-if="current_question.tooltip" class="tooltip tooltip-info"
-                                    :data-tip="current_question.tooltip">
+                                <div class="tooltip tooltip-info"
+                                    :data-tip="getLocalizedTooltip()">
                                     <button class="btn btn-info rounded-full">
                                         <FontAwesomeIcon icon="fa-info" />
                                     </button>
                                 </div>
                             </div>
 
-                            <p>{{ current_question.text }}</p>
+                            <p>
+                                {{ getLocalizedQuestion() }}
+                            </p>
 
                             <img :src="current_question.image" alt="No image provided" />
 
@@ -89,7 +98,7 @@
                                 <div>
                                     <textarea v-model="current_question.comment" v-if="!isEyeOpen"
                                         class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                        :placeholder="$t('scan_page.add_a_comment')"></textarea>
+                                        :placeholder="$t('scan_page.add_a_comment')"/>
                                 </div>
                             </div>
                             <div class="card-actions justify-end">
@@ -101,13 +110,15 @@
                 </div>
             </div>
             <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-                <div class="flex-grow md:max-w-1/4">
+                <div class="flex-grow md:max-w-1/4 lg:max-w-full">
                     <ul class="steps steps-vertical">
                         <li v-for="category in categories"
                             :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                             :data-content="`${category.is_completed ? '✓' : '●'}`"
                             v-on:click="() => { jumpToCategory(category.uuid) }">
-                            {{ category.name }}
+                            <div class="text-xs sm:text-sm md:text-base">
+                                {{ getLocalizedCategoryName(category) }}
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -137,7 +148,7 @@ export default {
             current_question: {},
             isEyeOpen: true,
             loadingQuestions: false,
-            sectors: ['Technology', 'Finance', 'Healthcare'],
+            sectors: [],
             name: null,
             email: null,
             selectedSector: null,
@@ -205,7 +216,7 @@ export default {
             var answers = this.categories.map((c) => {
                 return {
                     category_uuid: c.uuid,
-                    category_name: c.name,
+                    category_data: c.data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
@@ -213,8 +224,7 @@ export default {
                             answer: q.answer,
                             comment: q.comment ?? null,
                             is_statement: q.is_statement,
-                            text: q.text,
-                            tooltip: q.tooltip,
+                            data: q.data,
                             image: q.image,
                         }
                     })
@@ -236,7 +246,7 @@ export default {
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
-                    name: c.category_name,
+                    data: c.category_data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
@@ -244,8 +254,7 @@ export default {
                             answer: q.answer,
                             comment: q.comment,
                             is_statement: q.is_statement,
-                            text: q.text,
-                            tooltip: q.tooltip,
+                            data: q.data,
                             image: q.image,
                         }
                     })
@@ -272,8 +281,7 @@ export default {
                         uuid: q.uuid,
                         image: q.image,
                         is_statement: q.statement,
-                        text: questionData.nl.question,
-                        tooltip: questionData.nl.tooltip,
+                        data: questionData,
                         answer: -1,
                         comment: null
                     }
@@ -285,7 +293,7 @@ export default {
                     } else {
                         category = {
                             uuid: q.category_uuid,
-                            name: q.category_name,
+                            data: JSON.parse(q.category_data),
                             is_completed: false,
                             questions: [question]
                         }
@@ -350,6 +358,42 @@ export default {
 
                 this.email = result;
             });
+        },
+        loadSectorsFromAPI() {
+            return axios.get('/api/sectors', {
+
+            }).then((response) => {
+                let sectors = response.data;
+
+                sectors.forEach((sector) => {
+                    this.sectors.push({
+                        id: sector.id,
+                        data: JSON.parse(sector.data),
+                    });
+                });
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
+        },
+        getLocalizedQuestion() {
+            return this.current_question.data[this.$i18n.locale] ?
+                    this.current_question.data[this.$i18n.locale].question :
+                    this.current_question.data['nl'].question
+        },
+        getLocalizedTooltip() {
+            return this.current_question.data[this.$i18n.locale] ?
+                    this.current_question.data[this.$i18n.locale].tooltip :
+                    this.current_question.data['nl'].tooltip
+        },
+        getLocalizedCategoryName(category) {
+            return category.data[this.$i18n.locale] ?
+                    category.data[this.$i18n.locale].name :
+                    category.data['nl'].name;
+        },
+        getLocalizedSectorName(sector) {
+            return sector.data[this.$i18n.locale] ?
+                    sector.data[this.$i18n.locale].name :
+                    sector.data['nl'].name;
         }
     },
     mounted() {
@@ -362,19 +406,31 @@ export default {
             this.email = data.email;
             this.selectedSector = data.sector;
         } else {
-            PopupHelper.DisplaySectorPopup('Enter scan information', this.sectors, false, (Result) => {
+            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
+                'Enter scan information', sectors, this.$i18n.locale, false,
+                (Result) =>
+            {
+                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
+
                 LocalStorage.SetContactInfo({
                     name: Result[0],
                     email: Result[1],
-                    sector: Result[2]
+                    sector: sector,
                 });
 
                 this.name = Result[0];
                 this.email = Result[1];
-                this.selectedSector = Result[2];
+                this.selectedSector = sector;
             }, () => {
                 this.$router.push(RouteList.Home);
             });
+
+            if (!this.sectors.length)
+                this.loadSectorsFromAPI().then(() => {
+                    popup(this.sectors);
+                });
+            else
+                popup(this.sectors);
         }
 
         this.loadQuestions();
