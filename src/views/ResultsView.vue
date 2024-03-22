@@ -21,6 +21,16 @@
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
+        <div v-if="plotData" class="results-container mt-10">
+            <div class="result-card" v-for="(label, index) in plotData.labels" :key="index">
+            <h3 class="result-label">{{ label }}</h3>
+            <p class="result-score">
+                {{ $t('results_page.you_scored') }}
+                <strong>{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
+                {{ $t('results_page.out_of') }} 5.
+            </p>
+            </div>
+        </div>
     </LoadingTemplate>
 </template>
 
@@ -170,3 +180,27 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-card {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.result-label {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.result-score {
+  font-size: 1em;
+  color: #666;
+}
+</style>

@@ -9,10 +9,19 @@
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li>
-                        <a>{{ $t('navbar_component.home_route') }}</a>
+                        <RouterLink to="/">
+                            {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                        </RouterLink>
                     </li>
                     <li>
-                        <a v-on:click="HandleUniqueCode">{{ $t('navbar_component.unique_code') }}</a>
+                        <a v-on:click="HandleUniqueCode">
+                            {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                        </a>
+                    </li>
+                    <li>
+                        <RouterLink to="/history">
+                            {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                        </RouterLink>
                     </li>
                     <li>
                         <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
@@ -33,10 +42,19 @@
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1 text-xl font-bold text-gray-500">
                 <li>
-                    <RouterLink to="/">{{ $t('navbar_component.home_route') }}</RouterLink>
+                    <RouterLink to="/">
+                        {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                    </RouterLink>
                 </li>
                 <li>
-                    <a v-on:click="HandleUniqueCode">{{ $t('navbar_component.unique_code') }}</a>
+                    <a v-on:click="HandleUniqueCode">
+                        {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                    </a>
+                </li>
+                <li>
+                    <RouterLink to="/history">
+                        {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                    </RouterLink>
                 </li>
                 <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
@@ -66,6 +84,9 @@
 
 <script>
 import PopupHelper from "@/helpers/PopupHelper.js";
+import RouteList from "@/helpers/RouteList.js";
+import Swal from 'sweetalert2';
+import i18n from '../i18n/index.js';
 
 export default {
     name: 'NavbarComponent',
@@ -82,9 +103,81 @@ export default {
         setLang(lang) {
             this.$i18n.locale = lang;
         },
-        HandleUniqueCode() {
-            PopupHelper.DisplayUniqueCodePopup((Result) => {
-                //TODO: Handle unique code
+        async HandleUniqueCode() {
+            const steps = ['1', '2', '3']
+            const Queue = Swal.mixin({
+                progressSteps: steps,
+                confirmButtonText: i18n.global.t('utils.next'),
+                cancelButtonText: i18n.global.t('utils.cancel'),
+                showClass: { backdrop: 'swal2-noanimation' },
+                hideClass: { backdrop: 'swal2-noanimation' },
+            });
+
+            Queue.fire({
+                title: i18n.global.t('navbar_component.enter_your_code'),
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off',
+                    placeholder: '4374860b-c6ab-403e-8c9e-1ccd2b6ece20'
+                },
+                currentProgressStep: 0,
+                showCancelButton: true,
+                allowOutsideClick: () => false,
+                preConfirm: (code) => {
+                    const uuidRegex = /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-(8|9|a|b|A|B)[0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$/;
+
+                    if (!code) {
+                        Swal.showValidationMessage(i18n.global.t('errors.missing_fields'));
+                    } else if (!uuidRegex.test(code)) {
+                        Swal.showValidationMessage(i18n.global.t('errors.missing_scan_code'));
+                    } else {
+                        return code;
+                    }
+                }
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    Swal.close();
+                } else {
+                    Queue.fire({
+                        title: i18n.global.t('utils.loading'),
+                        currentProgressStep: 1,
+                        allowOutsideClick: () => false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                        showConfirmButton: false,
+                    });
+
+                    axios.get(`/api/scan-codes/${result.value}`, {
+
+                    }).then((response) => {
+                        let data = response.data;
+                        let scanUuid = data.scan_uuid;
+                        let isEditable = data.editable;
+
+                        Queue.fire({
+                            icon: 'success',
+                            title: i18n.global.t('navbar_component.scan_code_is_valid'),
+                            text: isEditable ? i18n.global.t('navbar_component.scan_editable') : i18n.global.t('navbar_component.scan_visitable'),
+                            currentProgressStep: 2,
+                            showCancelButton: true,
+                            showConfirmButton: true,
+                            confirmButtonText: isEditable ? i18n.global.t('utils.edit') : i18n.global.t('utils.view'),
+                            preConfirm: (result) => {
+                                if (result) {
+                                    this.$router.push(RouteList.Result + "/" + scanUuid);
+                                } else {
+                                    Swal.close();
+                                }
+                            }
+                        });
+
+                    }).catch((error) => {
+                        PopupHelper.DisplayErrorPopupWithTryAgain(error.response.data, () => {
+                            this.HandleUniqueCode();
+                        });
+                    });
+                }
             });
         }
     },

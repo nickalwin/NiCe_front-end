@@ -2,8 +2,13 @@ export default {
     navbar_component: {
         home_route: "Thuis",
         unique_code: "Unieke code",
+        history_route: "Geschiedenis",
         green_theme: "Groen thema",
         yellow_theme: "Geel thema",
+        enter_your_code: "Voer uw unieke code in",
+        scan_code_is_valid: "Scan code is geldig",
+        scan_visitable: "U kunt nu de scan bezoeken",
+        scan_editable: "U kunt nu de scan bewerken",
     },
     summary_component: {
         all_in_one: "Alles-in-één platform",
@@ -52,6 +57,8 @@ export default {
         main_header: "Rapport Circulaire scan",
         download_pdf: "Download PDF",
         main_text: "Bedankt voor het invullen van de circulaire scan. In dit document kun u uw resultaten vinden. Het rapport is ingedeeld in de 6 hoofd categorieën van de test innovatie, productie, ketensamenwerking, arbeid, facilitair en ambitie. Het model kunt u hieronder vinden. Hoe hoger u op een categorie scoort, hoe beter u al bezig bent met de circulaire economie op dat gebied.",
+        you_scored: "U scoorde",
+        out_of: "van de",
     },
     fields: {
         first_name: "Voornaam",
@@ -80,6 +87,8 @@ export default {
         cancel: "Annuleren",
         fill_in_ucode: "Vul uw scan code in",
         next: "Volgende",
+        view: "Bekijken",
+        loading: "Laden...",
     },
     errors: {
         missing_fields: "Vul alle velden in",

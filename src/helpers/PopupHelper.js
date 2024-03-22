@@ -40,6 +40,21 @@ class SwalHelper {
         })
     }
 
+    static DisplayErrorPopupWithTryAgain(text = 'Oh no, something went wrong!', againCallback = () => {}) {
+        Swal.fire({
+            title: 'Error!',
+            text: text,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'Try again',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                againCallback();
+            }
+        })
+    }
+
     static DisplaySectorPopup(
         text = 'Operation was successful!', sectors = [], locale = 'nl', skippable = true,
         confirmedCallback = () => {}, dismissedCallback = () => {}

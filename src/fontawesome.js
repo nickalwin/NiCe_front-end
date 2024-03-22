@@ -11,12 +11,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
     faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit,
-    faRecycle,
+    faRecycle, faKey, faBars, faHouse,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
     faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit,
-    faRecycle,
+    faRecycle, faKey, faBars, faHouse,
 );
 
 export default FontAwesomeIcon;

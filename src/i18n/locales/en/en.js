@@ -2,8 +2,13 @@ export default {
     navbar_component: {
         home_route: "Home",
         unique_code: "Unique code",
+        history_route: "History",
         green_theme: "Green theme",
         yellow_theme: "Yellow theme",
+        enter_your_code: "Enter your unique code",
+        scan_code_is_valid: "Scan code is valid",
+        scan_visitable: "You can now visit the scan",
+        scan_editable: "You can now edit the scan",
     },
     summary_component: {
         all_in_one: "All-in-one platform",
@@ -52,6 +57,8 @@ export default {
         main_header: "Circularity scan report",
         download_pdf: "Download PDF",
         main_text: "Thank you for completing the circularity scan. In this document you can find your results. The report is divided into the 6 main categories of the test innovation, production, chain cooperation, labor, facilities and ambition. The model can be found below. The higher you score on a category, the better you are already doing with the circular economy in that area.",
+        you_scored: "You scored",
+        out_of: "out of",
     },
     fields: {
         first_name: "First name",
@@ -80,6 +87,8 @@ export default {
         cancel: "Cancel",
         fill_in_ucode: "Fill in your scan code",
         next: "Next",
+        view: "View",
+        loading: "Loading...",
     },
     errors: {
         missing_fields: "Please fill in all fields",
