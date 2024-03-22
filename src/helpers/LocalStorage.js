@@ -40,6 +40,14 @@ class LocalStorage
         localStorage.removeItem('scanResultsValidUntil');
     }
 
+    static TryGetLastCodes() {
+        return JSON.parse(localStorage.getItem('lastCodes'));
+    }
+
+    static SetLastCodes(lastCodes) {
+        localStorage.setItem('lastCodes', JSON.stringify(lastCodes));
+    }
+
 }
 
 export default LocalStorage;

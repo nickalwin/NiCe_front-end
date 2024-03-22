@@ -1,15 +1,70 @@
 <template>
-    <div>
-        <div class="hero my-10">
-            <div class="hero-content text-center">
-                TODO
-            </div>
+    <div class="flex flex-col items-center justify-center mt-52">
+        <div class="p-6 bg-white rounded-xl shadow-md flex flex-col items-center space-x-4 w-full max-w-2xl">
+            <h2 class="text-2xl font-semibold mb-4">
+                {{ $t('history_page.last_codes') }}:
+            </h2>
+            <template v-if="editableScanCode && readonlyScanCode">
+                <div class="w-full">
+                <label class="block text-lg font-medium text-gray-700">
+                    {{ $t('history_page.editable') }}:
+                </label>
+                <div class="flex flex-wrap items-center mt-2">
+                    <input v-model="editableScanCode"
+                        class="flex-grow mr-2 py-2 px-3 text-lg border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        type="text" disabled>
+                    <button class="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                        @click="copyToClipboard('14DB6FEA-6475-44F7-B1D4-AEC4E295AA42')">
+                        {{ $t('utils.copy') }}
+                    </button>
+                    </div>
+                </div>
+                <div class="w-full mt-4">
+                    <label class="block text-lg font-medium text-gray-700">
+                        {{ $t('history_page.read_only') }}:
+                    </label>
+                    <div class="flex flex-wrap items-center mt-2">
+                        <input v-model="readonlyScanCode"
+                            class="flex-grow mr-2 py-2 px-3 text-lg border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            type="text" disabled>
+                        <button class="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                            @click="copyToClipboard('14DB6FEA-6475-44F7-B1D4-AEC4E295AA42')">
+                            {{ $t('utils.copy') }}
+                        </button>
+                    </div>
+                </div>
+            </template>
+            <template v-else>
+                <p class="text-lg text-gray-500">
+                    {{ $t('history_page.no_scans') }}.
+                </p>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
-export default {
+import LocalStorage from '@/helpers/LocalStorage';
 
+export default {
+    data() {
+        return {
+            editableScanCode: null,
+            readonlyScanCode: null
+        }
+    },
+    methods: {
+        copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+        }
+    },
+    mounted() {
+        let codes = LocalStorage.TryGetLastCodes();
+
+        if (codes) {
+            this.editableScanCode = codes.editable;
+            this.readonlyScanCode = codes.readonly;
+        }
+    }
 };
 </script>

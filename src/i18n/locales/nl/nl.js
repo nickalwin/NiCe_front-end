@@ -60,6 +60,12 @@ export default {
         you_scored: "U scoorde",
         out_of: "van de",
     },
+    history_page: {
+        last_codes: "De unieke codes van uw laatste scan",
+        editable: "Bewerkbaar",
+        read_only: "Alleen lezen",
+        no_scans: "Geen scans gevonden",
+    },
     fields: {
         first_name: "Voornaam",
         your_first_name: "Uw voornaam",
@@ -89,6 +95,7 @@ export default {
         next: "Volgende",
         view: "Bekijken",
         loading: "Laden...",
+        copy: "Kopiëren",
     },
     errors: {
         missing_fields: "Vul alle velden in",

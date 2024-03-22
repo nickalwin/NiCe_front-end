@@ -60,6 +60,12 @@ export default {
         you_scored: "You scored",
         out_of: "out of",
     },
+    history_page: {
+        last_codes: "Your last scan's unique codes",
+        editable: "Editable",
+        read_only: "Read only",
+        no_scans: "No scans found",
+    },
     fields: {
         first_name: "First name",
         your_first_name: "Your first name",
@@ -89,6 +95,7 @@ export default {
         next: "Next",
         view: "View",
         loading: "Loading...",
+        copy: "Copy",
     },
     errors: {
         missing_fields: "Please fill in all fields",

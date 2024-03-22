@@ -338,6 +338,10 @@ export default {
                 PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                     LocalStorage.ClearScanResults();
                     LocalStorage.ClearContactInfo();
+                    LocalStorage.SetLastCodes({
+                        editable: response.data.edit_code,
+                        readonly: response.data.view_code
+                    });
 
                     this.$router.push(RouteList.Result + "/" + response.data.uuid);
                 });
