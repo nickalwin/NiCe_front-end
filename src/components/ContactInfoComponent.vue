@@ -24,13 +24,7 @@
             <h2 class="text-2xl text-center text-black mb-4">
                 {{ $t("contact_info_component.send_us_a_message") }}
             </h2>
-            <div v-if="successMessage" class="mb-4 text-green-500"> <!-- TODO - add error popups instead of this -->
-                {{ successMessage }}
-            </div>
-            <div v-if="errorMessage" class="mb-4 text-red-500">
-                {{ errorMessage }}
-            </div>
-            <form @submit.prevent="submitForm" ref="contactForm">
+            <div ref="contactForm">
                 <div class="flex">
                     <div class="w-1/2 mr-3">
                         <div class="mb-4">
@@ -104,16 +98,19 @@
                 <div class="flex items-center justify-end">
                     <PrimaryButton
                         :label="$t('utils.send')"
-                        @onClick="submitForm"
+                        @onClick="submit"
                     />
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
+import PopupHelper from "@/helpers/PopupHelper.js";
+import i18n from '../i18n/index.js';
+import axios from "axios";
 
 export default {
     name: 'ContactInfoComponent',
@@ -130,44 +127,40 @@ export default {
                 subject: '',
                 message: ''
             },
-            successMessage: '',
-            errorMessage: ''
-
         };
     },
     methods: {
-        async submitForm() {
-            try {
-                const response = await fetch('https://localhost:44333/api/Mail', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.formData)
-                });
+        cleanForm() {
+            this.formData = {
+                firsName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                subject: '',
+                message: ''
+            };
+        },
+        submit() {
+            if (
+                !this.formData.firsName ||
+                !this.formData.lastName ||
+                !this.formData.email ||
+                !this.formData.subject
+            ) {
+                PopupHelper.DisplayErrorPopup(i18n.global.t('errors.missing_fields'));
 
-                if (!response.ok) {
-                    const errorMessage = await response.text();
-                    throw new Error(`Failed to submit form: ${errorMessage}`);
-                }
-
-
-                this.successMessage = 'Form submitted successfully';
-
-                setTimeout(() => {
-                    this.successMessage = '';
-                }, 3000);
-
-                this.$refs.contactForm.reset();
-            } catch (error) {
-                console.error('Error submitting form:', error);
-
-                this.errorMessage = 'Form unsuccesfull';
-
-                setTimeout(() => {
-                    this.errorMessage = '';
-                }, 3000);
+                return;
             }
+
+            axios.post('/api/Mail', {
+                ...this.formData
+            }).then(() => {
+                PopupHelper.DisplaySuccessPopup(i18n.global.t('success.mail_sent'));
+            }).catch(() => {
+                PopupHelper.DisplayErrorPopup(i18n.global.t('errors.mail_not_sent'));
+            }).finally(() => {
+                this.cleanForm();
+            });
         }
     }
 };

@@ -5,9 +5,9 @@
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
-        <div class="hero mt-10">
-            <PrimaryButton :label="$t('results_page.download_pdf')" />
-        </div>
+        <!-- <div class="hero mt-10">
+            <PrimaryButton :label="$t('results_page.download_pdf')" />  TODO
+        </div> -->
         <div class="hero mt-10">
             <p class="text-lg">
                 {{ $t('results_page.main_text') }}
@@ -21,16 +21,18 @@
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
+        <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categories" />
         <div v-if="plotData" class="results-container mt-10">
-            <div class="result-card" v-for="(label, index) in plotData.labels" :key="index">
-            <h3 class="result-label">{{ label }}</h3>
-            <p class="result-score">
-                {{ $t('results_page.you_scored') }}
-                <strong>{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
-                {{ $t('results_page.out_of') }} 5.
-            </p>
+            <div class="result-card bg-white shadow-md rounded-lg p-4 mb-4" v-for="(label, index) in plotData.labels" :key="index">
+                <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
+                <p class="result-score text-gray-600">
+                    {{ $t('results_page.you_scored') }}
+                    <strong class="text-blue-600">{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
+                    {{ $t('results_page.out_of') }} 5.
+                </p>
             </div>
         </div>
+        <ContactInfoComponent class="mt-10" />
     </LoadingTemplate>
 </template>
 
@@ -41,12 +43,14 @@ import RouteList from "@/helpers/RouteList.js";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import LoadingTemplate from '@/components/utils/LoadingTemplate.vue';
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
+import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
+import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default {
     components: {
-        Bar, LoadingTemplate, PrimaryButton,
+        Bar, LoadingTemplate, PrimaryButton, ContactInfoComponent, CategoryQuestionTableComponent,
     },
     data() {
         return {

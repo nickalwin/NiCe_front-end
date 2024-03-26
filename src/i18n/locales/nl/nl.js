@@ -83,6 +83,10 @@ export default {
         somebodys_scan: "'s scan",
         statement: "Verklaring",
         question: "Vraag",
+        questions: "Vragen",
+        answers: "Antwoorden",
+        comments: "Opmerkingen",
+        actions: "Acties",
     },
     utils: {
         optional: "Optioneel",
@@ -96,10 +100,24 @@ export default {
         view: "Bekijken",
         loading: "Laden...",
         copy: "Kopiëren",
+        save: "Opslaan",
+        try_again: "Probeer opnieuw",
+        edit: "Bewerk",
+        copied_to_clipboard: "Gekopieerd naar klembord",
+        no_comment: "Geen opmerking",
+        edit_score: "Score bewerken 1-5",
     },
     errors: {
+        error: "Fout",
+        oh_no_smth_wrong: "Oh nee, er is iets misgegaan!",
         missing_fields: "Vul alle velden in",
         invalid_email: "Voer een geldig e-mailadres in",
         missing_ucode: "Vul een unieke code in",
+        mail_not_sent: "Mail kon niet worden verzonden",
+    },
+    success: {
+        success: "Succes",
+        operation_success: "De operatie is geslaagd!",
+        mail_sent: "Mail succesvol verzonden!",
     }
 }

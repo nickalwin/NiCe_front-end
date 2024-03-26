@@ -64,7 +64,7 @@
                             <img :src="current_question.image" alt="No image provided" />
 
                             <div class="rating rating-lg flex items-center justify-center">
-                                <div class="text-xl2 font-bold text-blue-600">
+                                <div class="text-lg font-semibold text-gray-600">
                                     {{ $t('scan_page.low_score') }}
                                 </div>
                                 <div class="flex justify-center mx-4">
@@ -81,10 +81,9 @@
                                     <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
                                         v-model="current_question.answer" />
                                 </div>
-                                <div class="text-xl2 font-bold text-blue-600">
+                                <div class="text-lg font-semibold text-gray-600">
                                     {{ $t('scan_page.high_score') }}
                                 </div>
-
                             </div>
                             <div class="tooltip-container">
                                 <div class="tooltip tooltip-info" :data-tip="$t('scan_page.give_extra_feedback')">

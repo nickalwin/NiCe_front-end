@@ -66,7 +66,9 @@
                 </li>
                 <li>
                     <div class="dropdown">
-                        <div tabindex="0" role="button">{{ $i18n.locale }}</div>
+                        <div tabindex="0" role="button">
+                            {{ $i18n.locale }} <FontAwesomeIcon icon="fa-caret-down" />
+                        </div>
                         <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
                             <li v-for="(lang, i) in langs" :key="`Lang${i}`" v-on:click="setLang(lang)">
                                 <strong>{{ lang }}</strong>

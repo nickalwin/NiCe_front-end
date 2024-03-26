@@ -14,7 +14,7 @@
                         class="flex-grow mr-2 py-2 px-3 text-lg border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         type="text" disabled>
                     <button class="py-2 px-4 bg-indigo-500 text-white rounded-md"
-                        @click="copyToClipboard('14DB6FEA-6475-44F7-B1D4-AEC4E295AA42')">
+                        @click="copyToClipboard(editableScanCode)">
                         {{ $t('utils.copy') }}
                     </button>
                     </div>
@@ -28,7 +28,7 @@
                             class="flex-grow mr-2 py-2 px-3 text-lg border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             type="text" disabled>
                         <button class="py-2 px-4 bg-indigo-500 text-white rounded-md"
-                            @click="copyToClipboard('14DB6FEA-6475-44F7-B1D4-AEC4E295AA42')">
+                            @click="copyToClipboard(readonlyScanCode)">
                             {{ $t('utils.copy') }}
                         </button>
                     </div>
@@ -45,6 +45,7 @@
 
 <script>
 import LocalStorage from '@/helpers/LocalStorage';
+import PopupHelper from "@/helpers/PopupHelper.js";
 
 export default {
     data() {
@@ -56,6 +57,8 @@ export default {
     methods: {
         copyToClipboard(text) {
             navigator.clipboard.writeText(text);
+
+            PopupHelper.DisplaySuccessPopup(this.$t('utils.copied_to_clipboard'));
         }
     },
     mounted() {

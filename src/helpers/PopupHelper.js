@@ -11,9 +11,9 @@ class SwalHelper {
      * @param {Function} [afterCallback=() => {}] - The callback function to execute after the user confirms the popup.
      * @returns {void}
      */
-    static DisplaySuccessPopup(text = 'Operation was successful!', afterCallback = () => {}) {
+    static DisplaySuccessPopup(text = i18n.global.t('success.operation_success'), afterCallback = () => {}) {
         Swal.fire({
-            title: 'Success!',
+            title: i18n.global.t('success.success'),
             text: text,
             icon: 'success',
             confirmButtonText: 'OK',
@@ -30,9 +30,9 @@ class SwalHelper {
      * @param {Function} [afterCallback=() => {}] - The callback function to execute after the user confirms the popup.
      * @returns {void}
     */
-    static DisplayErrorPopup(text = 'Oh no, something went wrong!', afterCallback = () => {}) {
+    static DisplayErrorPopup(text = i18n.global.t('errors.oh_no_smth_wrong'), afterCallback = () => {}) {
         Swal.fire({
-            title: 'Error!',
+            title: i18n.global.t('errors.error'),
             text: text,
             icon: 'error',
         }).then(() => {
@@ -40,14 +40,14 @@ class SwalHelper {
         })
     }
 
-    static DisplayErrorPopupWithTryAgain(text = 'Oh no, something went wrong!', againCallback = () => {}) {
+    static DisplayErrorPopupWithTryAgain(text = i18n.global.t('errors.error'), againCallback = () => {}) {
         Swal.fire({
-            title: 'Error!',
+            title: i18n.global.t('errors.error'),
             text: text,
             icon: 'error',
             showCancelButton: true,
-            confirmButtonText: 'Try again',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: i18n.global.t('utils.try_again'),
+            cancelButtonText: i18n.global.t('utils.cancel'),
         }).then((result) => {
             if (result.isConfirmed) {
                 againCallback();
@@ -56,7 +56,7 @@ class SwalHelper {
     }
 
     static DisplaySectorPopup(
-        text = 'Operation was successful!', sectors = [], locale = 'nl', skippable = true,
+        text = i18n.global.t('success.operation_success'), sectors = [], locale = 'nl', skippable = true,
         confirmedCallback = () => {}, dismissedCallback = () => {}
     ) {
         Swal.fire({
@@ -127,12 +127,12 @@ class SwalHelper {
     }
 
 
-    static DisplayEmailEditPopup(text = 'Operation was successful!', email = '', afterCallback = () => {}) {
+    static DisplayEmailEditPopup(text = i18n.global.t('success.operation_success'), email = '', afterCallback = () => {}) {
         Swal.fire({
             text: text,
             input: 'email',
             inputValue: email,
-            confirmButtonText: 'Save',
+            confirmButtonText: i18n.global.t('utils.save'),
             showCancelButton: true,
             allowOutsideClick: () => !Swal.isLoading() // Disable clicking outside to close the modal while loading
         }).then((result) => {

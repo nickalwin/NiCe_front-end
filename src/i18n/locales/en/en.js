@@ -83,6 +83,10 @@ export default {
         somebodys_scan: "'s scan",
         statement: "Statement",
         question: "Question",
+        questions: "Questions",
+        answers: "Answers",
+        comments: "Comments",
+        actions: "Actions",
     },
     utils: {
         optional: "Optional",
@@ -96,10 +100,24 @@ export default {
         view: "View",
         loading: "Loading...",
         copy: "Copy",
+        save: "Save",
+        try_again: "Try again",
+        edit: "Edit",
+        copied_to_clipboard: "Copied to clipboard",
+        no_comment: "No comment",
+        edit_score: "Edit score 1-5",
     },
     errors: {
+        error: "Error",
+        oh_no_smth_wrong: "Oh no, something went wrong!",
         missing_fields: "Please fill in all fields",
         invalid_email: "Please enter a valid email address",
         missing_scan_code: "Please enter a valid scan code",
+        mail_not_sent: "Mail could not be sent",
+    },
+    success: {
+        success: "Success",
+        operation_success: "Operation was successful!",
+        mail_sent: "Mail sent successfully!",
     }
 }
