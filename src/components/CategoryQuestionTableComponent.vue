@@ -28,7 +28,7 @@
 
                     </div>
                     <tbody>
-                        <tr v-for="(question, qIndex) in selectedGroup.questions.grouped_answers" :key="qIndex">
+                        <tr v-for="(question, qIndex) in selectedGroup.questions.grouped_answers" :key="qIndex" class="transition-colors duration-200 hover:bg-blue-100">
                             <td class="border px-4 py-2">
                                 <ul>
                                     <li>
@@ -79,15 +79,15 @@ export default {
         }
     },
     methods: {
-        getLocalizedQuestionName(questionData) {
-            var data = JSON.parse(questionData.question_data);
+        getLocalizedQuestionName(question) {
+            var data = JSON.parse(question.question_data);
 
             return data[this.$i18n.locale] ?
                     data[this.$i18n.locale].question :
                     data.en.question;
         },
-        getLocalizedCategoryName(categoryData) {
-            var data = categoryData.data;
+        getLocalizedCategoryName(category) {
+            var data = JSON.parse(category.category_data);
 
             return data[this.$i18n.locale] ?
                 data[this.$i18n.locale].name :
@@ -126,14 +126,18 @@ export default {
     },
     mounted() {
         this.data.forEach((question) => {
-            let category = this.categories.find((category) => {
-                return category.uuid === question.category_uuid;
+            let category = this.categories.find((d) => {
+                return d.category.category_uuid === question.category_uuid;
             });
 
             this.groupedQuestions.push({
-                category: category,
+                ...category,
                 questions: question
             });
+        });
+
+        this.groupedQuestions = this.groupedQuestions.sort((a, b) => {
+            return a.category.mean - b.category.mean;
         });
 
         this.selectedGroup = this.groupedQuestions[0];

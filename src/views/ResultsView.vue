@@ -21,7 +21,7 @@
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
-        <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categories" />
+        <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categoriesWithMeans" />
         <div v-if="plotData" class="results-container mt-10">
             <div class="result-card bg-white shadow-md rounded-lg p-4 mb-4" v-for="(label, index) in plotData.labels" :key="index">
                 <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
@@ -75,7 +75,8 @@ export default {
                     }
                 },
             },
-            isLoadingResults: false
+            isLoadingResults: false,
+            categoriesWithMeans: null,
         }
     },
     methods: {
@@ -103,6 +104,8 @@ export default {
                 let allLabels = [];
                 let allData = [];
 
+                this.categoriesWithMeans = [];
+
                 results.forEach((category) => {
                     var data = JSON.parse(category.category_data);
 
@@ -110,6 +113,10 @@ export default {
                         this.getLocalizedCategoryName(data)
                     );
                     allData.push(category.mean);
+
+                    this.categoriesWithMeans.push({
+                        category: category,
+                    });
                 });
 
                 var averageResults = JSON.parse(this.scan.average_results);
