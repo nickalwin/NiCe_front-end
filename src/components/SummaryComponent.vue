@@ -9,7 +9,7 @@
     </div>
     <div class="py-12">
         <div class="container mx-auto">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 ">
                 <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-4 flex">
                     <span class="mr-2 text-blue-600">&#10003;</span>
                     <div>
