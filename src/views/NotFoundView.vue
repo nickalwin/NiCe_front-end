@@ -1,9 +1,32 @@
 <template>
-    <div class="flex flex-col items-center justify-center h-screen text-gray-600">
-        <h1 class="text-6xl font-semibold">404</h1>
-        <p class="text-2xl">Page Not Found</p>
-        <p class="mt-2">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
+    <div class="flex flex-col items-center justify-center text-gray-600 mt-52 px-4 sm:px-0">
+        <h1 class="text-4xl sm:text-6xl font-semibold transition-all duration-500 ease-in-out">
+            404
+        </h1>
 
-        <router-link to="/" class="mt-8 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Go to Home Page</router-link>
+        <p class="text-xl sm:text-2xl mt-4 transition-all duration-500 ease-in-out">
+            {{ $t("not_found_page.not_found") }}
+        </p>
+
+        <p class="mt-2 transition-all duration-500 ease-in-out">
+            {{ $t("not_found_page.not_found_desc") }}
+        </p>
+
+        <PrimaryRouterLink
+            :to="'/'"
+            :label="$t('not_found_page.go_home')"
+            class="mt-4 px-4 py-2 rounded bg-blue-500 text-white transition-all duration-500 ease-in-out hover:bg-blue-700"
+        />
     </div>
 </template>
+
+<script>
+import PrimaryRouterLink from "@/components/router-links/PrimaryRouterLink.vue";
+
+export default {
+    name: "NotFoundView",
+    components: {
+        PrimaryRouterLink,
+    },
+};
+</script>

@@ -1,6 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
 import Swal from 'sweetalert2';
+import i18n from '../i18n/index.js';
 
 /**
  * Helper class for displaying Swal popups.
@@ -12,9 +11,9 @@ class SwalHelper {
      * @param {Function} [afterCallback=() => {}] - The callback function to execute after the user confirms the popup.
      * @returns {void}
      */
-    static DisplaySuccessPopup(text = 'Operation was successful!', afterCallback = () => {}) {
+    static DisplaySuccessPopup(text = i18n.global.t('success.operation_success'), afterCallback = () => {}) {
         Swal.fire({
-            title: 'Success!',
+            title: i18n.global.t('success.success'),
             text: text,
             icon: 'success',
             confirmButtonText: 'OK',
@@ -31,9 +30,9 @@ class SwalHelper {
      * @param {Function} [afterCallback=() => {}] - The callback function to execute after the user confirms the popup.
      * @returns {void}
     */
-    static DisplayErrorPopup(text = 'Oh no, something went wrong!', afterCallback = () => {}) {
+    static DisplayErrorPopup(text = i18n.global.t('errors.oh_no_smth_wrong'), afterCallback = () => {}) {
         Swal.fire({
-            title: 'Error!',
+            title: i18n.global.t('errors.error'),
             text: text,
             icon: 'error',
         }).then(() => {
@@ -41,23 +40,40 @@ class SwalHelper {
         })
     }
 
+    static DisplayErrorPopupWithTryAgain(text = i18n.global.t('errors.error'), againCallback = () => {}) {
+        Swal.fire({
+            title: i18n.global.t('errors.error'),
+            text: text,
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: i18n.global.t('utils.try_again'),
+            cancelButtonText: i18n.global.t('utils.cancel'),
+        }).then((result) => {
+            if (result.isConfirmed) {
+                againCallback();
+            }
+        })
+    }
+
     static DisplaySectorPopup(
-        text = 'Operation was successful!', sectors = [], skippable = true,
+        text = i18n.global.t('success.operation_success'), sectors = [], locale = 'nl', skippable = true,
         confirmedCallback = () => {}, dismissedCallback = () => {}
     ) {
         Swal.fire({
-            title: 'Fill in info',
+            title: i18n.global.t('utils.fill_in_info'),
             text: text,
             html:
                 `<div class="swal2-content">
-                    <input id="swal-input-name" class="swal2-input" placeholder="Scan Name" type="text">
-                    <input id="swal-input-email" class="swal2-input" placeholder="Email Address" type="email">
+                    <input id="swal-input-name" class="swal2-input" placeholder="${i18n.global.t('fields.scan_name')}" type="text">
+                    <input id="swal-input-email" class="swal2-input" placeholder="${i18n.global.t('fields.email')}" type="email">
                     <select id="swal-dropdown" class="swal2-select">
-                        <option value="" disabled selected>Select sector</option>
-                        ${sectors.map(sector => `<option value="${sector}">${sector}</option>`).join('')}
+                        <option value="" disabled selected>${i18n.global.t('utils.select_sector')}</option>
+                        ${sectors.map(sector => `<option value="${sector.id}">
+                        ${sector.data[locale].name}</option>`).join('')}
                     </select>
                 </div>`,
-            confirmButtonText: 'Continue',
+            confirmButtonText: i18n.global.t('utils.continue'),
+            cancelButtonText: i18n.global.t('utils.cancel'),
             showCancelButton: true,
             allowOutsideClick: skippable,
             customClass: {
@@ -69,12 +85,12 @@ class SwalHelper {
                 const sectorInput = document.getElementById('swal-dropdown').value;
 
                 if (!nameInput || !emailInput || !sectorInput) {
-                    Swal.showValidationMessage('Please fill in all fields');
+                    Swal.showValidationMessage(i18n.global.t('errors.missing_fields'));
                     return false;
                 }
 
                 if (!emailInput.match(/^\S+@\S+\.\S+$/)) {
-                    Swal.showValidationMessage('Please enter a valid email address');
+                    Swal.showValidationMessage(i18n.global.t('errors.invalid_email'));
                     return false;
                 }
 
@@ -88,17 +104,19 @@ class SwalHelper {
             }
         });
     }
-    static DisplayUniqueCodePopup(text, afterCallback = () => {}) {
+    static DisplayUniqueCodePopup(afterCallback = () => {}) {
         Swal.fire({
-            title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${text}`,
+            title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${
+                i18n.global.t('utils.fill_in_ucode')
+            }`,
             input: 'text',
-            confirmButtonText: 'Visit',
+            confirmButtonText: i18n.global.t('utils.continue'),
             preConfirm: (uniqueCode) => {
                 if (!uniqueCode) {
-                    Swal.showValidationMessage('Please enter a unique code');
+                    Swal.showValidationMessage(i18n.global.t('errors.missing_ucode'));
+
                     return false;
                 }
-                return ["test", "test@test.nl", "Technology"];
             },
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
@@ -109,12 +127,12 @@ class SwalHelper {
     }
 
 
-    static DisplayEmailEditPopup(text = 'Operation was successful!', email = '', afterCallback = () => {}) {
+    static DisplayEmailEditPopup(text = i18n.global.t('success.operation_success'), email = '', afterCallback = () => {}) {
         Swal.fire({
             text: text,
             input: 'email',
             inputValue: email,
-            confirmButtonText: 'Save',
+            confirmButtonText: i18n.global.t('utils.save'),
             showCancelButton: true,
             allowOutsideClick: () => !Swal.isLoading() // Disable clicking outside to close the modal while loading
         }).then((result) => {

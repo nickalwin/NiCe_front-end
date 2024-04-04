@@ -2,7 +2,7 @@
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
         <div v-if="name && email && selectedSector" class="flex justify-between p-5">
             <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
-                {{ name }}'s scan
+                {{ name }} {{ $t('fields.somebodys_scan') }}
             </h1>
             <div class="flex m-1">
                 <div class="input input-disabled mx-1">
@@ -11,9 +11,15 @@
                         <FontAwesomeIcon icon="fa-edit" />
                     </span>
                 </div>
-                <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
-                    <option v-for="sector in sectors" :key="sector" :value="sector">{{ sector }}</option>
-                </select>
+                <span class="select select-bordered bg-transparent mx-1 rounded p-2">
+                    {{ getLocalizedSectorName(selectedSector) }}
+                </span>
+                <!-- TODO proper email and sector change! -->
+                <!-- <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
+                    <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
+                        {{ getLocalizedSectorName(sector) }}
+                    </option>
+                </select> -->
             </div>
         </div>
         <div class="flex justify-center">
@@ -22,7 +28,8 @@
                     <li v-for="(question, index) in current_category.questions"
                         :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
                         :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.uuid) }">
+                        v-on:click="() => { jumpToQuestion(question.uuid) }"
+                    >
                         {{ index + 1 }}
                     </li>
                 </ul>
@@ -33,25 +40,34 @@
             <div class="flex-grow md:flex-shrink md:w-2/3">
                 <div class="card flex-grow">
                     <div class="bg-base-100 shadow-xl">
-                        <div class="card-body">
+                        <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
                                 <h2 class="card-title">
-                                    {{ current_question.is_statement ? 'Statement' : 'Question' }}
+                                    {{
+                                        current_question.is_statement ?
+                                        $t('fields.statement') :
+                                        $t('fields.question')
+                                    }}
                                 </h2>
-                                <div v-if="current_question.tooltip" class="tooltip tooltip-info"
-                                    :data-tip="current_question.tooltip">
+                                <div class="tooltip tooltip-info"
+                                    :data-tip="getLocalizedTooltip()">
                                     <button class="btn btn-info rounded-full">
                                         <FontAwesomeIcon icon="fa-info" />
                                     </button>
                                 </div>
                             </div>
 
-                            <p>{{ current_question.text }}</p>
+                            <p>
+                                {{ getLocalizedQuestion() }}
+                            </p>
 
                             <img :src="current_question.image" alt="No image provided" />
 
-                            <div class="rating rating-lg flex flex-col">
-                                <div>
+                            <div class="rating rating-lg flex items-center justify-center">
+                                <div class="text-lg font-semibold text-gray-600">
+                                    {{ $t('scan_page.low_score') }}
+                                </div>
+                                <div class="flex justify-center mx-4">
                                     <input type="radio" class="rating-hidden text-xl" value="-1"
                                         v-model="current_question.answer" />
                                     <input type="radio" class="mask mask-star-2 bg-gray-500 text-5xl" value="1"
@@ -65,43 +81,43 @@
                                     <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
                                         v-model="current_question.answer" />
                                 </div>
-                                <div class="flex justify-between w-52  min-w-min">
-                                    <div class="text-xs w-1/3">Helemaal niet van toepassing</div>
-                                    <div class="text-xs w-1/3">Volledig van toepassing</div>
+                                <div class="text-lg font-semibold text-gray-600">
+                                    {{ $t('scan_page.high_score') }}
                                 </div>
-
-                                <div class="tooltip-container">
-                                    <div class="tooltip tooltip-info" data-tip="Press to be able to give explanation.">
-                                        <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
-                                            <FontAwesomeIcon icon="fa-eye" />
-                                        </span>
-                                        <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
-                                            <FontAwesomeIcon icon="fa-eye-slash" />
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <textarea v-model="current_question.comment" v-if="!isEyeOpen"
-                                            class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                            placeholder="Add a comment..."></textarea>
-                                    </div>
+                            </div>
+                            <div class="tooltip-container">
+                                <div class="tooltip tooltip-info" :data-tip="$t('scan_page.give_extra_feedback')">
+                                    <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
+                                        <FontAwesomeIcon icon="fa-eye" />
+                                    </span>
+                                    <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
+                                        <FontAwesomeIcon icon="fa-eye-slash" />
+                                    </span>
                                 </div>
-                                <div class="card-actions justify-end">
-                                    <PrimaryButton :label="'Next'" :disabled="current_question.answer === -1"
-                                        @onClick="jumpToNextQuestion" />
+                                <div>
+                                    <textarea v-model="current_question.comment" v-if="!isEyeOpen"
+                                        class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
+                                        :placeholder="$t('scan_page.add_a_comment')"/>
                                 </div>
+                            </div>
+                            <div class="card-actions justify-end">
+                                <PrimaryButton :label="$t('utils.next')" :disabled="current_question.answer === -1"
+                                    @onClick="jumpToNextQuestion" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-                <div class="flex-grow md:max-w-1/4">
+                <div class="flex-grow md:max-w-1/4 lg:max-w-full">
                     <ul class="steps steps-vertical">
                         <li v-for="category in categories"
                             :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
                             :data-content="`${category.is_completed ? '✓' : '●'}`"
                             v-on:click="() => { jumpToCategory(category.uuid) }">
-                            {{ category.name }}
+                            <div class="text-xs sm:text-sm md:text-base">
+                                {{ getLocalizedCategoryName(category) }}
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -131,7 +147,7 @@ export default {
             current_question: {},
             isEyeOpen: true,
             loadingQuestions: false,
-            sectors: ['Technology', 'Finance', 'Healthcare'],
+            sectors: [],
             name: null,
             email: null,
             selectedSector: null,
@@ -199,7 +215,7 @@ export default {
             var answers = this.categories.map((c) => {
                 return {
                     category_uuid: c.uuid,
-                    category_name: c.name,
+                    category_data: c.data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
@@ -207,8 +223,7 @@ export default {
                             answer: q.answer,
                             comment: q.comment ?? null,
                             is_statement: q.is_statement,
-                            text: q.text,
-                            tooltip: q.tooltip,
+                            data: q.data,
                             image: q.image,
                         }
                     })
@@ -230,7 +245,7 @@ export default {
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
-                    name: c.category_name,
+                    data: c.category_data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
@@ -238,8 +253,7 @@ export default {
                             answer: q.answer,
                             comment: q.comment,
                             is_statement: q.is_statement,
-                            text: q.text,
-                            tooltip: q.tooltip,
+                            data: q.data,
                             image: q.image,
                         }
                     })
@@ -266,8 +280,7 @@ export default {
                         uuid: q.uuid,
                         image: q.image,
                         is_statement: q.statement,
-                        text: questionData.nl.question,
-                        tooltip: questionData.nl.tooltip,
+                        data: questionData,
                         answer: -1,
                         comment: null
                     }
@@ -279,7 +292,7 @@ export default {
                     } else {
                         category = {
                             uuid: q.category_uuid,
-                            name: q.category_name,
+                            data: JSON.parse(q.category_data),
                             is_completed: false,
                             questions: [question]
                         }
@@ -324,6 +337,10 @@ export default {
                 PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                     LocalStorage.ClearScanResults();
                     LocalStorage.ClearContactInfo();
+                    LocalStorage.SetLastCodes({
+                        editable: response.data.edit_code,
+                        readonly: response.data.view_code
+                    });
 
                     this.$router.push(RouteList.Result + "/" + response.data.uuid);
                 });
@@ -344,6 +361,42 @@ export default {
 
                 this.email = result;
             });
+        },
+        loadSectorsFromAPI() {
+            return axios.get('/api/sectors', {
+
+            }).then((response) => {
+                let sectors = response.data;
+
+                sectors.forEach((sector) => {
+                    this.sectors.push({
+                        id: sector.id,
+                        data: JSON.parse(sector.data),
+                    });
+                });
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
+        },
+        getLocalizedQuestion() {
+            return this.current_question.data[this.$i18n.locale] ?
+                    this.current_question.data[this.$i18n.locale].question :
+                    this.current_question.data['nl'].question
+        },
+        getLocalizedTooltip() {
+            return this.current_question.data[this.$i18n.locale] ?
+                    this.current_question.data[this.$i18n.locale].tooltip :
+                    this.current_question.data['nl'].tooltip
+        },
+        getLocalizedCategoryName(category) {
+            return category.data[this.$i18n.locale] ?
+                    category.data[this.$i18n.locale].name :
+                    category.data['nl'].name;
+        },
+        getLocalizedSectorName(sector) {
+            return sector.data[this.$i18n.locale] ?
+                    sector.data[this.$i18n.locale].name :
+                    sector.data['nl'].name;
         }
     },
     mounted() {
@@ -356,19 +409,31 @@ export default {
             this.email = data.email;
             this.selectedSector = data.sector;
         } else {
-            PopupHelper.DisplaySectorPopup('Enter scan information', this.sectors, false, (Result) => {
+            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
+                'Enter scan information', sectors, this.$i18n.locale, false,
+                (Result) =>
+            {
+                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
+
                 LocalStorage.SetContactInfo({
                     name: Result[0],
                     email: Result[1],
-                    sector: Result[2]
+                    sector: sector,
                 });
 
                 this.name = Result[0];
                 this.email = Result[1];
-                this.selectedSector = Result[2];
+                this.selectedSector = sector;
             }, () => {
                 this.$router.push(RouteList.Home);
             });
+
+            if (!this.sectors.length)
+                this.loadSectorsFromAPI().then(() => {
+                    popup(this.sectors);
+                });
+            else
+                popup(this.sectors);
         }
 
         this.loadQuestions();
