@@ -330,7 +330,7 @@ export default {
 
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
-                sector_id: 1,
+                sector_id: this.selectedSector.id,
                 contact_name: this.name,
                 contact_email: this.email,
             }).then((response) => {

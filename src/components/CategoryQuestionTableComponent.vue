@@ -96,7 +96,6 @@ export default {
         editScorePopup(question) {
             let currentAnswer = question.answer;
             let currentComment = question.comment;
-
             Swal.fire({
                 title: this.$t('utils.edit_score'),
                 showCancelButton: true,
