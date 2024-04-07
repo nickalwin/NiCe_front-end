@@ -122,6 +122,7 @@
                     </ul>
                 </div>
             </div>
+            <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
         </div>
         <div class="mt-10">
             <SummaryComponent />
@@ -397,7 +398,14 @@ export default {
             return sector.data[this.$i18n.locale] ?
                     sector.data[this.$i18n.locale].name :
                     sector.data['nl'].name;
-        }
+        },
+        // debugAnswerAllQuestions() {
+        //     this.categories.forEach((category) => {
+        //         category.questions.forEach((question) => {
+        //             question.answer = 5;
+        //         });
+        //     });
+        // }
     },
     mounted() {
         LocalStorage.ActiveCheck();

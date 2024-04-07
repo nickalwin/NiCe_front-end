@@ -9,6 +9,7 @@ export default {
         scan_code_is_valid: "Scan code is valid",
         scan_visitable: "You can now visit the scan",
         scan_editable: "You can now edit the scan",
+        pick_language: "Pick a language",
     },
     summary_component: {
         all_in_one: "All-in-one platform",

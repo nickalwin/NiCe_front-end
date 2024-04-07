@@ -1,12 +1,13 @@
 <template>
     <div class="navbar" style="background-color: var(--color-ternary)">
         <div class="navbar-start">
+            <img src="/LeftNavIcon.png" alt="" width="80"/>
+
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                 </div>
+
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li class="hover:bg-gray-200">
                         <RouterLink to="/">
@@ -31,34 +32,40 @@
                             {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
                         </a>
                     </li>
-                    <li class="hover:bg-gray-200" v-on:click="setLang('en')">
-                        <div class="row">
-                            <div class="col">
-                                <strong>EN</strong>
+                    <li>
+                        <a>{{ $t('navbar_component.pick_language') }}</a>
+                        <ul class="p-2">
+                            <li>
+                        <li class="hover:bg-gray-200" v-on:click="setLang('en')">
+                            <div class="row">
+                                <div class="col">
+                                    <strong>EN</strong>
+                                </div>
+                                <div class="col">
+                                    <img src="/uk_flag.png" alt="" width="20"/>
+                                </div>
                             </div>
-                            <div class="col">
-                                <img src="/uk_flag.png" alt="" width="20"/>
+                        </li>
+                        <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
+                            <div class="row">
+                                <div class="col">
+                                    <strong>NL</strong>
+                                </div>
+                                <div class="col">
+                                    <img src="/nl_flag.png" alt="" width="20"/>
+                                </div>
                             </div>
-                        </div>
+                        </li>
                     </li>
-                    <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
-                        <div class="row">
-                            <div class="col">
-                                <strong>NL</strong>
-                            </div>
-                            <div class="col">
-                                <img src="/nl_flag.png" alt="" width="20"/>
-                            </div>
-                        </div>
+                        </ul>
                     </li>
                 </ul>
             </div>
-
-            <img src="/LeftNavIcon.png" alt="" width="50"/>
         </div>
-        <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1 text-xl font-bold text-gray-500">
-                <li>
+
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1">
+                    <li>
                     <RouterLink to="/">
                         {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
                     </RouterLink>
@@ -111,12 +118,12 @@
                         </ul>
                     </div>
                 </li>
-            </ul>
+                </ul>
+            </div>
+            <div class="navbar-end">
+                <img src="/RightNavIcon.png" alt="" width="140"/>
+            </div>
         </div>
-        <div class="navbar-end">
-            <img src="/RightNavIcon.png" alt="" width="140"/>
-        </div>
-    </div>
 </template>
 
 <script>
@@ -227,3 +234,23 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+@media screen and (max-width: 768px) {
+    .navbar-end img {
+        width: 100px;
+    }
+    .navbar-start img {
+        width: 40px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar-end img {
+        width: 60px;
+    }
+    .navbar-start img {
+        width: 20px;
+    }
+}
+</style>
