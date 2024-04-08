@@ -1,9 +1,11 @@
 class ColorHelper
 {
     static GetColorForAnswer(answer) {
+        answer = Math.round(answer);
+
         switch (answer) {
             case 0:
-                return 'bg-blue-500';
+                return 'bg-red-600';
             case 1:
                 return 'bg-red-500';
             case 2:
@@ -20,9 +22,11 @@ class ColorHelper
     }
 
     static GetTextColorForAnswer(answer) {
+        answer = Math.round(answer);
+
         switch (answer) {
             case 0:
-                return 'text-blue-500';
+                return 'text-red-600';
             case 1:
                 return 'text-red-500';
             case 2:

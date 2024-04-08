@@ -51,7 +51,7 @@
         <div class="mt-10">
             <SummaryComponent />
         </div>
-        <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
+        <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
     </LoadingTemplate>
 </template>
 
@@ -327,10 +327,12 @@ export default {
         },
         debugAnswerAllQuestions() {
             this.categories.forEach((category) => {
+                category.is_completed = true;
                 category.questions.forEach((question) => {
-                    question.answer = 5;
+                    question.answer = Math.floor(Math.random() * 5);
                 });
             });
+            this.onScanCompleted();
         }
     },
     mounted() {

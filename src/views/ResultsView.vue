@@ -24,22 +24,12 @@
 
         <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categoriesWithMeans" />
 
-        <div v-if="plotData" class="results-container mt-10">
-            <div v-for="(label, index) in plotData.labels" :key="index"
-            class="collapse collapse-plus result-card bg-white shadow-md rounded-lg p-4 mb-4">
-                <input type="radio" name="label" checked="checked" />
-                <div class="collapse-title text-xl font-medium">
-                    <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
-                </div>
-                <div class="collapse-content">
-                    <p class="result-score text-gray-600">
-                        {{ $t('results_page.you_scored') }}
-                        <strong class="text-blue-600">{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
-                        {{ $t('results_page.out_of') }} 5.
-                    </p>
-                </div>
-            </div>
-        </div>
+        <CategoryDetailInfo v-if="plotData"
+            :data="plotData" class="mt-10"
+            :allLabelsWithCategoryUuid="allLabelsWithCategoryUuid"
+            :categories="scan.data"
+        />
+
         <ContactInfoComponent class="mt-10" />
     </LoadingTemplate>
 </template>
@@ -53,18 +43,21 @@ import LoadingTemplate from '@/components/utils/LoadingTemplate.vue';
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
+import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default {
     components: {
         Bar, LoadingTemplate, PrimaryButton, ContactInfoComponent, CategoryQuestionTableComponent,
+        CategoryDetailInfo,
     },
     data() {
         return {
             categories: [],
             scan: null,
             plotData: null,
+            allLabelsWithCategoryUuid: [],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -120,6 +113,12 @@ export default {
                     allLabels.push(
                         this.getLocalizedCategoryName(data)
                     );
+
+                    this.allLabelsWithCategoryUuid.push({
+                        label: this.getLocalizedCategoryName(data),
+                        uuid: category.category_uuid,
+                    });
+
                     allData.push(category.mean);
 
                     this.categoriesWithMeans.push({
