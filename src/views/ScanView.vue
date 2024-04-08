@@ -25,11 +25,12 @@
 
         <div class="flex w-full mt-10">
             <div class="flex-grow md:flex-shrink">
-                <div class="card flex-grow">
+                <div id="questionCard" class="card flex-grow lg:w-full mx-auto">
                     <div class="bg-base-100 shadow-xl">
                         <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
                                 <QuestionCardHeader :question="current_question"
+                                    :totalQuestions="totalQuestions"
                                     :questions="current_category.questions"
                                     :category="current_category"
                                     :categories="categories"
@@ -45,25 +46,12 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-                <div class="flex-grow md:max-w-1/4 lg:max-w-full">
-                    <ul class="steps steps-vertical">
-                        <li v-for="category in categories"
-                            :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
-                            :data-content="`${category.is_completed ? '✓' : '●'}`"
-                            v-on:click="() => { jumpToCategory(category.uuid) }">
-                            <div class="text-xs sm:text-sm md:text-base">
-                                {{ getLocalizedCategoryName(category) }}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
-            <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
         </div>
+
         <div class="mt-10">
             <SummaryComponent />
         </div>
+        <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
     </LoadingTemplate>
 </template>
 
@@ -91,6 +79,7 @@ export default {
             name: null,
             email: null,
             selectedSector: null,
+            totalQuestions: 0,
         }
     },
     methods: {
@@ -114,6 +103,8 @@ export default {
             }
 
             this.saveAnswersToLocalStorage();
+
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
         },
         areAllQuestionsFromCategoryAnswered(category) {
             return category.questions.every((q) => q.answer !== -1);
@@ -152,6 +143,8 @@ export default {
                     this.current_question = this.current_category.questions[this.current_category.questions.length - 1];
                 }
             }
+
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
         },
         saveAnswersToLocalStorage() {
             var answers = this.categories.map((c) => {
@@ -184,13 +177,18 @@ export default {
             }
         },
         loadQuestionsFromLocalStorage(answers) {
+            this.totalQuestions = 0;
+
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
                     data: c.category_data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
+                        this.totalQuestions++;
+
                         return {
+                            id: this.totalQuestions,
                             uuid: q.question_uuid,
                             answer: q.answer,
                             comment: q.comment,
@@ -215,10 +213,15 @@ export default {
             }).then((response) => {
                 var questions = response.data;
 
+                this.totalQuestions = 0;
+
                 questions.forEach((q) => {
                     var questionData = JSON.parse(q.data);
 
+                    this.totalQuestions++;
+
                     var question = {
+                        id: this.totalQuestions,
                         uuid: q.uuid,
                         image: q.image,
                         is_statement: q.statement,
@@ -322,13 +325,13 @@ export default {
                     sector.data[this.$i18n.locale].name :
                     sector.data['nl'].name;
         },
-        // debugAnswerAllQuestions() {
-        //     this.categories.forEach((category) => {
-        //         category.questions.forEach((question) => {
-        //             question.answer = 5;
-        //         });
-        //     });
-        // }
+        debugAnswerAllQuestions() {
+            this.categories.forEach((category) => {
+                category.questions.forEach((question) => {
+                    question.answer = 5;
+                });
+            });
+        }
     },
     mounted() {
         LocalStorage.ActiveCheck();

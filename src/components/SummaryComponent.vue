@@ -10,7 +10,7 @@
     <div class="py-12">
         <div class="container mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-                <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-6 m-2 rounded-lg shadow-xl">
+                <div v-for="(infoBox, index) in infoBoxes" :key="index" class="p-6 m-2 rounded-lg shadow-xl transform hover:-translate-y-1 transition duration-200">
                     <div class="flex items-center mb-2">
                         <span class="mr-2 text-blue-600">&#10003;</span>
                         <h3 class="text-lg sm:text-xl font-bold overflow-auto whitespace-normal break-words">
