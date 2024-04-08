@@ -18,6 +18,25 @@ class ColorHelper
                 return 'bg-gray-500';
         }
     }
+
+    static GetTextColorForAnswer(answer) {
+        switch (answer) {
+            case 0:
+                return 'text-blue-500';
+            case 1:
+                return 'text-red-500';
+            case 2:
+                return 'text-red-400';
+            case 3:
+                return 'text-yellow-500';
+            case 4:
+                return 'text-green-300';
+            case 5:
+                return 'text-green-500';
+            default:
+                return 'text-gray-500';
+        }
+    }
 }
 
 export default ColorHelper;

@@ -37,9 +37,16 @@
                                 </ul>
                             </td>
                             <td class="border px-4 py-2 text-center">
-                                <strong class="text-blue-600">
-                                    {{ question.answer }}
-                                </strong> / 5
+                                <template v-if="question.answer == 0">
+                                    X
+                                </template>
+                                <template v-else>
+                                    <div :class="`radial-progress ${getColorForAnswer(question.answer)}`"
+                                        :style="`--value: ${question.answer * 20}`" role="progressbar"
+                                    >
+                                        {{ question.answer }} / 5
+                                    </div>
+                                </template>
                             </td>
                             <td class="border px-4 py-2">
                                 <div v-if="question.comment == ''">
@@ -65,6 +72,7 @@
 </template>
 
 <script>
+import ColorHelper from '@/helpers/ColorHelper';
 import Swal from 'sweetalert2';
 
 export default {
@@ -121,6 +129,9 @@ export default {
                     // TODO: Use `score` and `comment` here
                 }
             });
+        },
+        getColorForAnswer(answer) {
+            return ColorHelper.GetTextColorForAnswer(answer);
         }
     },
     mounted() {

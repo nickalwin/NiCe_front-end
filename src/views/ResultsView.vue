@@ -5,9 +5,9 @@
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
-        <!-- <div class="hero mt-10">
-            <PrimaryButton :label="$t('results_page.download_pdf')" />  TODO
-        </div> -->
+        <div class="hero mt-10">
+            <PrimaryButton :label="$t('results_page.download_pdf')" />
+        </div>
         <div class="hero mt-10">
             <p class="text-lg">
                 {{ $t('results_page.main_text') }}
@@ -21,15 +21,23 @@
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
+
         <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categoriesWithMeans" />
+
         <div v-if="plotData" class="results-container mt-10">
-            <div class="result-card bg-white shadow-md rounded-lg p-4 mb-4" v-for="(label, index) in plotData.labels" :key="index">
-                <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
-                <p class="result-score text-gray-600">
-                    {{ $t('results_page.you_scored') }}
-                    <strong class="text-blue-600">{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
-                    {{ $t('results_page.out_of') }} 5.
-                </p>
+            <div v-for="(label, index) in plotData.labels" :key="index"
+            class="collapse collapse-plus result-card bg-white shadow-md rounded-lg p-4 mb-4">
+                <input type="radio" name="label" checked="checked" />
+                <div class="collapse-title text-xl font-medium">
+                    <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
+                </div>
+                <div class="collapse-content">
+                    <p class="result-score text-gray-600">
+                        {{ $t('results_page.you_scored') }}
+                        <strong class="text-blue-600">{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
+                        {{ $t('results_page.out_of') }} 5.
+                    </p>
+                </div>
             </div>
         </div>
         <ContactInfoComponent class="mt-10" />
@@ -179,12 +187,12 @@ export default {
                 labels: allLabels,
                 datasets: copy.datasets
             }
-        }
+        },
     },
     watch: {
         '$i18n.locale': function() {
             this.reloadBarChartTranslations();
-        }
+        },
     },
     mounted() {
         this.loadScanWithResults(this.$route.params.uuid);
