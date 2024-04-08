@@ -1,91 +1,106 @@
 <template>
     <div class="navbar" style="background-color: var(--color-ternary)">
         <div class="navbar-start">
-            <img src="/LeftNavIcon.png" alt="" width="80"/>
+            <img src="/LeftNavIcon.png" alt="" width="80" />
 
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
                 </div>
 
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li class="hover:bg-gray-200">
                         <RouterLink to="/">
-                            {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                            {{ $t('navbar_component.home_route') }}
+                            <FontAwesomeIcon icon="fa-house" />
                         </RouterLink>
                     </li>
                     <li class="hover:bg-gray-200">
                         <a v-on:click="HandleUniqueCode">
-                            {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                            {{ $t('navbar_component.unique_code') }}
+                            <FontAwesomeIcon icon="fa-key" />
                         </a>
                     </li>
                     <li class="hover:bg-gray-200">
                         <RouterLink to="/history">
-                            {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                            {{ $t('navbar_component.history_route') }}
+                            <FontAwesomeIcon icon="fa-bars" />
                         </RouterLink>
                     </li>
                     <li class="hover:bg-gray-200">
                         <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                            {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
+                            {{ $t('navbar_component.green_theme') }}
+                            <FontAwesomeIcon icon="fa-leaf" />
                         </a>
                         <a v-else v-on:click="setTheme('yellow')">
-                            {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
+                            {{ $t('navbar_component.yellow_theme') }}
+                            <FontAwesomeIcon icon="fa-sun" />
                         </a>
                     </li>
                     <li>
                         <a>{{ $t('navbar_component.pick_language') }}</a>
                         <ul class="p-2">
                             <li>
-                        <li class="hover:bg-gray-200" v-on:click="setLang('en')">
-                            <div class="row">
-                                <div class="col">
-                                    <strong>EN</strong>
+                            <li class="hover:bg-gray-200" v-on:click="setLang('en')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>EN</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/uk_flag.png" alt="" width="20" />
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <img src="/uk_flag.png" alt="" width="20"/>
+                            </li>
+                            <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>NL</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/nl_flag.png" alt="" width="20" />
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                        <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
-                            <div class="row">
-                                <div class="col">
-                                    <strong>NL</strong>
-                                </div>
-                                <div class="col">
-                                    <img src="/nl_flag.png" alt="" width="20"/>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
                     </li>
-                        </ul>
-                    </li>
+                </ul>
+                </li>
                 </ul>
             </div>
         </div>
 
-            <div class="navbar-center hidden lg:flex">
-                <ul class="menu menu-horizontal px-1">
-                    <li>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li>
                     <RouterLink to="/">
-                        {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                        {{ $t('navbar_component.home_route') }}
+                        <FontAwesomeIcon icon="fa-house" />
                     </RouterLink>
                 </li>
                 <li>
                     <a v-on:click="HandleUniqueCode">
-                        {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                        {{ $t('navbar_component.unique_code') }}
+                        <FontAwesomeIcon icon="fa-key" />
                     </a>
                 </li>
                 <li>
                     <RouterLink to="/history">
-                        {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                        {{ $t('navbar_component.history_route') }}
+                        <FontAwesomeIcon icon="fa-bars" />
                     </RouterLink>
                 </li>
                 <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                        {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
+                        {{ $t('navbar_component.green_theme') }}
+                        <FontAwesomeIcon icon="fa-leaf" />
                     </a>
                     <a v-else v-on:click="setTheme('yellow')">
-                        {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
+                        {{ $t('navbar_component.yellow_theme') }}
+                        <FontAwesomeIcon icon="fa-sun" />
                     </a>
                 </li>
                 <li>
@@ -101,7 +116,7 @@
                                         <strong>EN</strong>
                                     </div>
                                     <div class="col">
-                                        <img src="/uk_flag.png" alt="" width="20"/>
+                                        <img src="/uk_flag.png" alt="" width="20" />
                                     </div>
                                 </div>
                             </li>
@@ -111,19 +126,19 @@
                                         <strong>NL</strong>
                                     </div>
                                     <div class="col">
-                                        <img src="/nl_flag.png" alt="" width="20"/>
+                                        <img src="/nl_flag.png" alt="" width="20" />
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </li>
-                </ul>
-            </div>
-            <div class="navbar-end">
-                <img src="/RightNavIcon.png" alt="" width="140"/>
-            </div>
+            </ul>
         </div>
+        <div class="navbar-end">
+            <img src="/RightNavIcon.png" alt="" width="140" />
+        </div>
+    </div>
 </template>
 
 <script>
@@ -141,6 +156,7 @@ export default {
         },
         setLang(lang) {
             this.$i18n.locale = lang;
+            localStorage.setItem('lang', lang);
         },
         async HandleUniqueCode() {
             const steps = ['1', '2', '3']
@@ -232,6 +248,13 @@ export default {
             return theme;
         }
     },
+    mounted() {
+        var lang = localStorage.getItem('lang');
+
+        if (lang) {
+            this.$i18n.locale = lang;
+        }
+    }
 }
 </script>
 
@@ -240,6 +263,7 @@ export default {
     .navbar-end img {
         width: 100px;
     }
+
     .navbar-start img {
         width: 40px;
     }
@@ -249,6 +273,7 @@ export default {
     .navbar-end img {
         width: 60px;
     }
+
     .navbar-start img {
         width: 20px;
     }

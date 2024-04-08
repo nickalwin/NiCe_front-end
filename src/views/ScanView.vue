@@ -22,93 +22,30 @@
                 </select> -->
             </div>
         </div>
-        <div class="flex justify-center">
-            <div class="overflow-x-auto">
-                <ul class="steps">
-                    <li v-for="(question, index) in current_category.questions"
-                        :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
-                        :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.uuid) }"
-                    >
-                        {{ index + 1 }}
-                    </li>
-                </ul>
-            </div>
-        </div>
 
         <div class="flex w-full mt-10">
-            <div class="flex-grow md:flex-shrink md:w-2/3">
+            <div class="flex-grow md:flex-shrink">
                 <div class="card flex-grow">
                     <div class="bg-base-100 shadow-xl">
                         <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
-                                <h2 class="card-title">
-                                    {{
-                                        current_question.is_statement ?
-                                        $t('fields.statement') :
-                                        $t('fields.question')
-                                    }}
-                                </h2>
-                                <div class="tooltip tooltip-info"
-                                    :data-tip="getLocalizedTooltip()">
-                                    <button class="btn btn-info rounded-full">
-                                        <FontAwesomeIcon icon="fa-info" />
-                                    </button>
-                                </div>
+                                <QuestionCardHeader :question="current_question"
+                                    :questions="current_category.questions"
+                                    :category="current_category"
+                                    :categories="categories"
+                                    @jumpToQuestion="jumpToQuestion"
+                                    @jumpToCategory="jumpToCategory"
+                                />
                             </div>
 
-                            <p>
-                                {{ getLocalizedQuestion() }}
-                            </p>
-
-                            <img :src="current_question.image" alt="No image provided" />
-
-                            <div class="rating rating-lg flex items-center justify-center">
-                                <div class="text-lg font-semibold text-gray-600">
-                                    {{ $t('scan_page.low_score') }}
-                                </div>
-                                <div class="flex justify-center mx-4">
-                                    <input type="radio" class="rating-hidden text-xl" value="-1"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-5xl" value="1"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="2"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="3"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="4"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
-                                        v-model="current_question.answer" />
-                                </div>
-                                <div class="text-lg font-semibold text-gray-600">
-                                    {{ $t('scan_page.high_score') }}
-                                </div>
-                            </div>
-                            <div class="tooltip-container">
-                                <div class="tooltip tooltip-info" :data-tip="$t('scan_page.give_extra_feedback')">
-                                    <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
-                                        <FontAwesomeIcon icon="fa-eye" />
-                                    </span>
-                                    <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
-                                        <FontAwesomeIcon icon="fa-eye-slash" />
-                                    </span>
-                                </div>
-                                <div>
-                                    <textarea v-model="current_question.comment" v-if="!isEyeOpen"
-                                        class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                        :placeholder="$t('scan_page.add_a_comment')"/>
-                                </div>
-                            </div>
-                            <div class="card-actions justify-end">
-                                <PrimaryButton :label="$t('utils.next')" :disabled="current_question.answer === -1"
-                                    @onClick="jumpToNextQuestion" />
-                            </div>
+                            <QuestionCardBody :question="current_question"
+                                @jumpToNextQuestion="jumpToNextQuestion"
+                                @jumpToPreviousQuestion="jumpToPreviousQuestion" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
+            <!-- <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
                 <div class="flex-grow md:max-w-1/4 lg:max-w-full">
                     <ul class="steps steps-vertical">
                         <li v-for="category in categories"
@@ -121,7 +58,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> -->
             <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
         </div>
         <div class="mt-10">
@@ -133,20 +70,22 @@
 <script>
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
-import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import RouteList from "@/helpers/RouteList.js";
 import LocalStorage from "@/helpers/LocalStorage";
+import QuestionCardHeader from "@/components/card/QuestionCardHeader.vue";
+import QuestionCardBody from "@/components/card/QuestionCardBody.vue";
 
 export default {
-    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
+    components: {
+        SummaryComponent, FontAwesomeIcon, LoadingTemplate, QuestionCardHeader, QuestionCardBody,
+    },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
-            isEyeOpen: true,
             loadingQuestions: false,
             sectors: [],
             name: null,
@@ -155,18 +94,6 @@ export default {
         }
     },
     methods: {
-        isQuestionAnswered(question) {
-            return question.answer !== -1;
-        },
-        isQuestionPicked(question) {
-            return question.uuid === this.current_question.uuid;
-        },
-        isCategoryCompleted(category) {
-            return category.is_completed;
-        },
-        isCategoryPicked(category) {
-            return category.uuid === this.current_category.uuid;
-        },
         jumpToQuestion(questionUuid) {
             this.current_question = this.current_category.questions.find((q) => q.uuid === questionUuid);
         },
@@ -211,6 +138,20 @@ export default {
             }
 
             this.saveAnswersToLocalStorage();
+        },
+        jumpToPreviousQuestion() {
+            var currentIndex = this.current_category.questions.findIndex((q) => q.uuid === this.current_question.uuid);
+
+            if (currentIndex > 0) {
+                this.current_question = this.current_category.questions[currentIndex - 1];
+            } else {
+                var previousCategoryIndex = this.categories.findIndex((c) => c.uuid === this.current_category.uuid) - 1;
+
+                if (previousCategoryIndex >= 0) {
+                    this.current_category = this.categories[previousCategoryIndex];
+                    this.current_question = this.current_category.questions[this.current_category.questions.length - 1];
+                }
+            }
         },
         saveAnswersToLocalStorage() {
             var answers = this.categories.map((c) => {
@@ -349,9 +290,6 @@ export default {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         },
-        toggleEye(isOpen) {
-            this.isEyeOpen = isOpen;
-        },
         handleEditEmail() {
             PopupHelper.DisplayEmailEditPopup('Change your email', this.email, (result) => {
                 LocalStorage.SetContactInfo({
@@ -378,21 +316,6 @@ export default {
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
-        },
-        getLocalizedQuestion() {
-            return this.current_question.data[this.$i18n.locale] ?
-                    this.current_question.data[this.$i18n.locale].question :
-                    this.current_question.data['nl'].question
-        },
-        getLocalizedTooltip() {
-            return this.current_question.data[this.$i18n.locale] ?
-                    this.current_question.data[this.$i18n.locale].tooltip :
-                    this.current_question.data['nl'].tooltip
-        },
-        getLocalizedCategoryName(category) {
-            return category.data[this.$i18n.locale] ?
-                    category.data[this.$i18n.locale].name :
-                    category.data['nl'].name;
         },
         getLocalizedSectorName(sector) {
             return sector.data[this.$i18n.locale] ?
