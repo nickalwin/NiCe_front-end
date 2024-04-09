@@ -32,7 +32,7 @@
                             <FontAwesomeIcon icon="fa-bars" />
                         </RouterLink>
                     </li>
-                    <li class="hover:bg-gray-200">
+                    <!-- <li class="hover:bg-gray-200">
                         <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
                             {{ $t('navbar_component.green_theme') }}
                             <FontAwesomeIcon icon="fa-leaf" />
@@ -41,7 +41,7 @@
                             {{ $t('navbar_component.yellow_theme') }}
                             <FontAwesomeIcon icon="fa-sun" />
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a>{{ $t('navbar_component.pick_language') }}</a>
                         <ul class="p-2">
@@ -93,7 +93,7 @@
                         <FontAwesomeIcon icon="fa-bars" />
                     </RouterLink>
                 </li>
-                <li>
+                <!-- <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
                         {{ $t('navbar_component.green_theme') }}
                         <FontAwesomeIcon icon="fa-leaf" />
@@ -102,7 +102,7 @@
                         {{ $t('navbar_component.yellow_theme') }}
                         <FontAwesomeIcon icon="fa-sun" />
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <div class="dropdown dropdown-hover">
                         <div tabindex="0" role="button">
@@ -175,6 +175,7 @@ export default {
                     autocapitalize: 'off',
                     placeholder: '4374860b-c6ab-403e-8c9e-1ccd2b6ece20'
                 },
+                heightAuto: false,
                 currentProgressStep: 0,
                 showCancelButton: true,
                 allowOutsideClick: () => false,
@@ -196,6 +197,7 @@ export default {
                     Queue.fire({
                         title: i18n.global.t('utils.loading'),
                         currentProgressStep: 1,
+                        heightAuto: false,
                         allowOutsideClick: () => false,
                         willOpen: () => {
                             Swal.showLoading();
@@ -218,6 +220,7 @@ export default {
                             showCancelButton: true,
                             showConfirmButton: true,
                             confirmButtonText: isEditable ? i18n.global.t('utils.edit') : i18n.global.t('utils.view'),
+                            heightAuto: false,
                             preConfirm: (result) => {
                                 if (result) {
                                     this.$router.push(RouteList.Result + "/" + scanUuid);

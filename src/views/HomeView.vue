@@ -22,7 +22,11 @@
             </div>
         </div>
     </div>
+
+    <ScanInfoModal ref="ScanInfoModal" />
+
     <SummaryComponent />
+
     <ContactInfoComponent />
 </template>
 
@@ -33,60 +37,26 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 import LocalStorage from "@/helpers/LocalStorage";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import TernaryButton from "@/components/buttons/TernaryButton.vue";
+import ScanInfoModal from "@/components/modals/ScanInfoModal.vue";
 
 export default {
     components: {
         ContactInfoComponent, SummaryComponent, PrimaryButton, TernaryButton,
+        ScanInfoModal,
     },
     data() {
         return {
-            sectors: []
+            sectors: [],
         };
     },
     methods: {
-        loadSectorsFromAPI() {
-            return axios.get('/api/sectors', {
-
-            }).then((response) => {
-                let sectors = response.data;
-
-                sectors.forEach((sector) => {
-                    this.sectors.push({
-                        id: sector.id,
-                        data: JSON.parse(sector.data),
-                    });
-                });
-            }).catch((error) => {
-                PopupHelper.DisplayErrorPopup(error.response.data.message);
-            });
-        },
-        async handleGetStarted() {
+        handleGetStarted() {
             if (LocalStorage.GetContactInfo()) {
                 this.$router.push('/scan');
                 return;
             }
 
-            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
-                'Enter scan information', sectors, this.$i18n.locale, true,
-                (Result) =>
-            {
-                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
-
-                LocalStorage.SetContactInfo({
-                    name: Result[0],
-                    email: Result[1],
-                    sector: sector,
-                });
-
-                this.$router.push('/scan');
-            });
-
-            if (!this.sectors.length)
-                this.loadSectorsFromAPI().then(() => {
-                    popup(this.sectors);
-                });
-            else
-                popup(this.sectors);
+            this.$refs.ScanInfoModal.open();
         },
         handleShowGuide() {
             this.$router.push('/guide');

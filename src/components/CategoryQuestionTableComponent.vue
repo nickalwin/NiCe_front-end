@@ -113,6 +113,7 @@ export default {
                     <input id="swal-input1" class="swal2-input" type="range" min="1" max="5" step="1" value="${currentAnswer}">
                     <textarea id="swal-input2" class="swal2-textarea">${currentComment}</textarea>
                 `,
+                heightAuto: false,
                 preConfirm: () => {
                     const score = document.getElementById('swal-input1').value;
                     const comment = document.getElementById('swal-input2').value;

@@ -5,9 +5,10 @@
         >
             <input type="checkbox" class="peer" />
 
-            <div class="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+            <div class="collapse-title">
                 <div class="collapse-title text-xl font-medium">
                     <h3 class="result-label text-lg font-semibold mb-2">
+                        <FontAwesomeIcon icon="fa-caret-down" />
                         {{ element.label }}
                         [<strong :class="`${getColorTextForAnswer(parseFloat(element.mean).toFixed(2))}`">
                             {{ parseFloat(element.mean).toFixed(2) }}
@@ -15,7 +16,7 @@
                     </h3>
                 </div>
             </div>
-            <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+            <div class="collapse-content">
                 <p class="result-score text-gray-600">
                     {{ $t('results_page.you_scored') }}
                     <strong :class="`${getColorTextForAnswer(parseFloat(element.mean).toFixed(2))}`">

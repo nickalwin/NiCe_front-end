@@ -1,7 +1,8 @@
 <template>
     <template v-if="isLoading">
         <slot name="whenLoading">
-            <div :class="{ 'tw-flex tw-justify-center tw-items-center tw-h-screen': center }">
+            <!-- tw-h-screen removed temporarily -->
+            <div :class="{ 'tw-flex tw-justify-center tw-items-center': center }">
                 <LoadingIndicator
                     :icon="icon"
                     :size="size"

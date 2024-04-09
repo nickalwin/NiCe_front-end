@@ -39,6 +39,11 @@
     --button-secondary: white;
     --button-secondary-hover: #E5E5E5;
     --button-secondary-text: rgba(0, 0, 255, 0.685)
+
+    --color-primary: #ffcb05;
+    --color-secondary: #F5A61A;
+    --color-tertiary: #ffff578;
+    --color-background: #fff578;
 }
 
 *,
@@ -49,7 +54,10 @@
     font-weight: normal;
 }
 
-html,
+html {
+    overflow-y: scroll;
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -66,4 +74,8 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+body .swal2-height-auto {
+    height: 100vh !important;
 }

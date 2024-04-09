@@ -17,6 +17,7 @@ class SwalHelper {
             text: text,
             icon: 'success',
             confirmButtonText: 'OK',
+            heightAuto: false,
         }).then((result) => {
             if (result.isConfirmed) {
                 afterCallback();
@@ -35,6 +36,7 @@ class SwalHelper {
             title: i18n.global.t('errors.error'),
             text: text,
             icon: 'error',
+            heightAuto: false,
         }).then(() => {
             afterCallback();
         })
@@ -48,6 +50,7 @@ class SwalHelper {
             showCancelButton: true,
             confirmButtonText: i18n.global.t('utils.try_again'),
             cancelButtonText: i18n.global.t('utils.cancel'),
+            heightAuto: false,
         }).then((result) => {
             if (result.isConfirmed) {
                 againCallback();
@@ -76,6 +79,7 @@ class SwalHelper {
             cancelButtonText: i18n.global.t('utils.cancel'),
             showCancelButton: true,
             allowOutsideClick: skippable,
+            heightAuto: false,
             customClass: {
                 container: 'nice-swal-container'
             },
@@ -111,6 +115,7 @@ class SwalHelper {
             }`,
             input: 'text',
             confirmButtonText: i18n.global.t('utils.continue'),
+            heightAuto: false,
             preConfirm: (uniqueCode) => {
                 if (!uniqueCode) {
                     Swal.showValidationMessage(i18n.global.t('errors.missing_ucode'));
@@ -134,6 +139,7 @@ class SwalHelper {
             inputValue: email,
             confirmButtonText: i18n.global.t('utils.save'),
             showCancelButton: true,
+            heightAuto: false,
             allowOutsideClick: () => !Swal.isLoading() // Disable clicking outside to close the modal while loading
         }).then((result) => {
             if (result.isConfirmed) {
