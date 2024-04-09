@@ -37,16 +37,16 @@
                                 </ul>
                             </td>
                             <td class="border px-4 py-2 text-center">
-                                <template v-if="question.answer == 0">
+                                <!-- <template v-if="question.answer == 0">
                                     X
                                 </template>
-                                <template v-else>
+                                <template v-else> -->
                                     <div :class="`radial-progress ${getColorForAnswer(question.answer)}`"
                                         :style="`--value: ${question.answer * 20}`" role="progressbar"
                                     >
                                         {{ question.answer }} / 5
                                     </div>
-                                </template>
+                                <!-- </template> -->
                             </td>
                             <td class="border px-4 py-2">
                                 <div v-if="question.comment == ''">

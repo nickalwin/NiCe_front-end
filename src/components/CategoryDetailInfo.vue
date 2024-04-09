@@ -1,17 +1,21 @@
 <template>
     <div v-if="data" class="results-container mt-10">
-        <div v-for="(element, index) in displayData" :key="index"
-            class="collapse collapse-plus result-card bg-white shadow-md rounded-lg p-4 mb-4">
-            <input type="radio" name="label" checked="checked" />
-            <div class="collapse-title text-xl font-medium">
-                <h3 class="result-label text-lg font-semibold mb-2">
-                    {{ element.label }}
-                    [<strong :class="`${getColorTextForAnswer(parseFloat(element.mean).toFixed(2))}`">
-                        {{ parseFloat(element.mean).toFixed(2) }}
-                    </strong> / 5.00]
-                </h3>
+        <div v-for="(element, index) in displayData"
+            class="collapse bg-white shadow-md rounded-lg p-4 mb-4 bg-white-200"
+        >
+            <input type="checkbox" class="peer" />
+
+            <div class="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+                <div class="collapse-title text-xl font-medium">
+                    <h3 class="result-label text-lg font-semibold mb-2">
+                        {{ element.label }}
+                        [<strong :class="`${getColorTextForAnswer(parseFloat(element.mean).toFixed(2))}`">
+                            {{ parseFloat(element.mean).toFixed(2) }}
+                        </strong> / 5.00]
+                    </h3>
+                </div>
             </div>
-            <div class="collapse-content">
+            <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
                 <p class="result-score text-gray-600">
                     {{ $t('results_page.you_scored') }}
                     <strong :class="`${getColorTextForAnswer(parseFloat(element.mean).toFixed(2))}`">
@@ -30,16 +34,11 @@
                                 {{ getLocalizedQuestion(answer.question_data) }}
                             </span>
                             <td class="border px-4 py-2 text-center rounded-lg">
-                                <template v-if="answer.answer == 0">
-                                    X
-                                </template>
-                                <template v-else>
-                                    <div :class="`radial-progress ${getColorTextForAnswer(answer.answer)}`"
-                                        :style="`--value: ${answer.answer * 20}`" role="progressbar"
-                                    >
-                                        {{ answer.answer }} / 5
-                                    </div>
-                                </template>
+                                <div :class="`radial-progress ${getColorTextForAnswer(answer.answer)}`"
+                                    :style="`--value: ${answer.answer * 20}`" role="progressbar"
+                                >
+                                    {{ answer.answer }} / 5
+                                </div>
                             </td>
                         </li>
                     </ul>
