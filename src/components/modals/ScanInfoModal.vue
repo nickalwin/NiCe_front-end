@@ -36,6 +36,10 @@
                     </CasualInput>
                 </SingleRow>
 
+                <SingleRow>
+                    <CasualSelect />
+                </SingleRow>
+
                 <DoubleRow>
                     <template #first>
                         <span class="label-text">
@@ -87,11 +91,13 @@ import SingleRow from '@/components/layouts/SingleRow.vue';
 import DoubleRow from '@/components/layouts/DoubleRow.vue';
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import CasualInput from '@/components/inputs/CasualInput.vue';
+import CasualSelect from '@/components/inputs/CasualSelect.vue';
 
 export default {
     name: "ScanInfoModal",
     components: {
         PrimaryButton, DoubleRow, SingleRow, SecondaryButton, LoadingTemplate, CasualInput,
+        CasualSelect,
     },
     setup () {
         return { v$: useVuelidate() }
