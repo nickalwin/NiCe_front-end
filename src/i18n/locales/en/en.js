@@ -72,6 +72,8 @@ export default {
         no_scans: "No scans found",
     },
     fields: {
+        name: "Name",
+        your_name: "Your name",
         first_name: "First name",
         your_first_name: "Your first name",
         last_name: "Last name",
@@ -122,6 +124,10 @@ export default {
         invalid_email: "Please enter a valid email address",
         missing_scan_code: "Please enter a valid scan code",
         mail_not_sent: "Mail could not be sent",
+    },
+    validation: {
+        required: "This field is required",
+        email: "Invalid email address",
     },
     success: {
         success: "Success",

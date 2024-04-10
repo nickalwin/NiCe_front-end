@@ -72,6 +72,8 @@ export default {
         no_scans: "Geen scans gevonden",
     },
     fields: {
+        name: "Naam",
+        your_name: "Uw naam",
         first_name: "Voornaam",
         your_first_name: "Uw voornaam",
         last_name: "Achternaam",
@@ -122,6 +124,10 @@ export default {
         invalid_email: "Voer een geldig e-mailadres in",
         missing_ucode: "Vul een unieke code in",
         mail_not_sent: "Mail kon niet worden verzonden",
+    },
+    validation: {
+        required: "Dit veld is verplicht",
+        email: "Ongeldig e-mailadres",
     },
     success: {
         success: "Succes",
