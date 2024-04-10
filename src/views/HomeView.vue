@@ -33,7 +33,6 @@
 <script>
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import SummaryComponent from "@/components/SummaryComponent.vue";
-import PopupHelper from "@/helpers/PopupHelper.js";
 import LocalStorage from "@/helpers/LocalStorage";
 import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import TernaryButton from "@/components/buttons/TernaryButton.vue";

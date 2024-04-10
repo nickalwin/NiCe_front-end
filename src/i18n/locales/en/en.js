@@ -80,6 +80,8 @@ export default {
         your_last_name: "Your last name",
         email: "Email",
         your_email: "Your email",
+        sector: "Sector",
+        your_sector: "Your sector",
         phone_number: "Phone number",
         your_phone_number: "Your phone number",
         subject: "Subject",
@@ -116,6 +118,9 @@ export default {
         copied_to_clipboard: "Copied to clipboard",
         no_comment: "No comment",
         edit_score: "Edit score 1-5",
+        i_aggree_to: "I agree to the",
+        terms_and_conditions: "terms and conditions",
+        required_fields: "Required fields",
     },
     errors: {
         error: "Error",

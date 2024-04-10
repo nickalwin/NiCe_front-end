@@ -80,6 +80,8 @@ export default {
         your_last_name: "Uw achternaam",
         email: "E-mail",
         your_email: "Uw e-mail",
+        sector: "Sector",
+        your_sector: "Uw sector",
         phone_number: "Telefoonnummer",
         your_phone_number: "Uw telefoonnummer",
         subject: "Onderwerp",
@@ -116,6 +118,9 @@ export default {
         copied_to_clipboard: "Gekopieerd naar klembord",
         no_comment: "Geen opmerking",
         edit_score: "Score bewerken 1-5",
+        i_aggree_to: "Ik ga ak",
+        terms_and_conditions: "met de algemene voorwaarden",
+        required_fields: "Verplichte velden",
     },
     errors: {
         error: "Fout",

@@ -58,56 +58,6 @@ class SwalHelper {
         })
     }
 
-    static DisplaySectorPopup(
-        text = i18n.global.t('success.operation_success'), sectors = [], locale = 'nl', skippable = true,
-        confirmedCallback = () => {}, dismissedCallback = () => {}
-    ) {
-        Swal.fire({
-            title: i18n.global.t('utils.fill_in_info'),
-            text: text,
-            html:
-                `<div class="swal2-content">
-                    <input id="swal-input-name" class="swal2-input" placeholder="${i18n.global.t('fields.scan_name')}" type="text">
-                    <input id="swal-input-email" class="swal2-input" placeholder="${i18n.global.t('fields.email')}" type="email">
-                    <select id="swal-dropdown" class="swal2-select">
-                        <option value="" disabled selected>${i18n.global.t('utils.select_sector')}</option>
-                        ${sectors.map(sector => `<option value="${sector.id}">
-                        ${sector.data[locale].name}</option>`).join('')}
-                    </select>
-                </div>`,
-            confirmButtonText: i18n.global.t('utils.continue'),
-            cancelButtonText: i18n.global.t('utils.cancel'),
-            showCancelButton: true,
-            allowOutsideClick: skippable,
-            heightAuto: false,
-            customClass: {
-                container: 'nice-swal-container'
-            },
-            preConfirm: () => {
-                const nameInput = document.getElementById('swal-input-name').value;
-                const emailInput = document.getElementById('swal-input-email').value;
-                const sectorInput = document.getElementById('swal-dropdown').value;
-
-                if (!nameInput || !emailInput || !sectorInput) {
-                    Swal.showValidationMessage(i18n.global.t('errors.missing_fields'));
-                    return false;
-                }
-
-                if (!emailInput.match(/^\S+@\S+\.\S+$/)) {
-                    Swal.showValidationMessage(i18n.global.t('errors.invalid_email'));
-                    return false;
-                }
-
-                return [nameInput, emailInput, sectorInput];
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                confirmedCallback(result.value); // Pass the input values to the callback
-            } else if (result.isDismissed) {
-                dismissedCallback();
-            }
-        });
-    }
     static DisplayUniqueCodePopup(afterCallback = () => {}) {
         Swal.fire({
             title: `<span class="icon is-small mr-2"><FontAwesomeIcon icon="fa-edit" /></span>${

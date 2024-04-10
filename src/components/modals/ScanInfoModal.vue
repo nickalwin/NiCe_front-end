@@ -1,8 +1,10 @@
 <template>
-    <dialog id="ScanInfoModal" class="modal rounded-lg shadow-lg overflow-hidden">
-        <div class="modal-box p-6">
+    <dialog id="ScanInfoModal" class="modal rounded-lg shadow-md overflow-hidden max-w-lg mx-auto">
+        <div class="modal-box p-4 sm:p-6">
             <LoadingTemplate :isLoading="isLoading" :center="true">
-                <h1 class="text-2xl font-bold mb-4">Fill the info before scan</h1>
+                <h1 class="text-xl sm:text-2xl font-bold mb-4">
+                    {{ $t('utils.fill_in_info') }}
+                </h1>
 
                 <SingleRow>
                     <CasualInput v-model="name"
@@ -37,7 +39,20 @@
                 </SingleRow>
 
                 <SingleRow>
-                    <CasualSelect />
+                    <CasualSelect v-model="sector"
+                        :label="$t('fields.sector')"
+                        :placeholder="$t('fields.your_sector')"
+                        :options="sectors"
+                    >
+                        <template #beforeValue>
+                            <FontAwesomeIcon icon="fa-industry" style="color: gray" size="sm" />
+                        </template>
+                        <template #errors>
+                            <span v-for="(error, index) in v$.sector.$errors" :key="index" class="text-red-500 text-xs">
+                                <p>{{  $t(`validation.${v$.sector.$errors[index].$validator}`) }}</p>
+                            </span>
+                        </template>
+                    </CasualSelect>
                 </SingleRow>
 
                 <DoubleRow>
@@ -45,9 +60,11 @@
                         <span class="label-text">
                             <FontAwesomeIcon icon="fa-asterisk" style="color: gray" />
 
-                            I agree to the
+                            {{ $t('utils.i_aggree_to') }}
 
-                            <a href="#" class="text-blue-500 underline">terms and conditions</a>
+                            <a href="#" class="text-blue-500 underline">
+                                {{ $t('utils.terms_and_conditions') }}
+                            </a>
                         </span>
                     </template>
 
@@ -57,7 +74,7 @@
                 </DoubleRow>
 
                 <cite class="text-sm">
-                    <FontAwesomeIcon icon="fa-asterisk" style="color: gray" /> Required fields
+                    <FontAwesomeIcon icon="fa-asterisk" style="color: gray" /> {{ $t('utils.required_fields') }}
                 </cite>
 
                 <DoubleRow>
@@ -92,6 +109,8 @@ import DoubleRow from '@/components/layouts/DoubleRow.vue';
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import CasualInput from '@/components/inputs/CasualInput.vue';
 import CasualSelect from '@/components/inputs/CasualSelect.vue';
+import PopupHelper from '@/helpers/PopupHelper';
+import LocalStorage from "@/helpers/LocalStorage";
 
 export default {
     name: "ScanInfoModal",
@@ -115,11 +134,17 @@ export default {
     validations () {
         return {
             name: { required },
-            email: { required, email }
+            email: { required, email },
+            sector: { required },
         }
     },
     methods: {
         open() {
+            this.reset();
+
+            if (!this.sectors.length)
+                this.loadSectorsFromAPI();
+
             const modal = document.getElementById("ScanInfoModal");
 
             modal.showModal();
@@ -133,9 +158,6 @@ export default {
             this.rulesAccepted = false;
         },
         loadSectorsFromAPI() {
-            if (this.sectors.length)
-                return;
-
             this.isLoading = true;
 
             axios.get('/api/sectors', {
@@ -145,8 +167,9 @@ export default {
 
                 sectors.forEach((sector) => {
                     this.sectors.push({
-                        id: sector.id,
-                        data: JSON.parse(sector.data),
+                        label: this.getTranslatedSectorName(sector),
+                        value: sector.id,
+                        data: sector.data,
                     });
                 });
 
@@ -156,24 +179,28 @@ export default {
             })
         },
         getTranslatedSectorName(sector) {
-            return sector.data[this.$i18n.locale] ?
-                    sector.data[this.$i18n.locale].name :
-                    sector.data['nl'].name;
+            var data = JSON.parse(sector.data);
+
+            return data[this.$i18n.locale] ?
+                    data[this.$i18n.locale].name :
+                    data['nl'].name;
         },
         async continueToScan() {
             const result = await this.v$.$validate();
-            console.log(result);
-        }
-    },
-    mounted() {
-        this.reset();
 
-        this.loadSectorsFromAPI();
+            if (!result)
+                return;
+
+            let sector = this.sectors.find((sector) => sector.value == this.sector);
+
+            LocalStorage.SetContactInfo({
+                name: this.name,
+                email: this.email,
+                sector: sector,
+            });
+
+            this.$router.push('/scan');
+        }
     }
 }
 </script>
-<!-- //     LocalStorage.SetContactInfo({
-//         name: Result[0],
-//         email: Result[1],
-//         sector: sector,
-//     }); -->

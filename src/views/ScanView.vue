@@ -25,8 +25,8 @@
 
         <div class="flex w-full mt-10">
             <div class="flex-grow md:flex-shrink">
-                <div id="questionCard" class="card flex-grow lg:w-full mx-auto">
-                    <div class="bg-base-100 shadow-xl">
+                <div id="questionCard" class="card flex-grow lg:w-full mx-auto items-center">
+                    <div class="w-3/4 bg-base-100 shadow-xl">
                         <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
                                 <QuestionCardHeader :question="current_question"
@@ -321,9 +321,11 @@ export default {
             });
         },
         getLocalizedSectorName(sector) {
-            return sector.data[this.$i18n.locale] ?
-                    sector.data[this.$i18n.locale].name :
-                    sector.data['nl'].name;
+            var data = JSON.parse(sector.data);
+
+            return data[this.$i18n.locale] ?
+                    data[this.$i18n.locale].name :
+                    data['nl'].name;
         },
         debugAnswerAllQuestions() {
             this.categories.forEach((category) => {
