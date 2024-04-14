@@ -121,6 +121,7 @@ export default {
         i_aggree_to: "Ik ga ak",
         terms_and_conditions: "met de algemene voorwaarden",
         required_fields: "Verplichte velden",
+        select_option: "Selecteer een optie",
     },
     errors: {
         error: "Fout",

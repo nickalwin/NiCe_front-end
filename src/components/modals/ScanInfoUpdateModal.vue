@@ -1,5 +1,5 @@
 <template>
-    <dialog id="ScanInfoModal" class="modal rounded-lg shadow-md overflow-hidden max-w-lg mx-auto">
+    <dialog id="ScanInfoUpdateModal" class="modal rounded-lg shadow-md overflow-hidden max-w-lg mx-auto">
         <div class="modal-box p-4 sm:p-6">
             <LoadingTemplate :isLoading="isLoading" :center="true">
                 <h1 class="text-xl sm:text-2xl font-bold mb-4">
@@ -55,24 +55,6 @@
                     </CasualSelect>
                 </SingleRow>
 
-                <DoubleRow>
-                    <template #first>
-                        <span class="label-text">
-                            <FontAwesomeIcon icon="fa-asterisk" style="color: gray" />
-
-                            {{ $t('utils.i_aggree_to') }}
-
-                            <a href="#" class="text-blue-500 underline">
-                                {{ $t('utils.terms_and_conditions') }}
-                            </a>
-                        </span>
-                    </template>
-
-                    <template #second>
-                        <input id="agreed" v-model="rulesAccepted" type="checkbox" class="checkbox" />
-                    </template>
-                </DoubleRow>
-
                 <cite class="text-sm">
                     <FontAwesomeIcon icon="fa-asterisk" style="color: gray" /> {{ $t('utils.required_fields') }}
                 </cite>
@@ -87,9 +69,8 @@
 
                     <template #second>
                         <PrimaryButton
-                            :label="$t('utils.continue')"
-                            :disabled="!rulesAccepted"
-                            @onClick="continueFurther"
+                            :label="$t('utils.save')"
+                            @onClick="trySave"
                         />
                     </template>
                 </DoubleRow>
@@ -113,8 +94,8 @@ import PopupHelper from '@/helpers/PopupHelper';
 import LocalStorage from "@/helpers/LocalStorage";
 
 export default {
-    name: "ScanInfoModal",
-    emits: ['onCancel', 'onContinue'],
+    name: "ScanInfoUpdateModal",
+    emits: ['onCancel', 'onSave'],
     components: {
         PrimaryButton, DoubleRow, SingleRow, SecondaryButton, LoadingTemplate, CasualInput,
         CasualSelect,
@@ -128,7 +109,6 @@ export default {
             email: '',
             sector: '',
             sectors: [],
-            rulesAccepted: false,
             isLoading: false,
         }
     },
@@ -146,12 +126,12 @@ export default {
             if (!this.sectors.length)
                 this.loadSectorsFromAPI();
 
-            const modal = document.getElementById("ScanInfoModal");
+            const modal = document.getElementById("ScanInfoUpdateModal");
 
             modal.showModal();
         },
         close() {
-            const modal = document.getElementById("ScanInfoModal");
+            const modal = document.getElementById("ScanInfoUpdateModal");
 
             modal.close();
         },
@@ -189,7 +169,7 @@ export default {
         cancelOperation() {
             this.$emit('onCancel');
         },
-        async continueFurther() {
+        async trySave() {
             const result = await this.v$.$validate();
 
             if (!result)
@@ -203,8 +183,20 @@ export default {
                 sector: sector,
             });
 
-            this.$emit('onContinue');
+            this.$emit('onSave');
+        },
+        loadData() {
+            let data = LocalStorage.GetContactInfo();
+
+            if (data) {
+                this.name = data.name;
+                this.email = data.email;
+                this.sector = data.sector.value;
+            }
         }
+    },
+    mounted() {
+        this.loadData();
     }
 }
 </script>

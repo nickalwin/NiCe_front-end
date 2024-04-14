@@ -1,27 +1,6 @@
 <template>
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
-        <div v-if="name && email && selectedSector" class="flex justify-between p-5">
-            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
-                {{ name }} {{ $t('fields.somebodys_scan') }}
-            </h1>
-            <div class="flex m-1">
-                <div class="input input-disabled mx-1">
-                    <input class="input border-none rounded p-2 text-blue-900" type="email" :value="email" disabled />
-                    <span v-on:click="handleEditEmail" class="hover:text-gray-400 font-bold py-2 cursor-pointer hover:bg-blue-200 rounded">
-                        <FontAwesomeIcon icon="fa-edit" />
-                    </span>
-                </div>
-                <span class="select select-bordered bg-transparent mx-1 rounded p-2">
-                    {{ getLocalizedSectorName(selectedSector) }}
-                </span>
-                <!-- TODO proper email and sector change! -->
-                <!-- <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
-                    <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
-                        {{ getLocalizedSectorName(sector) }}
-                    </option>
-                </select> -->
-            </div>
-        </div>
+        <ContactInfoCard />
 
         <div class="flex w-full mt-10">
             <div class="flex-grow md:flex-shrink">
@@ -53,6 +32,13 @@
         </div>
         <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
     </LoadingTemplate>
+
+    <ScanInfoModal ref="ScanInfoModal"
+        @onCancel="() => this.$router.push('/')"
+        @onContinue="() => {
+            this.$refs.ScanInfoModal.close();
+        }"
+    />
 </template>
 
 <script>
@@ -64,10 +50,13 @@ import RouteList from "@/helpers/RouteList.js";
 import LocalStorage from "@/helpers/LocalStorage";
 import QuestionCardHeader from "@/components/card/QuestionCardHeader.vue";
 import QuestionCardBody from "@/components/card/QuestionCardBody.vue";
+import ScanInfoModal from "@/components/modals/ScanInfoModal.vue";
+import ContactInfoCard from "@/components/ContactInfoCard.vue";
 
 export default {
     components: {
         SummaryComponent, FontAwesomeIcon, LoadingTemplate, QuestionCardHeader, QuestionCardBody,
+        ScanInfoModal, ContactInfoCard,
     },
     data() {
         return {
@@ -75,10 +64,6 @@ export default {
             current_category: {},
             current_question: {},
             loadingQuestions: false,
-            sectors: [],
-            name: null,
-            email: null,
-            selectedSector: null,
             totalQuestions: 0,
         }
     },
@@ -273,11 +258,13 @@ export default {
                 });
             });
 
+            let data = LocalStorage.GetContactInfo();
+
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
-                sector_id: this.selectedSector.id,
-                contact_name: this.name,
-                contact_email: this.email,
+                sector_id: data.sector.value,
+                contact_name: data.name,
+                contact_email: data.email,
             }).then((response) => {
                 PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                     LocalStorage.ClearScanResults();
@@ -291,17 +278,6 @@ export default {
                 });
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
-            });
-        },
-        handleEditEmail() {
-            PopupHelper.DisplayEmailEditPopup('Change your email', this.email, (result) => {
-                LocalStorage.SetContactInfo({
-                    name: this.name,
-                    email: result,
-                    sector: this.selectedSector
-                });
-
-                this.email = result;
             });
         },
         loadSectorsFromAPI() {
@@ -320,13 +296,6 @@ export default {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         },
-        getLocalizedSectorName(sector) {
-            var data = JSON.parse(sector.data);
-
-            return data[this.$i18n.locale] ?
-                    data[this.$i18n.locale].name :
-                    data['nl'].name;
-        },
         debugAnswerAllQuestions() {
             this.categories.forEach((category) => {
                 category.is_completed = true;
@@ -335,43 +304,13 @@ export default {
                 });
             });
             this.onScanCompleted();
-        }
+        },
     },
     mounted() {
         LocalStorage.ActiveCheck();
 
-        let data = LocalStorage.GetContactInfo();
-
-        if (data) {
-            this.name = data.name;
-            this.email = data.email;
-            this.selectedSector = data.sector;
-        } else {
-            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
-                'Enter scan information', sectors, this.$i18n.locale, false,
-                (Result) =>
-            {
-                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
-
-                LocalStorage.SetContactInfo({
-                    name: Result[0],
-                    email: Result[1],
-                    sector: sector,
-                });
-
-                this.name = Result[0];
-                this.email = Result[1];
-                this.selectedSector = sector;
-            }, () => {
-                this.$router.push(RouteList.Home);
-            });
-
-            if (!this.sectors.length)
-                this.loadSectorsFromAPI().then(() => {
-                    popup(this.sectors);
-                });
-            else
-                popup(this.sectors);
+        if (!LocalStorage.GetContactInfo()) {
+            this.$refs.ScanInfoModal.open();
         }
 
         this.loadQuestions();

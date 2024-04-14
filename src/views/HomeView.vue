@@ -23,7 +23,9 @@
         </div>
     </div>
 
-    <ScanInfoModal ref="ScanInfoModal" />
+    <ScanInfoModal ref="ScanInfoModal"
+        @onContinue="() => this.$router.push('/scan')"
+    />
 
     <SummaryComponent />
 

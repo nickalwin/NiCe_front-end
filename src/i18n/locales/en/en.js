@@ -121,6 +121,7 @@ export default {
         i_aggree_to: "I agree to the",
         terms_and_conditions: "terms and conditions",
         required_fields: "Required fields",
+        select_option: "Select an option",
     },
     errors: {
         error: "Error",

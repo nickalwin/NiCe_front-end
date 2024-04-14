@@ -15,7 +15,9 @@
                     :name="label"
                     class="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                     placeholder="0.00">
-                    <option value="" disabled selected>Select an option</option>
+                    <option value="" disabled selected>
+                        {{ $t('utils.select_option') }}
+                    </option>
                     <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
                 </select>
             </div>
