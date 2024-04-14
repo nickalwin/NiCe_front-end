@@ -1,3 +1,5 @@
+import { maxLength } from "@vuelidate/validators";
+
 export default {
     navbar_component: {
         home_route: "Thuis",
@@ -134,6 +136,7 @@ export default {
     validation: {
         required: "Dit veld is verplicht",
         email: "Ongeldig e-mailadres",
+        maxLength: "Dit veld moet minder dan 100 tekens bevatten",
     },
     success: {
         success: "Succes",

@@ -134,6 +134,7 @@ export default {
     validation: {
         required: "This field is required",
         email: "Invalid email address",
+        maxLength: "This field must be less than 100 characters",
     },
     success: {
         success: "Success",

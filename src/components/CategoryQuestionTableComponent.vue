@@ -55,7 +55,9 @@
                                     </span>
                                 </div>
                                 <div v-else>
-                                    {{ question.comment }}
+                                    <span class="whitespace-normal">
+                                        {{ question.comment }}
+                                    </span>
                                 </div>
                             </td>
                             <td class="border px-4 py-2">
@@ -69,13 +71,21 @@
             </div>
         </div>
     </div>
+
+    <EditQuestionModal ref="EditQuestionModal"
+        @onCancel="() => { this.$refs.EditQuestionModal.close(); }"
+        @onSave="() => { this.$refs.EditQuestionModal.close(); }"
+    />
 </template>
 
 <script>
 import ColorHelper from '@/helpers/ColorHelper';
-import Swal from 'sweetalert2';
+import EditQuestionModal from '@/components/modals/EditQuestionModal.vue';
 
 export default {
+    components: {
+        EditQuestionModal
+    },
     props: {
         data: { type: Array, required: true },
         categories: { type: Array, required: true }
@@ -102,34 +112,10 @@ export default {
                 data.en.name;
         },
         editScorePopup(question) {
-            let currentAnswer = question.answer;
-            let currentComment = question.comment;
-            Swal.fire({
-                title: this.$t('utils.edit_score'),
-                showCancelButton: true,
-                confirmButtonText: this.$t('utils.save'),
-                cancelButtonText: this.$t('utils.cancel'),
-                html: `
-                    <input id="swal-input1" class="swal2-input" type="range" min="1" max="5" step="1" value="${currentAnswer}">
-                    <textarea id="swal-input2" class="swal2-textarea">${currentComment}</textarea>
-                `,
-                heightAuto: false,
-                preConfirm: () => {
-                    const score = document.getElementById('swal-input1').value;
-                    const comment = document.getElementById('swal-input2').value;
-
-                    if (!score || !comment) {
-                        Swal.showValidationMessage(this.$t('utils.required'));
-                    }
-
-                    return { score, comment };
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const { score, comment } = result.value;
-                    // TODO: Use `score` and `comment` here
-                }
-            });
+            this.$refs.EditQuestionModal.open(
+                this.getLocalizedQuestionName(question),
+                question
+            );
         },
         getColorForAnswer(answer) {
             return ColorHelper.GetTextColorForAnswer(answer);

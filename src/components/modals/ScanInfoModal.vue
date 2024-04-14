@@ -100,7 +100,7 @@
 
 <script>
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { required, email, maxLength } from '@vuelidate/validators';
 
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import SecondaryButton from '@/components/buttons/SecondaryButton.vue';
@@ -134,8 +134,8 @@ export default {
     },
     validations () {
         return {
-            name: { required },
-            email: { required, email },
+            name: { required, maxLength: maxLength(100) },
+            email: { required, email, maxLength: maxLength(100) },
             sector: { required },
         }
     },
