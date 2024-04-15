@@ -62,7 +62,7 @@
 
                             {{ $t('utils.i_aggree_to') }}
 
-                            <a href="#" class="text-blue-500 underline">
+                            <a href="/terms-and-conditions" class="text-blue-500 underline">
                                 {{ $t('utils.terms_and_conditions') }}
                             </a>
                         </span>

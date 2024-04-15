@@ -25,6 +25,7 @@
 
     <ScanInfoModal ref="ScanInfoModal"
         @onContinue="() => this.$router.push('/scan')"
+        @onCancel="() => this.$refs.ScanInfoModal.close()"
     />
 
     <SummaryComponent />
