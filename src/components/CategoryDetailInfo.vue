@@ -26,6 +26,21 @@
                 </p>
                 <div>
                     <h1 class="mt-4 text-2xl font-bold text-blue-600">
+                        <strong>{{ $t('results_page.dont_know_answers') }}</strong>
+                    </h1>
+                    <ul class="list-disc pl-5">
+                        <li v-for="(answer, index) in element.dontKnownAnswers" :key="index"
+                            class="result-answer text-gray-600 mb-2">
+                            <span class="font-medium">
+                                {{ getLocalizedQuestion(answer.question_data) }}
+                            </span>
+                            <td class="border px-4 py-2 text-center rounded-lg">
+
+                            </td>
+                        </li>
+                    </ul>
+
+                    <h1 class="mt-4 text-2xl font-bold text-blue-600">
                         <strong>{{ $t('results_page.top_answers') }}</strong>
                     </h1>
                     <ul class="list-disc pl-5">
@@ -136,10 +151,12 @@ export default {
                 if (count >= 9)
                     qa = 3;
 
+                let dontKnownAnswers = answers.filter((answer) => answer.answer === -1);
                 let topAnswers = [];
                 let lowestAnswers = [];
 
-                answers = answers.sort((a, b) => b.answer - a.answer);
+                answers = answers.filter((answer) => answer.answer !== -1)
+                                 .sort((a, b) => b.answer - a.answer);
 
                 for (let i = 0; i < qa; i++)
                     topAnswers.push(answers[i]);
@@ -151,7 +168,8 @@ export default {
                     mean: this.data.datasets[0].data[i++],
                     label: label.label,
                     topAnswers: topAnswers,
-                    lowestAnswers: lowestAnswers
+                    lowestAnswers: lowestAnswers,
+                    dontKnownAnswers: dontKnownAnswers
                 });
             });
         },

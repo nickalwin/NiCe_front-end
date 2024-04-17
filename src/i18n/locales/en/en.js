@@ -62,6 +62,7 @@ export default {
         out_of: "out of",
         top_answers: "Top answers",
         lowest_answers: "Lowest answers",
+        dont_know_answers: "Don't know answers",
         tips_to_improve: "Tips to improve",
         additional_tools: "Additional tools",
     },

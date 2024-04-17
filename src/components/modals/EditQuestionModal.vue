@@ -1,6 +1,6 @@
 <template>
-    <dialog id="EditQuestionModal" class="modal rounded-lg shadow-md overflow-hidden max-w-lg mx-auto">
-        <div v-if="question" class="modal-box p-4 sm:p-6">
+    <dialog id="EditQuestionModal" class="modal rounded-lg shadow-md">
+        <div v-if="question" class="modal-box">
             <LoadingTemplate :isLoading="false" :center="true">
                 <h1 class="text-xl sm:text-2xl font-bold mb-4">
                     {{ label }}
@@ -12,7 +12,7 @@
                     />
                 </SingleRow>
 
-                <SingleRow>
+                <SingleRow class="mt-20">
                     <textarea v-model="question.comment"
                         class="w-full mt-4 p-4 bg-gray-100 rounded"
                         :placeholder="$t('scan_page.add_a_comment')"/>

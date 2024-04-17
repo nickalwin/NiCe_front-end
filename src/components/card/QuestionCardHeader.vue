@@ -73,7 +73,7 @@ export default {
             return question.uuid === this.question.uuid;
         },
         isQuestionAnswered(question) {
-            return question.answer !== -1;
+            return question.answer !== -2;
         },
         jumpToQuestion(uuid) {
             this.$emit('jumpToQuestion', uuid);

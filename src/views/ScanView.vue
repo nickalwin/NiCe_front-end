@@ -92,10 +92,10 @@ export default {
             document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
         },
         areAllQuestionsFromCategoryAnswered(category) {
-            return category.questions.every((q) => q.answer !== -1);
+            return category.questions.every((q) => q.answer !== -2);
         },
         getFirstNonAnsweredQuestion(category) {
-            return category.questions.find((q) => q.answer === -1);
+            return category.questions.find((q) => q.answer === -2);
         },
         getFirstNonCompletedCategory() {
             return this.categories.find((c) => !c.is_completed);
@@ -211,7 +211,7 @@ export default {
                         image: q.image,
                         is_statement: q.statement,
                         data: questionData,
-                        answer: -1,
+                        answer: -2,
                         comment: null
                     }
 
@@ -300,7 +300,7 @@ export default {
             this.categories.forEach((category) => {
                 category.is_completed = true;
                 category.questions.forEach((question) => {
-                    question.answer = Math.floor(Math.random() * 5);
+                    question.answer = Math.floor(Math.random() * 6) - 1;
                 });
             });
             this.onScanCompleted();

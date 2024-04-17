@@ -64,6 +64,7 @@ export default {
         out_of: "van de",
         top_answers: "Top antwoorden",
         lowest_answers: "Laagste antwoorden",
+        dont_know_answers: "Weet niet antwoorden",
         tips_to_improve: "Tips om te verbeteren",
         additional_tools: "Extra tools",
     },

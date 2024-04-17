@@ -34,7 +34,7 @@
             <TernaryButton :label="$t('utils.previous')"
                 @click="jumpToPreviousQuestion" />
 
-            <PrimaryButton :label="$t('utils.next')" :disabled="question.answer === -1"
+            <PrimaryButton :label="$t('utils.next')" :disabled="question.answer === -2"
                 @onClick="jumpToNextQuestion" />
         </div>
     </div>

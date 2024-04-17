@@ -37,16 +37,16 @@
                                 </ul>
                             </td>
                             <td class="border px-4 py-2 text-center">
-                                <!-- <template v-if="question.answer == 0">
-                                    X
+                                <template v-if="question.answer == -1">
+                                    <FontAwesomeIcon icon="fa-question" />
                                 </template>
-                                <template v-else> -->
+                                <template v-else>
                                     <div :class="`radial-progress ${getColorForAnswer(question.answer)}`"
                                         :style="`--value: ${question.answer * 20}`" role="progressbar"
                                     >
                                         {{ question.answer }} / 5
                                     </div>
-                                <!-- </template> -->
+                                </template>
                             </td>
                             <td class="border px-4 py-2">
                                 <div v-if="question.comment == ''">
@@ -81,6 +81,7 @@
 <script>
 import ColorHelper from '@/helpers/ColorHelper';
 import EditQuestionModal from '@/components/modals/EditQuestionModal.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
     components: {
