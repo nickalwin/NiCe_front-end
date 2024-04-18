@@ -14,10 +14,10 @@
                         :label="$t('home_page.get_started')"
                         v-on:click="handleGetStarted"
                     />
-                    <TernaryButton
+                    <!-- <TernaryButton
                         :label="$t('home_page.show_guide')"
                         v-on:click="handleShowGuide"
-                    />
+                    /> -->
                 </div>
             </div>
         </div>

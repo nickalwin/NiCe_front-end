@@ -1,5 +1,30 @@
 <template>
     <LoadingTemplate :isLoading="isLoadingResults" :center="true" :size="'4x'">
+        <!-- TEMPORARY -->
+
+        <div v-if="$i18n.locale === 'en'">
+            <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">
+                    Attention Finance and Control Students
+                </h1>
+                <p class="text-base md:text-lg">
+                    Once you've finished using the tool, we kindly ask you to fill in our survey. Your feedback is invaluable to us. Thank you!
+                </p>
+                <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Go to Survey</a>
+            </div>
+        </div>
+        <div v-else>
+            <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">
+                    Attentie Financiën en Controle Studenten
+                </h1>
+                <p class="text-base md:text-lg">
+                    Zodra je klaar bent met het gebruik van de tool, vragen we je vriendelijk om onze enquête in te vullen. Jouw feedback is van onschatbare waarde voor ons. Dank je wel!
+                </p>
+                <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Ga naar Enquête</a>
+            </div>
+        </div>
+
         <div class="hero mt-10">
             <h1 class="text-4xl font-bold">
                 {{ $t('results_page.main_header') }}
