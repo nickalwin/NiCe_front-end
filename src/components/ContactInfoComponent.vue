@@ -1,6 +1,6 @@
 <template>
     <div class="card flex-col md:flex-row overflow-hidden shadow-2xl rounded">
-        <div class="card-info w-full md:w-2/5 text-sm text-gray-700 p-10" style="background-color: var(--color-primary)">
+        <div class="card-info w-full md:w-2/5 text-sm text-gray-700 p-10" style="background-color: var(--color-secondary)">
             <h2 class="text-2xl text-black mb-4">
                 {{ $t("contact_info_component.contact_info") }}
             </h2>
