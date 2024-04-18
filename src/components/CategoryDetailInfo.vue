@@ -34,9 +34,9 @@
                             <span class="font-medium">
                                 {{ getLocalizedQuestion(answer.question_data) }}
                             </span>
-                            <td class="border px-4 py-2 text-center rounded-lg">
+                            <!-- <td class="border px-4 py-2 text-center rounded-lg">
 
-                            </td>
+                            </td> -->
                         </li>
                     </ul>
 
@@ -134,7 +134,7 @@ export default {
             let i = 0;
 
             this.allLabelsWithCategoryUuid.forEach((label) => {
-                const category = this.categories.find((category) => category.uuid === label.category_uuid);
+                const category = this.categories.find((category) => category.category_uuid === label.uuid);
 
                 if (!category)
                     return;

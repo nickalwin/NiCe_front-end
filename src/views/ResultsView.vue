@@ -5,9 +5,9 @@
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
-        <div class="hero mt-10">
+        <!-- <div class="hero mt-10">
             <PrimaryButton :label="$t('results_page.download_pdf')" />
-        </div>
+        </div> -->
         <div class="hero mt-10">
             <p class="text-lg">
                 {{ $t('results_page.main_text') }}
@@ -22,7 +22,12 @@
             </div>
         </div>
 
-        <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categoriesWithMeans" />
+        <div id="CategoryQuestionTable">
+            <CategoryQuestionTableComponent ref="CategoryQuestionTableComponent"
+                v-if="scan" :data="scan.data" :categories="categoriesWithMeans"
+                @answerUpdated = "updateScanResults"
+            />
+        </div>
 
         <CategoryDetailInfo v-if="plotData"
             :data="plotData" class="mt-10"
@@ -86,8 +91,19 @@ export default {
                     data[this.$i18n.locale].name :
                     data['nl'].name;
         },
-        loadScanWithResults(uuid) {
+        updateScanResults(groupIndex) {
+            this.loadScanWithResults(this.$route.params.uuid, () => {
+                this.$nextTick(() => {
+                    document.getElementById('CategoryQuestionTable').scrollIntoView({ behavior: 'smooth' });
+
+                    this.$refs.CategoryQuestionTableComponent.selectGroupByIndex(groupIndex);
+                });
+            });
+        },
+        loadScanWithResults(uuid, cbck = () => {}) {
             this.isLoadingResults = true;
+
+            this.allLabelsWithCategoryUuid = [];
 
             axios.get(`/api/scans/${uuid}`, {
 
@@ -164,6 +180,8 @@ export default {
                 });
             }).finally(() => {
                 this.isLoadingResults = false;
+
+                cbck();
             });
         },
         reloadBarChartTranslations() {

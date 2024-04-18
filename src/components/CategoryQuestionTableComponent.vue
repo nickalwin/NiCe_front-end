@@ -74,7 +74,7 @@
 
     <EditQuestionModal ref="EditQuestionModal"
         @onCancel="() => { this.$refs.EditQuestionModal.close(); }"
-        @onSave="() => { this.$refs.EditQuestionModal.close(); }"
+        @onSave="(question) => { this.$refs.EditQuestionModal.close(); this.updateAnswer(question); }"
     />
 </template>
 
@@ -82,11 +82,13 @@
 import ColorHelper from '@/helpers/ColorHelper';
 import EditQuestionModal from '@/components/modals/EditQuestionModal.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import PopupHelper from "@/helpers/PopupHelper.js";
 
 export default {
     components: {
         EditQuestionModal
     },
+    emits: ['answerUpdated'],
     props: {
         data: { type: Array, required: true },
         categories: { type: Array, required: true }
@@ -120,6 +122,25 @@ export default {
         },
         getColorForAnswer(answer) {
             return ColorHelper.GetTextColorForAnswer(answer);
+        },
+        updateAnswer(question) {
+            let currentGroupIndex = this.groupedQuestions.findIndex((group) => {
+                return this.selectedGroup.category.category_uuid === group.category.category_uuid;
+            });
+
+            axios.put(`/api/scans/${this.$route.params.uuid}/updateAnswer/${question.question_uuid}`, {
+                answer: question.answer,
+                comment: question.comment
+            }).then(response => {
+                PopupHelper.DisplaySuccessPopup('Answer has been updated successfully!');
+
+                this.$emit('answerUpdated', currentGroupIndex);
+            }).catch(error => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
+        },
+        selectGroupByIndex(index) {
+            this.selectedGroup = this.groupedQuestions[index];
         }
     },
     mounted() {
@@ -138,7 +159,7 @@ export default {
             return a.category.mean - b.category.mean;
         });
 
-        this.selectedGroup = this.groupedQuestions[0];
+        this.selectGroupByIndex(0);
     }
 }
 </script>

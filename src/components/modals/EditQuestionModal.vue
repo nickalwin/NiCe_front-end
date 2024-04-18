@@ -78,7 +78,7 @@ export default {
             this.$emit('onCancel');
         },
         save() {
-            this.$emit('onSave');
+            this.$emit('onSave', this.question);
         }
     }
 }
