@@ -41,7 +41,7 @@
         <div class="hero mt-10">
             <img src="/info.png" width="700" alt="No image provided" />
         </div>
-        <div class="card mt-10 bg-base-100 shadow-xl">
+        <div class="card mt-10 bg-gray-100 shadow-xl">
             <div class="items-center text-center md:p-10">
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>

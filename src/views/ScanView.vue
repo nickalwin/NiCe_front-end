@@ -5,7 +5,7 @@
         <div class="flex w-full mt-10">
             <div class="flex-grow md:flex-shrink">
                 <div id="questionCard" class="card flex-grow lg:w-full mx-auto items-center">
-                    <div class="w-3/4 bg-base-100 shadow-xl">
+                    <div class="w-3/4 bg-gray-100 shadow-xl">
                         <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
                                 <QuestionCardHeader :question="current_question"
@@ -30,7 +30,7 @@
         <div class="mt-10">
             <SummaryComponent />
         </div>
-        <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
+        <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
     </LoadingTemplate>
 
     <ScanInfoModal ref="ScanInfoModal"

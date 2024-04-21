@@ -1,6 +1,6 @@
 <template>
     <dialog id="EditQuestionModal" class="modal rounded-lg shadow-md">
-        <div v-if="question" class="modal-box">
+        <div v-if="question" class="modal-box bg-gray-100">
             <LoadingTemplate :isLoading="false" :center="true">
                 <h1 class="text-xl sm:text-2xl font-bold mb-4">
                     {{ label }}

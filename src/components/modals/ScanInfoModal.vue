@@ -1,6 +1,6 @@
 <template>
     <dialog id="ScanInfoModal" class="modal rounded-lg shadow-md overflow-hidden max-w-lg mx-auto">
-        <div class="modal-box p-4 sm:p-6">
+        <div class="modal-box p-4 sm:p-6 bg-gray-100">
             <LoadingTemplate :isLoading="isLoading" :center="true">
                 <h1 class="text-xl sm:text-2xl font-bold mb-4">
                     {{ $t('utils.fill_in_info') }}

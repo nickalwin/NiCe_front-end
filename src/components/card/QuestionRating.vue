@@ -1,10 +1,14 @@
 <template>
     <div class="rating rating-lg flex flex-col md:flex-row justify-between items-center bg-gray-100 p-4 px-10 rounded-lg shadow-md">
         <div class="flex space-x-2 mb-4 md:mb-0">
-            <button v-for="i in 5" :key="i" v-on:click="onClick(i)" type="button"
-                :class="`text-white text-xs sm:text-sm md:text-xl px-3 py-1 rounded ${question.answer >= i  ? getColorForAnswer(i) : 'bg-gray-500'}`">
-                {{ i }}
-            </button>
+            <div v-for="i in 5" class="tooltip-container mt-2">
+                <div class="tooltip tooltip-info" :data-tip="$t(`scan_page.score_text_${i}`)">
+                    <button :key="i" v-on:click="onClick(i)" type="button"
+                        :class="`text-white text-xs sm:text-sm md:text-xl px-3 py-1 rounded ${question.answer >= i  ? getColorForAnswer(i) : 'bg-gray-500'}`">
+                        {{ i }}
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="ml-1 flex space-x-2">

@@ -13,7 +13,7 @@
                 </div>
 
                 <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-gray-100 rounded-box w-52">
                     <li class="hover:bg-gray-200">
                         <RouterLink to="/">
                             {{ $t('navbar_component.home_route') }}
@@ -109,7 +109,7 @@
                             <strong>{{ $i18n.locale == 'en' ? 'EN ' : 'NL ' }}</strong>
                             <FontAwesomeIcon icon="fa-caret-down" />
                         </div>
-                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-28">
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-100 rounded-box w-28">
                             <li class="hover:bg-gray-200" v-on:click="setLang('en')">
                                 <div class="row">
                                     <div class="col">

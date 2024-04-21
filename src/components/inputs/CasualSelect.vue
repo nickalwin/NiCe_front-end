@@ -13,7 +13,7 @@
                 <select v-model="value"
                     :id="label"
                     :name="label"
-                    class="block w-full rounded-md border-0 py-3 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                    class="block w-full bg-gray-100 rounded-md border-0 py-3 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                     placeholder="0.00">
                     <option value="" disabled selected>
                         {{ $t('utils.select_option') }}

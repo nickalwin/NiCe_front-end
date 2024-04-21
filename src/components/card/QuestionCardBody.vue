@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <h1 class="text-xl sm:text-2xl md:text-3xl">
+        <!-- <h1 class="text-xl sm:text-2xl md:text-3xl">
             <strong>Dummy header</strong>
-        </h1>
+        </h1> -->
 
         <p class="text-xs sm:text-sm md:text-base">
             {{ getLocalizedQuestion() }}

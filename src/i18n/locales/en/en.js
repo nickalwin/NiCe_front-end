@@ -53,6 +53,11 @@ export default {
         low_score: "Not applicable at all",
         high_score: "Fully applicable",
         give_extra_feedback: "Give extra feedback",
+        score_text_1: "Not applicable at all",
+        score_text_2: "Marginally applicable",
+        score_text_3: "Partially applicable",
+        score_text_4: "Mostly applicable",
+        score_text_5: "Fully applicable",
     },
     results_page: {
         main_header: "Circularity scan report",
