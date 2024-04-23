@@ -58,6 +58,8 @@ export default {
         score_text_3: "Partially applicable",
         score_text_4: "Mostly applicable",
         score_text_5: "Fully applicable",
+        i_dont_know: "I don't know",
+        not_applicable: "Not applicable",
     },
     results_page: {
         main_header: "Circularity scan report",

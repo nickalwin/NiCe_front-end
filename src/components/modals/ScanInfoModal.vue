@@ -55,26 +55,28 @@
                     </CasualSelect>
                 </SingleRow>
 
-                <DoubleRow>
-                    <template #first>
-                        <span class="label-text">
-                            <FontAwesomeIcon icon="fa-asterisk" style="color: gray" />
+                <div class="flex flex-col w-full mb-2">
+                    <div class="grid h-10 flex-grow card rounded-box place-items-center">
+                        <div class="w-3/4 flex flex-row items-center justify-center">
+                            <input id="agreed" v-model="rulesAccepted" type="checkbox" class="checkbox" />
 
-                            {{ $t('utils.i_aggree_to') }}
+                            <span class="label-text mr-2 pb-3">
+                                <FontAwesomeIcon class="mr-6" icon="fa-asterisk" style="color: red" size="2xs" />
+                            </span>
 
-                            <a href="/terms-and-conditions" class="text-blue-500 underline">
+                            <span class="text-sm">
+                                {{ $t('utils.i_aggree_to') }} &nbsp;
+                            </span>
+
+                            <a href="/terms-and-conditions" class="text-blue-500 underline text-sm">
                                 {{ $t('utils.terms_and_conditions') }}
                             </a>
-                        </span>
-                    </template>
+                        </div>
+                    </div>
+                </div>
 
-                    <template #second>
-                        <input id="agreed" v-model="rulesAccepted" type="checkbox" class="checkbox" />
-                    </template>
-                </DoubleRow>
-
-                <cite class="text-sm">
-                    <FontAwesomeIcon icon="fa-asterisk" style="color: gray" /> {{ $t('utils.required_fields') }}
+                <cite class="text-xs">
+                    <FontAwesomeIcon icon="fa-asterisk" style="color: red" size="2xs" class="bl-1 pb-1" /> {{ $t('utils.required_fields') }}
                 </cite>
 
                 <DoubleRow>

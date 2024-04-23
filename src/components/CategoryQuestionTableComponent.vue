@@ -1,15 +1,15 @@
 <template>
     <div class="w-full flex justify-center mt-10">
-        <div class="max-w-full mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8">
+        <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-8">
             <div class="flex overflow-x-auto mb-4 space-x-4">
-                <button v-for="(group, index) in groupedQuestions" :key="index" @click="selectedGroup = group" :class="selectedGroup === group ? 'bg-blue-700' : 'bg-blue-500'" class="text-white font-bold py-2 px-4 rounded">
+                <button v-for="(group, index) in groupedQuestions" :key="index" @click="selectedGroup = group" :class="selectedGroup === group ? 'bg-indigo-700' : 'bg-indigo-500'" class="text-white font-bold py-2 px-4 rounded">
                     {{ getLocalizedCategoryName(group.category) }}
                 </button>
             </div>
             <div v-if="selectedGroup" class="overflow-x-auto">
                 <table class="mt-4 w-full table-auto">
                     <thead>
-                        <tr>
+                        <tr class="bg-indigo-200">
                             <th class="px-4 py-2">
                                 {{ $t('fields.questions') }}
                             </th>
@@ -24,11 +24,8 @@
                             </th>
                         </tr>
                     </thead>
-                    <div>
-
-                    </div>
                     <tbody>
-                        <tr v-for="(question, qIndex) in selectedGroup.questions.grouped_answers" :key="qIndex" class="transition-colors duration-200 hover:bg-blue-100">
+                        <tr v-for="(question, qIndex) in selectedGroup.questions.grouped_answers" :key="qIndex" class="transition-colors duration-200 hover:bg-indigo-100">
                             <td class="border px-4 py-2">
                                 <ul>
                                     <li>
@@ -61,7 +58,7 @@
                                 </div>
                             </td>
                             <td class="border px-4 py-2">
-                                <button v-on:click="editScorePopup(question)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button v-on:click="editScorePopup(question)" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                                     {{ $t('utils.edit') }}
                                 </button>
                             </td>

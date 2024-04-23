@@ -60,6 +60,8 @@ export default {
         score_text_3: "Gedeeltelijk van toepassing",
         score_text_4: "Meestal van toepassing",
         score_text_5: "Volledig van toepassing",
+        i_dont_know: "Weet ik niet",
+        not_applicable: "Niet van toepassing",
     },
     results_page: {
         main_header: "Rapport Circulaire scan",

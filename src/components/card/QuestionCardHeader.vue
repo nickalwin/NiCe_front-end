@@ -1,5 +1,4 @@
 <template>
-
     <div class="col">
         <div class="row overflow-x-auto">
             <div class="text-sm breadcrumbs w-full">
@@ -7,10 +6,15 @@
                     <li v-for="(c, index) in categories" class="inline">
                         <a
                             v-on:click="() => { jumpToCategory(c.uuid) }"
-                            :class="`
-                                ${isCategoryPicked(c) ? 'bg-blue-400' : (isCategoryCompleted(c) ? 'bg-gray-400' : '') }
-                                rounded-lg px-2
-                            `">
+                            class="rounded-lg px-2 py-1 m-1"
+                            :style="`
+                                background-color: ${colors[index]}; color: white;
+                            `"
+                        >
+                            <template v-if="isCategoryPicked(c)">
+                                <FontAwesomeIcon icon="crosshairs" />
+                                &nbsp;
+                            </template>
                             {{ getLocalizedCategoryName(c) }}
                         </a>
                     </li>
@@ -26,7 +30,7 @@
                             v-on:click="() => { jumpToQuestion(q.uuid) }"
                             :class="`
                                 ${isQuestionPicked(q) ? 'bg-blue-400' : (isQuestionAnswered(q) ? getColorForAnswer(q.answer) : '') }
-                                rounded-lg px-2
+                                rounded-lg px-2 py-1 m-1
                             `">
                             {{ index + 1 }}
                         </a>
@@ -35,7 +39,7 @@
             </div>
         </div>
 
-        <div class="tooltip tooltip-info tooltip-right rounded-lg px-1 py-1 text-xs mt-2"
+        <div class="tooltip tooltip-info tooltip-right rounded-lg px-2 py-2 text-xs mt-2"
             :data-tip="getLocalizedTooltip()">
             <div class="flex justify-between">
                 <div v-if="question.data" class="px-5 py-2 bg-blue-400 rounded-badge">
@@ -53,7 +57,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -67,6 +70,18 @@ export default {
         questions: { required: true },
         category: { required: true },
         categories: { required: true }
+    },
+    data() {
+        return {
+            colors: [ // TEMPORARY
+                '#f287b7',
+                '#1ebcc5',
+                '#ffcb05',
+                '#b1d249',
+                '#84d0d9',
+                '#f16682',
+            ]
+        }
     },
     methods: {
         isQuestionPicked(question) {

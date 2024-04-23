@@ -12,9 +12,9 @@
                     />
                 </SingleRow>
 
-                <SingleRow class="mt-20">
+                <SingleRow>
                     <textarea v-model="question.comment"
-                        class="w-full mt-4 p-4 bg-gray-100 rounded"
+                        class="w-full mt-4 p-4 bg-gray-200 rounded"
                         :placeholder="$t('scan_page.add_a_comment')"/>
                 </SingleRow>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="w-3/4">
         <label :for="label" class="block text-sm font-medium leading-6 text-gray-900">
-            {{ label }} <FontAwesomeIcon icon="fa-asterisk" style="color: gray" size="sm" />
+            {{ label }} <FontAwesomeIcon icon="fa-asterisk" style="color: red" size="2xs" class="pb-1" />
         </label>
         <div class="flex flex-col">
             <div class="relative rounded-md shadow-sm">

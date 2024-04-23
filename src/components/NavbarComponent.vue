@@ -46,7 +46,7 @@
                         <a>{{ $t('navbar_component.pick_language') }}</a>
                         <ul class="p-2">
                             <li>
-                            <li class="hover:bg-gray-200" v-on:click="setLang('en')">
+                            <li v-on:click="setLang('en')">
                                 <div class="row">
                                     <div class="col">
                                         <strong>EN</strong>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
+                            <li v-on:click="setLang('nl')">
                                 <div class="row">
                                     <div class="col">
                                         <strong>NL</strong>
@@ -110,7 +110,7 @@
                             <FontAwesomeIcon icon="fa-caret-down" />
                         </div>
                         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-100 rounded-box w-28">
-                            <li class="hover:bg-gray-200" v-on:click="setLang('en')">
+                            <li v-on:click="setLang('en')">
                                 <div class="row">
                                     <div class="col">
                                         <strong>EN</strong>
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="hover:bg-gray-200" v-on:click="setLang('nl')">
+                            <li v-on:click="setLang('nl')">
                                 <div class="row">
                                     <div class="col">
                                         <strong>NL</strong>

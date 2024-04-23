@@ -46,6 +46,10 @@
     --color-background: #fff578;
 }
 
+.tooltip-info {
+    --tooltip-color: rgb(59 130 246 / var(--tw-bg-opacity)) !important;
+}
+
 *,
 *::before,
 *::after {
