@@ -75,6 +75,10 @@ export default {
         tips_to_improve: "Tips om te verbeteren",
         additional_tools: "Extra tools",
     },
+    pdf_report: {
+        main_header: "Circulaire scan PDF-rapport",
+        main_text: "Bedankt voor het invullen van de circulaire scan. In dit pdf-document kunt u uw resultaten vinden. Hoe hoger u scoort op een categorie, hoe beter u al bezig bent met de circulaire economie in dat gebied.",
+    },
     history_page: {
         last_codes: "De unieke codes van uw laatste scan",
         editable: "Bewerkbaar",

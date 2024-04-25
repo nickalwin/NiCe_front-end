@@ -18,6 +18,8 @@
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "sweetalert2": "^11.10.5",
     "theme-change": "^2.5.0",
     "vue": "^3.4.15",

@@ -73,6 +73,10 @@ export default {
         tips_to_improve: "Tips to improve",
         additional_tools: "Additional tools",
     },
+    pdf_report: {
+        main_header: "Circularity scan PDF report",
+        main_text: "Thank you for completing the circularity scan. In this pdf document you can find your results. The higher you score on a category, the better you are already doing with the circular economy in that area.",
+    },
     history_page: {
         last_codes: "Your last scan's unique codes",
         editable: "Editable",

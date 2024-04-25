@@ -30,9 +30,11 @@
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
-        <!-- <div class="hero mt-10">
-            <PrimaryButton :label="$t('results_page.download_pdf')" />
-        </div> -->
+        <div class="hero mt-10">
+            <PrimaryButton :label="$t('results_page.download_pdf')"
+                @onClick="generatePDF"
+            />
+        </div>
         <div class="hero mt-10">
             <p class="text-lg">
                 {{ $t('results_page.main_text') }}
@@ -43,7 +45,7 @@
         </div>
         <div class="card mt-10 bg-gray-100 shadow-xl">
             <div class="items-center text-center md:p-10">
-                <Bar v-if="plotData" :data="plotData" :options="options" />
+                <Bar id="plot" v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
 
@@ -74,6 +76,7 @@ import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
 import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
+import PDFGenerator from '@/helpers/PDFGenerator';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -230,6 +233,11 @@ export default {
                 datasets: copy.datasets
             }
         },
+        generatePDF() {
+            var generator = new PDFGenerator();
+
+            generator.GeneratePDF();
+        }
     },
     watch: {
         '$i18n.locale': function() {
