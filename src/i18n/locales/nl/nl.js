@@ -110,7 +110,9 @@ export default {
         question_c: "VRAAG",
         questions: "Vragen",
         answers: "Antwoorden",
+        answer: "Antwoord",
         comments: "Opmerkingen",
+        comment: "Opmerking",
         actions: "Acties",
     },
     utils: {

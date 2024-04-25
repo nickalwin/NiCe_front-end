@@ -108,7 +108,9 @@ export default {
         question_c: "QUESTION",
         questions: "Questions",
         answers: "Answers",
+        answer: "Answer",
         comments: "Comments",
+        comment: "Comment",
         actions: "Actions",
     },
     utils: {

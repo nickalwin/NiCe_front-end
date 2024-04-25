@@ -138,6 +138,9 @@ export default {
         },
         selectGroupByIndex(index) {
             this.selectedGroup = this.groupedQuestions[index];
+        },
+        getGroupedQuestions() {
+            return this.groupedQuestions;
         }
     },
     mounted() {

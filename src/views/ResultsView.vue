@@ -52,7 +52,7 @@
         <div id="CategoryQuestionTable">
             <CategoryQuestionTableComponent ref="CategoryQuestionTableComponent"
                 v-if="scan" :data="scan.data" :categories="categoriesWithMeans"
-                @answerUpdated = "updateScanResults"
+                @answerUpdated="updateScanResults"
             />
         </div>
 
@@ -234,9 +234,10 @@ export default {
             }
         },
         generatePDF() {
-            var generator = new PDFGenerator();
+            var data = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
+            var generator = new PDFGenerator(data);
 
-            generator.GeneratePDF();
+            generator.generatePDF();
         }
     },
     watch: {
