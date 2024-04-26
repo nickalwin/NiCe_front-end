@@ -114,6 +114,7 @@ export default {
         comments: "Opmerkingen",
         comment: "Opmerking",
         actions: "Acties",
+        number: "Nummer",
     },
     utils: {
         optional: "Optioneel",

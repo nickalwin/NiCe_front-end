@@ -12,7 +12,7 @@
         </div>
 
         <div class="ml-1 flex space-x-2">
-            <button v-on:click="onClick(0)" type="button"
+            <button v-if="notApplicableAvailable" v-on:click="onClick(0)" type="button"
                 :class="`text-white text-xs sm:text-sm px-2 py-1 rounded-full ${question.answer == 0  ? 'bg-blue-600' : 'bg-gray-500'}`">
                 {{ $t('scan_page.not_applicable') }}
             </button>
@@ -41,7 +41,11 @@ export default {
     props: {
         question: {
             required: true
-        }
+        },
+        notApplicableAvailable: {
+            type: Boolean,
+            default: true
+        },
     },
     methods: {
         onClick(value) {

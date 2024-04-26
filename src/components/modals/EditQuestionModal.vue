@@ -7,7 +7,7 @@
                 </h1>
 
                 <SingleRow>
-                    <QuestionRating :question="question"
+                    <QuestionRating :question="question" :notApplicableAvailable="false"
                         @onChange="question.answer = $event"
                     />
                 </SingleRow>

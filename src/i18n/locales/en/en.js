@@ -112,6 +112,7 @@ export default {
         comments: "Comments",
         comment: "Comment",
         actions: "Actions",
+        number: "Number",
     },
     utils: {
         optional: "Optional",
