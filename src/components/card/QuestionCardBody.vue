@@ -9,7 +9,7 @@
         </p>
 
         <div class="flex justify-center my-6">
-            <img :src="question.image" class="lg:w-full" alt="No image provided" />
+            <img :src="question.image" class="lg:w-full" height="200" />
         </div>
 
         <QuestionRating :question="question" @onChange="question.answer = $event" />

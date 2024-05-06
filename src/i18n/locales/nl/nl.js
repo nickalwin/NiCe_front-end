@@ -14,8 +14,6 @@ export default {
         pick_language: "Kies een taal",
     },
     summary_component: {
-        all_in_one: "Alles-in-één platform",
-        all_in_one_desc: "Van adaptieve vragen tot gedetailleerde prestatierapporten, we hebben alles wat u nodig heeft om een nuttige scan voor uw bedrijf te maken. Geniet van een gebruiksvriendelijke interface, toegankelijk op zowel mobiel als desktop, en krijg de ondersteuning die u nodig heeft, wanneer u die nodig heeft.",
         detailed_results: "Gedetailleerde resultaten",
         detailed_results_desc: "Toegang tot uitgebreide resultaten van uw test voor een diepgaande analyse",
         graphs_and_plots: "Grafieken en plots",
@@ -44,6 +42,9 @@ export default {
         understanding_your_env: "Het begrijpen van uw milieueffect is de eerste stap naar het maken van meer duurzame keuzes.",
         get_started: "Beginnen",
         show_guide: "Toon gids",
+        slogan: "Een stap vooruit naar een circulaire toekomst:",
+        slogan_begin: "Begin bij deze scan",
+        slogan_desc: "Deze scan is een algemene circulaire economie scan. Het invullen van de scan kan een eerste stap zijn om te kijken waar het bedrijf nu staat. Aan het eind van de scan krijgt u gebaseerd op uw antwoorden feedback. We linken u naar andere tools die u verder kan helpen met de transitie richting een circulaire economie.",
     },
     not_found_page: {
         not_found: "Niet gevonden",
@@ -139,6 +140,8 @@ export default {
         terms_and_conditions: "met de algemene voorwaarden",
         required_fields: "Verplichte velden",
         select_option: "Selecteer een optie",
+        danger: "Gevaar",
+        are_you_sure_delete: "Weet u zeker dat u dit wilt verwijderen?",
     },
     errors: {
         error: "Fout",

@@ -1,12 +1,4 @@
 <template>
-    <div class="text-center">
-        <h3 class="text-2xl sm:text-3xl font-bold mb-2">
-            {{ $t("summary_component.all_in_one") }}
-        </h3>
-        <p class="text-gray-500 text-sm sm:text-base max-w-md mx-auto">
-            {{ $t("summary_component.all_in_one_desc") }}
-        </p>
-    </div>
     <div class="py-12">
         <div class="container mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">

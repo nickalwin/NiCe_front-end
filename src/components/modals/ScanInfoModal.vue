@@ -166,6 +166,7 @@ export default {
             axios.get('/api/sectors', {
 
             }).then((response) => {
+                console.log(response);
                 let sectors = response.data;
 
                 sectors.forEach((sector) => {

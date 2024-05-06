@@ -106,6 +106,31 @@
                 <li>
                     <div class="dropdown dropdown-hover">
                         <div tabindex="0" role="button">
+                            <strong>Theme</strong>
+                            <FontAwesomeIcon icon="fa-caret-down" />
+                        </div>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-100 rounded-box w-28">
+                            <li v-on:click="setTheme('green')">
+                                Green
+                            </li>
+                            <li v-on:click="setTheme('yellow')">
+                                Yellow
+                            </li>
+                            <li v-on:click="setTheme('lichtroze')">
+                                Innovation
+                            </li>
+                            <li v-on:click="setTheme('production')">
+                                Production
+                            </li>
+                            <li v-on:click="setTheme('labor')">
+                                Labor
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown dropdown-hover">
+                        <div tabindex="0" role="button">
                             <strong>{{ $i18n.locale == 'en' ? 'EN ' : 'NL ' }}</strong>
                             <FontAwesomeIcon icon="fa-caret-down" />
                         </div>

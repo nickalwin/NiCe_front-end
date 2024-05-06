@@ -183,6 +183,9 @@ export default {
                     questionData[this.$i18n.locale].question :
                     questionData['nl'].question
         },
+        getDisplayData() {
+            return this.displayData;
+        }
     },
     mounted() {
         this.sortQuestions();

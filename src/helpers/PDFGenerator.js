@@ -4,7 +4,7 @@ import 'jspdf-autotable';
 import ColorHelper from './ColorHelper.js';
 
 class PDFGenerator {
-    constructor(tableData) {
+    constructor(answersData, perCategoryData) {
         this.Config = {
             pdfBackgroundColor: "#fff578",
             headerFontSize: 40,
@@ -12,7 +12,8 @@ class PDFGenerator {
             leftMargin: 15,
             rightMargin: 10,
         }
-        this.tableData = tableData;
+        this.answersData = answersData;
+        this.perCategoryData = perCategoryData;
     }
 
     async loadImage(path) {
@@ -67,6 +68,19 @@ class PDFGenerator {
         });
     }
 
+    colorCell(data, index) {
+        if (data.column.index !== index)
+            return;
+
+        if (data.cell.raw === '?')
+            data.cell.styles.fillColor = [255, 0, 0];
+
+        if (isNaN(data.cell.raw))
+            return;
+
+        data.cell.styles.fillColor = ColorHelper.GetRGBColorForAnswer(data.cell.raw);
+    }
+
     async generatePDF(params) {
         var doc = new jsPDF('p', 'pt', 'a4');
         var docWidth = doc.internal.pageSize.getWidth();
@@ -113,7 +127,9 @@ class PDFGenerator {
 
         var tablePos = 1080;
 
-        for (const table of this.tableData) {
+        let self = this;
+
+        for (const table of this.answersData) {
             let category = table.category;
             let questions = table.questions;
             let categoryName = this.getLocalizedCategory(category);
@@ -131,21 +147,120 @@ class PDFGenerator {
                     doc.text(categoryName, data.settings.margin.left + 15, 40);
                 },
                 didParseCell: function (data) {
-                    if (data.column.index !== 2)
-                        return;
-
-                    if (data.cell.raw === '?')
-                        data.cell.styles.fillColor = [255, 0, 0];
-
-                    if (isNaN(data.cell.raw))
-                        return;
-
-                    data.cell.styles.fillColor = ColorHelper.GetRGBColorForAnswer(data.cell.raw);
+                    self.colorCell(data, 2);
                 },
                 margin: { top: 60 },
             })
 
             tablePos += 1000;
+        }
+
+        doc.addPage();
+
+        for (const categoryStats of this.perCategoryData) {
+            let label = categoryStats.label;
+            let mean = categoryStats.mean.toFixed(2);
+
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.setFillColor(173, 216, 230);
+            doc.rect(40, 30, docWidth - 80, 30, 'F');
+            doc.text(label + `   ${mean} / 5.00`, 45, 49);
+
+            let dontKnowData = categoryStats.dontKnownAnswers.map(dontKnow => {
+                return [dontKnow.answer, this.getLocalizedQuestion(dontKnow)];
+            });
+
+            doc.setFontSize(16);
+            doc.text("I Don't Know Questions", 40, 100);
+            doc.autoTable({
+                startY: 110,
+                head: [['Answer', 'Question']],
+                body: dontKnowData,
+                theme: 'striped',
+                didParseCell: function (data) {
+                    self.colorCell(data, 0);
+                },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+            });
+
+            let lowAnswerData = categoryStats.lowestAnswers.map(lowAnswer => {
+                return [lowAnswer.answer, this.getLocalizedQuestion(lowAnswer)];
+            });
+
+            doc.setFontSize(16);
+            doc.text("Lowest Score Questions", 40, doc.previousAutoTable.finalY + 25);
+            doc.autoTable({
+                startY: doc.previousAutoTable.finalY + 30,
+                head: [['Answer', 'Question']],
+                body: lowAnswerData,
+                theme: 'striped',
+                didParseCell: function (data) {
+                    self.colorCell(data, 0);
+                },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+            });
+
+            let topAnswerData = categoryStats.topAnswers.map(topAnswer => {
+                return [topAnswer.answer, this.getLocalizedQuestion(topAnswer)];
+            });
+
+            doc.setFontSize(16);
+            doc.text("Top Score Questions", 40, doc.previousAutoTable.finalY + 25);
+            doc.autoTable({
+                startY: doc.previousAutoTable.finalY + 30,
+                head: [['Answer', 'Question']],
+                body: topAnswerData,
+                theme: 'striped',
+                didParseCell: function (data) {
+                    self.colorCell(data, 0);
+                },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+            });
+
+            let tricksData = [
+                ["Trick 1: Some dummy text..."],
+                ["Trick 2: Some dummy text..."],
+                ["Trick 3: Some dummy text..."],
+                ["Trick 4: Some dummy text..."],
+                ["Trick 4: Some dummy text..."],
+            ];
+
+            doc.setFontSize(16);
+            doc.text("Tricks to improve", 40, doc.previousAutoTable.finalY + 25);
+            doc.autoTable({
+                startY: doc.previousAutoTable.finalY + 30,
+                head: [['Tricks']],
+                body: tricksData,
+                theme: 'striped',
+                didParseCell: function (data) {
+                    self.colorCell(data, 0);
+                },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+            });
+
+            let linksData = [
+                ["Link 1: https://www.google.com"],
+                ["Link 2: https://www.google.com"],
+                ["Link 3: https://www.google.com"],
+                ["Link 4: https://www.google.com"],
+                ["Link 5: https://www.google.com"],
+            ];
+
+            doc.setFontSize(16);
+            doc.text("Usefull Links", 40, doc.previousAutoTable.finalY + 25);
+            doc.autoTable({
+                startY: doc.previousAutoTable.finalY + 30,
+                head: [['Links']],
+                body: linksData,
+                theme: 'striped',
+                didParseCell: function (data) {
+                    self.colorCell(data, 0);
+                },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+            });
+
+            doc.addPage();
         }
 
         var pageCount = doc.internal.getNumberOfPages();

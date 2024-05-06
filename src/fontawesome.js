@@ -12,13 +12,19 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit,
     faRecycle, faKey, faBars, faHouse, faLanguage, faCaretDown, faAsterisk, faIndustry,
-    faQuestion, faCrosshairs,
+    faQuestion, faCrosshairs, faTrash,
 } from '@fortawesome/free-solid-svg-icons';
+
+import {
+    faWhatsapp, faLinkedin,
+} from '@fortawesome/free-brands-svg-icons';
 
 library.add(
     faPhone, faEnvelope, faMapMarkerAlt, faLeaf, faSun, faInfo, faEye, faEyeSlash, faEdit,
     faRecycle, faKey, faBars, faHouse, faLanguage, faCaretDown, faAsterisk, faIndustry,
-    faQuestion, faCrosshairs,
+    faQuestion, faCrosshairs, faTrash,
+
+    faWhatsapp, faLinkedin,
 );
 
 export default FontAwesomeIcon;

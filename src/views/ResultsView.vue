@@ -57,12 +57,19 @@
         </div>
 
         <CategoryDetailInfo v-if="plotData"
+            ref="CategoryDetailInfo"
             :data="plotData" class="mt-10"
             :allLabelsWithCategoryUuid="allLabelsWithCategoryUuid"
             :categories="scan.data"
         />
 
-        <ContactInfoComponent class="mt-10" />
+        <span v-on:click="removeContactInfo" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg" style="float: right;">
+            <FontAwesomeIcon icon="fa-trash" color="red" />
+        </span>
+
+        <div class="mt-10">
+            <FooterComponent />
+        </div>
     </LoadingTemplate>
 </template>
 
@@ -74,6 +81,7 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 import LoadingTemplate from '@/components/utils/LoadingTemplate.vue';
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
 import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
 import PDFGenerator from '@/helpers/PDFGenerator';
@@ -83,7 +91,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 export default {
     components: {
         Bar, LoadingTemplate, PrimaryButton, ContactInfoComponent, CategoryQuestionTableComponent,
-        CategoryDetailInfo,
+        CategoryDetailInfo, FooterComponent
     },
     data() {
         return {
@@ -234,10 +242,20 @@ export default {
             }
         },
         generatePDF() {
-            var data = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
-            var generator = new PDFGenerator(data);
+            var answersData = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
+            var perCategoryData = this.$refs.CategoryDetailInfo.getDisplayData();
+            var generator = new PDFGenerator(answersData, perCategoryData);
 
             generator.generatePDF();
+        },
+        removeContactInfo() {
+            PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
+                localStorage.removeItem('lastCodes');
+                localStorage.removeItem('contactInfo');
+                this.$router.push(RouteList.Home);
+
+                // todo api request
+            });
         }
     },
     watch: {

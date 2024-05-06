@@ -42,6 +42,9 @@ export default {
         understanding_your_env: "Understanding your environmental impact is the first step towards making more sustainable choices.",
         get_started: "Get started",
         show_guide: "Show guide",
+        slogan: "A step forward towards a circular future:",
+        slogan_begin: "Start with this scan",
+        slogan_desc: "This scan is a general circular economy scan. Filling out the scan can be a first step to see where the company stands now. At the end of the scan you will receive feedback based on your answers. We link you to other tools that can help you further with the transition towards a circular economy.",
     },
     not_found_page: {
         not_found: "Not found",
@@ -137,6 +140,8 @@ export default {
         terms_and_conditions: "terms and conditions",
         required_fields: "Required fields",
         select_option: "Select an option",
+        danger: "Danger",
+        are_you_sure_delete: "Are you sure you want to delete this?",
     },
     errors: {
         error: "Error",
