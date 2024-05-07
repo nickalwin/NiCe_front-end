@@ -1,8 +1,10 @@
 <template>
     <div class="container">
-        <!-- <h1 class="text-xl sm:text-2xl md:text-3xl">
-            <strong>Dummy header</strong>
-        </h1> -->
+        <h1 class="text-xl sm:text-2xl md:text-3xl">
+            <strong>
+                {{ getLocalizedHeader() }}
+            </strong>
+        </h1>
 
         <p class="text-xs sm:text-sm md:text-base">
             {{ getLocalizedQuestion() }}
@@ -75,6 +77,11 @@ export default {
             return this.question.data[this.$i18n.locale] ?
                     this.question.data[this.$i18n.locale].question :
                     this.question.data['nl'].question
+        },
+        getLocalizedHeader() {
+            return this.question.data[this.$i18n.locale] ?
+                    this.question.data[this.$i18n.locale].header :
+                    this.question.data['nl'].header
         },
         toggleEye(isOpen) {
             this.isEyeOpen = isOpen;
