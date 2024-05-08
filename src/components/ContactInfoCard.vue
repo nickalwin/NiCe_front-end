@@ -30,6 +30,7 @@
 import LocalStorage from "@/helpers/LocalStorage";
 import ScanInfoUpdateModal from "@/components/modals/ScanInfoUpdateModal.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
+import RouteList from "@/helpers/RouteList.js";
 
 export default {
     name: "ContactInfoCard",
@@ -66,7 +67,8 @@ export default {
         deleteRecords() {
             PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
                 LocalStorage.ClearScanResults();
-                window.location.reload();
+                LocalStorage.ClearContactInfo();
+                this.$router.push(RouteList.Home);
             });
         }
     },

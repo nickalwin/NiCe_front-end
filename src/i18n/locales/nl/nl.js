@@ -36,6 +36,20 @@ export default {
         contact_info_desc: "We horen graag van u!",
         send_us_a_message: "Stuur ons een bericht",
     },
+    footer_component: {
+        main: "Neem contact met ons op",
+        phone: "Bel",
+        when_to_call: "Op werkdagen van 9.00 tot 17.00 uur",
+        respond_1_hour: "Reageert binnen 1 uur",
+        respond_24_hour: "Reageert binnen 24 uur",
+        other_scanning_tools: "Andere scan tools",
+        quick_links: "Snelle links",
+        policies: "Beleid",
+        privacy_policy: "Privacybeleid",
+        cookie_policy: "Cookiebeleid",
+        newsletter: "Nieuwsbrief",
+        subscribe: "Abonneer u op de NiCE-nieuwsbrief",
+    },
     home_page: {
         check_your_impact_1: "Controleer je impact op",
         check_your_impact_2: "het milieu",
@@ -116,6 +130,10 @@ export default {
         comment: "Opmerking",
         actions: "Acties",
         number: "Nummer",
+    },
+    captcha: {
+        correct: "Correct",
+        incorrect: "Ongeldige captcha. Probeer het opnieuw.",
     },
     utils: {
         optional: "Optioneel",

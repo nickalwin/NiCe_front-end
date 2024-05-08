@@ -36,6 +36,20 @@ export default {
         contact_info_desc: "We'd love to hear from you!",
         send_us_a_message: "Send us a message",
     },
+    footer_component: {
+        main: "Contact us",
+        phone: "Call",
+        when_to_call: "On weekdays from 9.00 to 17.00",
+        respond_1_hour: "Responds within 1 hour",
+        respond_24_hour: "Responds within 24 hours",
+        other_scanning_tools: "Other scanning tools",
+        quick_links: "Quick links",
+        policies: "Policies",
+        privacy_policy: "Privacy policy",
+        cookie_policy: "Cookie policy",
+        newsletter: "Newsletter",
+        subscribe: "Subscribe to the NiCE newsletter",
+    },
     home_page: {
         check_your_impact_1: "Check your impact on",
         check_your_impact_2: "the environment",
@@ -116,6 +130,10 @@ export default {
         comment: "Comment",
         actions: "Actions",
         number: "Number",
+    },
+    captcha: {
+        correct: "Correct",
+        incorrect: "Incorrect captcha. Please try again.",
     },
     utils: {
         optional: "Optional",

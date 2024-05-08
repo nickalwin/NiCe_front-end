@@ -1,8 +1,6 @@
 <template>
     <LoadingTemplate :isLoading="isLoadingResults" :center="true" :size="'4x'">
-        <!-- TEMPORARY -->
-
-        <div v-if="$i18n.locale === 'en'">
+        <!-- <div v-if="$i18n.locale === 'en'">
             <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
                 <h1 class="text-2xl md:text-3xl font-bold mb-4">
                     Attention Finance and Control Students
@@ -23,7 +21,7 @@
                 </p>
                 <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Ga naar Enquête</a>
             </div>
-        </div>
+        </div> -->
 
         <div class="hero mt-10">
             <h1 class="text-4xl font-bold">

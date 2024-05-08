@@ -15,6 +15,7 @@
 
 <script>
 import PrimaryButton from '../buttons/PrimaryButton.vue';
+import i18n from '../../i18n/index.js';
 
 export default {
     components: {
@@ -66,10 +67,10 @@ export default {
         },
         checkCaptcha() {
             if (this.userInput === this.captchaText) {
-                this.feedback = 'Captcha correct!';
+                this.feedback = i18n.global.t('captcha.correct');
                 this.$emit('onSuccess');
             } else {
-                this.feedback = 'Incorrect captcha. Please try again.';
+                this.feedback = i18n.global.t('captcha.incorrect');
             }
 
             this.generateCaptcha();
