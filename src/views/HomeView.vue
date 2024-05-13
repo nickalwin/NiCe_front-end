@@ -71,6 +71,9 @@ export default {
         handleShowGuide() {
             this.$router.push('/guide');
         }
+    },
+    mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
     }
 };
 </script>

@@ -19,7 +19,7 @@
                             <th class="px-4 py-2">
                                 {{ $t('fields.comments') }}
                             </th>
-                            <th class="px-4 py-2">
+                            <th v-if="isEditable" class="px-4 py-2">
                                 {{ $t('fields.actions') }}
                             </th>
                         </tr>
@@ -57,7 +57,7 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="border px-4 py-2">
+                            <td v-if="isEditable" class="border px-4 py-2">
                                 <button v-on:click="editScorePopup(question)" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
                                     {{ $t('utils.edit') }}
                                 </button>
@@ -88,7 +88,8 @@ export default {
     emits: ['answerUpdated'],
     props: {
         data: { type: Array, required: true },
-        categories: { type: Array, required: true }
+        categories: { type: Array, required: true },
+        isEditable: { type: Boolean, required: true }
     },
     data() {
         return {

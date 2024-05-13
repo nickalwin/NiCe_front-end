@@ -88,31 +88,6 @@
                 <li>
                     <div class="dropdown dropdown-hover">
                         <div tabindex="0" role="button">
-                            <strong>Theme</strong>
-                            <FontAwesomeIcon icon="fa-caret-down" />
-                        </div>
-                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-100 rounded-box w-28">
-                            <li v-on:click="setTheme('green')">
-                                Green
-                            </li>
-                            <li v-on:click="setTheme('yellow')">
-                                Yellow
-                            </li>
-                            <li v-on:click="setTheme('lichtroze')">
-                                Innovation
-                            </li>
-                            <li v-on:click="setTheme('production')">
-                                Production
-                            </li>
-                            <li v-on:click="setTheme('labor')">
-                                Labor
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <div class="dropdown dropdown-hover">
-                        <div tabindex="0" role="button">
                             <strong>{{ $i18n.locale == 'en' ? 'EN ' : 'NL ' }}</strong>
                             <FontAwesomeIcon icon="fa-caret-down" />
                         </div>
@@ -217,6 +192,7 @@ export default {
                     }).then((response) => {
                         let data = response.data;
                         let scanUuid = data.scan_uuid;
+                        let scanCode = data.scan_code;
                         let isEditable = data.editable;
 
                         Queue.fire({
@@ -230,7 +206,7 @@ export default {
                             heightAuto: false,
                             preConfirm: (result) => {
                                 if (result) {
-                                    this.$router.push(RouteList.Result + "/" + scanUuid);
+                                    this.$router.push(RouteList.Result + "/" + scanUuid + "/" + scanCode);
                                 } else {
                                     Swal.close();
                                 }

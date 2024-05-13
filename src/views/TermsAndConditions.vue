@@ -635,5 +635,8 @@ export default {
     components: {
         ContactInfoComponent,
     },
+    mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+    }
 };
 </script>

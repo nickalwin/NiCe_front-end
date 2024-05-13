@@ -68,6 +68,8 @@ export default {
         }
     },
     mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+
         let codes = LocalStorage.TryGetLastCodes();
 
         if (codes) {

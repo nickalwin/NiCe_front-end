@@ -49,7 +49,7 @@
 
         <div id="CategoryQuestionTable">
             <CategoryQuestionTableComponent ref="CategoryQuestionTableComponent"
-                v-if="scan" :data="scan.data" :categories="categoriesWithMeans"
+                v-if="scan" :data="scan.data" :categories="categoriesWithMeans" :isEditable="isEditable"
                 @answerUpdated="updateScanResults"
             />
         </div>
@@ -61,7 +61,7 @@
             :categories="scan.data"
         />
 
-        <span v-on:click="removeContactInfo" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg" style="float: right;">
+        <span v-if="isEditable" v-on:click="removeContactInfo" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg" style="float: right;">
             <FontAwesomeIcon icon="fa-trash" color="red" />
         </span>
 
@@ -117,6 +117,7 @@ export default {
             },
             isLoadingResults: false,
             categoriesWithMeans: null,
+            isEditable: false,
         }
     },
     methods: {
@@ -248,11 +249,28 @@ export default {
         },
         removeContactInfo() {
             PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
-                localStorage.removeItem('lastCodes');
-                localStorage.removeItem('contactInfo');
-                this.$router.push(RouteList.Home);
+                axios.delete(`/api/scans/${this.$route.params.uuid}/deleteContactInfo`, {
 
-                // todo api request
+                }).then(() => {
+                    PopupHelper.DisplaySuccessPopup("Contact information removed.", () => {
+                        localStorage.removeItem('lastCodes');
+                        localStorage.removeItem('contactInfo');
+
+                        this.$router.push(RouteList.Home);
+                    });
+                }).catch(error => {
+                    PopupHelper.DisplayErrorPopup("Failed to remove contact information.");
+                });
+            });
+        },
+        validateScanCode() {
+            axios.get(`/api/scan-codes/${this.$route.params.code}`, {
+
+            }).then((response) => {
+                this.isEditable = response.data.editable;
+                console.log(this.isEditable);
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         }
     },
@@ -262,7 +280,10 @@ export default {
         },
     },
     mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+
         this.loadScanWithResults(this.$route.params.uuid);
+        this.validateScanCode();
     }
 }
 </script>

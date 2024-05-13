@@ -81,6 +81,8 @@ export default {
         jumpToCategory(categoryUuid) {
             this.current_category = this.categories.find((c) => c.uuid === categoryUuid);
 
+            document.documentElement.setAttribute("data-theme", this.current_category.color);
+
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.current_question = this.current_category.questions[0];
             } else {
@@ -155,9 +157,6 @@ export default {
 
             LocalStorage.SetScanResults(answers);
         },
-        loadQuestions() {
-            this.loadQuestionsFromApi();
-        },
         loadQuestionsFromApi() {
             this.loadingQuestions = true;
 
@@ -191,6 +190,7 @@ export default {
                         category = {
                             uuid: q.category_uuid,
                             data: JSON.parse(q.category_data),
+                            color: q.category_color,
                             is_completed: false,
                             questions: [question]
                         }
@@ -223,6 +223,7 @@ export default {
             }).then(() => {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+                document.documentElement.setAttribute("data-theme", this.current_category.color);
 
                 this.loadingQuestions = false;
             }).catch(() => {
@@ -264,7 +265,7 @@ export default {
                         readonly: response.data.view_code
                     });
 
-                    this.$router.push(RouteList.Result + "/" + response.data.uuid);
+                    this.$router.push(RouteList.Result + "/" + response.data.uuid + "/" + response.data.edit_code);
                 });
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
@@ -295,7 +296,7 @@ export default {
             });
 
             this.$refs.CaptchaModal.open();
-        },
+        }
     },
     mounted() {
         LocalStorage.ActiveCheck();
@@ -304,7 +305,7 @@ export default {
             this.$refs.ScanInfoModal.open();
         }
 
-        this.loadQuestions();
+        this.loadQuestionsFromApi();
     }
 }
 </script>
