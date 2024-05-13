@@ -268,7 +268,6 @@ export default {
 
             }).then((response) => {
                 this.isEditable = response.data.editable;
-                console.log(this.isEditable);
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
