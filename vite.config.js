@@ -16,7 +16,6 @@ export default defineConfig({
         exclude: ['source-map-js']
     },
     server: {
-        host: true,
-        port: 3000,
+        port: 80,
     },
 });

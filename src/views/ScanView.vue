@@ -1,171 +1,73 @@
 <template>
     <LoadingTemplate :isLoading="loadingQuestions" :center="true" :size="'4x'">
-        <div v-if="name && email && selectedSector" class="flex justify-between p-5">
-            <h1 class="text-5xl font-bold mb-10 first-letter:uppercase text-blue-900">
-                {{ name }} {{ $t('fields.somebodys_scan') }}
-            </h1>
-            <div class="flex m-1">
-                <div class="input input-disabled mx-1">
-                    <input class="input border-none rounded p-2 text-blue-900" type="email" :value="email" disabled />
-                    <span v-on:click="handleEditEmail" class="hover:text-gray-400 font-bold py-2 cursor-pointer hover:bg-blue-200 rounded">
-                        <FontAwesomeIcon icon="fa-edit" />
-                    </span>
-                </div>
-                <span class="select select-bordered bg-transparent mx-1 rounded p-2">
-                    {{ getLocalizedSectorName(selectedSector) }}
-                </span>
-                <!-- TODO proper email and sector change! -->
-                <!-- <select v-model="selectedSector" class="select select-bordered bg-transparent mx-1 rounded p-2 text-blue-900" disabled>
-                    <option v-for="sector in sectors" :key="sector.id" :value="sector.id">
-                        {{ getLocalizedSectorName(sector) }}
-                    </option>
-                </select> -->
-            </div>
-        </div>
-        <div class="flex justify-center">
-            <div class="overflow-x-auto">
-                <ul class="steps">
-                    <li v-for="(question, index) in current_category.questions"
-                        :class="`step ${isQuestionPicked(question) ? '' : isQuestionAnswered(question) ? 'step-warning' : 'step-error'} ${isQuestionPicked(question) ? 'step-info' : ''}`"
-                        :data-content="`${isQuestionAnswered(question) ? '✓' : 'X'}`"
-                        v-on:click="() => { jumpToQuestion(question.uuid) }"
-                    >
-                        {{ index + 1 }}
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <ContactInfoCard />
 
         <div class="flex w-full mt-10">
-            <div class="flex-grow md:flex-shrink md:w-2/3">
-                <div class="card flex-grow">
-                    <div class="bg-base-100 shadow-xl">
+            <div class="flex-grow md:flex-shrink">
+                <div id="questionCard" class="card flex-grow lg:w-full mx-auto items-center">
+                    <div class="w-3/4 bg-gray-100 shadow-xl">
                         <div class="card-body" v-if="current_question.data">
                             <div class="flex items-center justify-between">
-                                <h2 class="card-title">
-                                    {{
-                                        current_question.is_statement ?
-                                        $t('fields.statement') :
-                                        $t('fields.question')
-                                    }}
-                                </h2>
-                                <div class="tooltip tooltip-info"
-                                    :data-tip="getLocalizedTooltip()">
-                                    <button class="btn btn-info rounded-full">
-                                        <FontAwesomeIcon icon="fa-info" />
-                                    </button>
-                                </div>
+                                <QuestionCardHeader :question="current_question"
+                                    :totalQuestions="totalQuestions"
+                                    :questions="current_category.questions"
+                                    :category="current_category"
+                                    :categories="categories"
+                                    @jumpToQuestion="jumpToQuestion"
+                                    @jumpToCategory="jumpToCategory"
+                                />
                             </div>
 
-                            <p>
-                                {{ getLocalizedQuestion() }}
-                            </p>
-
-                            <img :src="current_question.image" alt="No image provided" />
-
-                            <div class="rating rating-lg flex items-center justify-center">
-                                <div class="text-lg font-semibold text-gray-600">
-                                    {{ $t('scan_page.low_score') }}
-                                </div>
-                                <div class="flex justify-center mx-4">
-                                    <input type="radio" class="rating-hidden text-xl" value="-1"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-5xl" value="1"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="2"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="3"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="4"
-                                        v-model="current_question.answer" />
-                                    <input type="radio" class="mask mask-star-2 bg-gray-500 text-xl" value="5"
-                                        v-model="current_question.answer" />
-                                </div>
-                                <div class="text-lg font-semibold text-gray-600">
-                                    {{ $t('scan_page.high_score') }}
-                                </div>
-                            </div>
-                            <div class="tooltip-container">
-                                <div class="tooltip tooltip-info" :data-tip="$t('scan_page.give_extra_feedback')">
-                                    <span v-if="isEyeOpen" class="text-lg font-bold" v-on:click="toggleEye(false)">
-                                        <FontAwesomeIcon icon="fa-eye" />
-                                    </span>
-                                    <span v-else class="text-lg font-bold " v-on:click="toggleEye(true)">
-                                        <FontAwesomeIcon icon="fa-eye-slash" />
-                                    </span>
-                                </div>
-                                <div>
-                                    <textarea v-model="current_question.comment" v-if="!isEyeOpen"
-                                        class="w-full h-24 mt-4 p-4 bg-gray-100 rounded"
-                                        :placeholder="$t('scan_page.add_a_comment')"/>
-                                </div>
-                            </div>
-                            <div class="card-actions justify-end">
-                                <PrimaryButton :label="$t('utils.next')" :disabled="current_question.answer === -1"
-                                    @onClick="jumpToNextQuestion" />
-                            </div>
+                            <QuestionCardBody :question="current_question"
+                                @jumpToNextQuestion="jumpToNextQuestion"
+                                @jumpToPreviousQuestion="jumpToPreviousQuestion" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ml-5 grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-                <div class="flex-grow md:max-w-1/4 lg:max-w-full">
-                    <ul class="steps steps-vertical">
-                        <li v-for="category in categories"
-                            :class="`step ${isCategoryPicked(category) ? '' : isCategoryCompleted(category) ? 'step-warning' : 'step-error'} ${isCategoryPicked(category) ? 'step-info' : ''}`"
-                            :data-content="`${category.is_completed ? '✓' : '●'}`"
-                            v-on:click="() => { jumpToCategory(category.uuid) }">
-                            <div class="text-xs sm:text-sm md:text-base">
-                                {{ getLocalizedCategoryName(category) }}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
         </div>
+
         <div class="mt-10">
             <SummaryComponent />
         </div>
+        <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
     </LoadingTemplate>
+
+    <ScanInfoModal ref="ScanInfoModal"
+        @onCancel="() => this.$router.push('/')"
+        @onContinue="() => {
+            this.$refs.ScanInfoModal.close();
+        }"
+    />
 </template>
 
 <script>
 import SummaryComponent from "@/components/SummaryComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
-import PrimaryButton from "@/components/buttons/PrimaryButton.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
 import RouteList from "@/helpers/RouteList.js";
 import LocalStorage from "@/helpers/LocalStorage";
+import QuestionCardHeader from "@/components/card/QuestionCardHeader.vue";
+import QuestionCardBody from "@/components/card/QuestionCardBody.vue";
+import ScanInfoModal from "@/components/modals/ScanInfoModal.vue";
+import ContactInfoCard from "@/components/ContactInfoCard.vue";
 
 export default {
-    components: { SummaryComponent, PrimaryButton, FontAwesomeIcon, LoadingTemplate },
+    components: {
+        SummaryComponent, FontAwesomeIcon, LoadingTemplate, QuestionCardHeader, QuestionCardBody,
+        ScanInfoModal, ContactInfoCard,
+    },
     data() {
         return {
             categories: [],
             current_category: {},
             current_question: {},
-            isEyeOpen: true,
             loadingQuestions: false,
-            sectors: [],
-            name: null,
-            email: null,
-            selectedSector: null,
+            totalQuestions: 0,
         }
     },
     methods: {
-        isQuestionAnswered(question) {
-            return question.answer !== -1;
-        },
-        isQuestionPicked(question) {
-            return question.uuid === this.current_question.uuid;
-        },
-        isCategoryCompleted(category) {
-            return category.is_completed;
-        },
-        isCategoryPicked(category) {
-            return category.uuid === this.current_category.uuid;
-        },
         jumpToQuestion(questionUuid) {
             this.current_question = this.current_category.questions.find((q) => q.uuid === questionUuid);
         },
@@ -186,12 +88,14 @@ export default {
             }
 
             this.saveAnswersToLocalStorage();
+
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
         },
         areAllQuestionsFromCategoryAnswered(category) {
-            return category.questions.every((q) => q.answer !== -1);
+            return category.questions.every((q) => q.answer !== -2);
         },
         getFirstNonAnsweredQuestion(category) {
-            return category.questions.find((q) => q.answer === -1);
+            return category.questions.find((q) => q.answer === -2);
         },
         getFirstNonCompletedCategory() {
             return this.categories.find((c) => !c.is_completed);
@@ -210,6 +114,22 @@ export default {
             }
 
             this.saveAnswersToLocalStorage();
+        },
+        jumpToPreviousQuestion() {
+            var currentIndex = this.current_category.questions.findIndex((q) => q.uuid === this.current_question.uuid);
+
+            if (currentIndex > 0) {
+                this.current_question = this.current_category.questions[currentIndex - 1];
+            } else {
+                var previousCategoryIndex = this.categories.findIndex((c) => c.uuid === this.current_category.uuid) - 1;
+
+                if (previousCategoryIndex >= 0) {
+                    this.current_category = this.categories[previousCategoryIndex];
+                    this.current_question = this.current_category.questions[this.current_category.questions.length - 1];
+                }
+            }
+
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth' });
         },
         saveAnswersToLocalStorage() {
             var answers = this.categories.map((c) => {
@@ -242,13 +162,18 @@ export default {
             }
         },
         loadQuestionsFromLocalStorage(answers) {
+            this.totalQuestions = 0;
+
             answers.forEach((c) => {
                 var category = {
                     uuid: c.category_uuid,
                     data: c.category_data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
+                        this.totalQuestions++;
+
                         return {
+                            id: this.totalQuestions,
                             uuid: q.question_uuid,
                             answer: q.answer,
                             comment: q.comment,
@@ -273,15 +198,20 @@ export default {
             }).then((response) => {
                 var questions = response.data;
 
+                this.totalQuestions = 0;
+
                 questions.forEach((q) => {
                     var questionData = JSON.parse(q.data);
 
+                    this.totalQuestions++;
+
                     var question = {
+                        id: this.totalQuestions,
                         uuid: q.uuid,
                         image: q.image,
                         is_statement: q.statement,
                         data: questionData,
-                        answer: -1,
+                        answer: -2,
                         comment: null
                     }
 
@@ -328,11 +258,13 @@ export default {
                 });
             });
 
+            let data = LocalStorage.GetContactInfo();
+
             axios.post('/api/scans', {
                 answers: questionsWithAnswers,
-                sector_id: 1,
-                contact_name: this.name,
-                contact_email: this.email,
+                sector_id: data.sector.value,
+                contact_name: data.name,
+                contact_email: data.email,
             }).then((response) => {
                 PopupHelper.DisplaySuccessPopup('Scan has been completed successfully!', () => {
                     LocalStorage.ClearScanResults();
@@ -346,20 +278,6 @@ export default {
                 });
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
-            });
-        },
-        toggleEye(isOpen) {
-            this.isEyeOpen = isOpen;
-        },
-        handleEditEmail() {
-            PopupHelper.DisplayEmailEditPopup('Change your email', this.email, (result) => {
-                LocalStorage.SetContactInfo({
-                    name: this.name,
-                    email: result,
-                    sector: this.selectedSector
-                });
-
-                this.email = result;
             });
         },
         loadSectorsFromAPI() {
@@ -378,62 +296,21 @@ export default {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
             });
         },
-        getLocalizedQuestion() {
-            return this.current_question.data[this.$i18n.locale] ?
-                    this.current_question.data[this.$i18n.locale].question :
-                    this.current_question.data['nl'].question
+        debugAnswerAllQuestions() {
+            this.categories.forEach((category) => {
+                category.is_completed = true;
+                category.questions.forEach((question) => {
+                    question.answer = Math.floor(Math.random() * 6) - 1;
+                });
+            });
+            this.onScanCompleted();
         },
-        getLocalizedTooltip() {
-            return this.current_question.data[this.$i18n.locale] ?
-                    this.current_question.data[this.$i18n.locale].tooltip :
-                    this.current_question.data['nl'].tooltip
-        },
-        getLocalizedCategoryName(category) {
-            return category.data[this.$i18n.locale] ?
-                    category.data[this.$i18n.locale].name :
-                    category.data['nl'].name;
-        },
-        getLocalizedSectorName(sector) {
-            return sector.data[this.$i18n.locale] ?
-                    sector.data[this.$i18n.locale].name :
-                    sector.data['nl'].name;
-        }
     },
     mounted() {
         LocalStorage.ActiveCheck();
 
-        let data = LocalStorage.GetContactInfo();
-
-        if (data) {
-            this.name = data.name;
-            this.email = data.email;
-            this.selectedSector = data.sector;
-        } else {
-            const popup = (sectors) => PopupHelper.DisplaySectorPopup(
-                'Enter scan information', sectors, this.$i18n.locale, false,
-                (Result) =>
-            {
-                let sector = this.sectors.find((sector) => sector.id === parseInt(Result[2]));
-
-                LocalStorage.SetContactInfo({
-                    name: Result[0],
-                    email: Result[1],
-                    sector: sector,
-                });
-
-                this.name = Result[0];
-                this.email = Result[1];
-                this.selectedSector = sector;
-            }, () => {
-                this.$router.push(RouteList.Home);
-            });
-
-            if (!this.sectors.length)
-                this.loadSectorsFromAPI().then(() => {
-                    popup(this.sectors);
-                });
-            else
-                popup(this.sectors);
+        if (!LocalStorage.GetContactInfo()) {
+            this.$refs.ScanInfoModal.open();
         }
 
         this.loadQuestions();

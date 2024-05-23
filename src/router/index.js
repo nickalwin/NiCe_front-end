@@ -30,6 +30,12 @@ const router = createRouter({
 
         },
         {
+            path: '/terms-and-conditions',
+            name: 'terms-and-conditions',
+            component: () => import('@/views/TermsAndConditions.vue'),
+
+        },
+        {
             path: '/:pathMatch(.*)*',
             name: 'not-found',
             component: () => import('@/views/NotFoundView.vue'),

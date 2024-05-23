@@ -1,77 +1,134 @@
 <template>
     <div class="navbar" style="background-color: var(--color-ternary)">
         <div class="navbar-start">
+            <img src="/LeftNavIcon.png" alt="" width="80" />
+
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h8m-8 6h16" />
                     </svg>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li>
+
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-gray-100 rounded-box w-52">
+                    <li class="hover:bg-gray-200">
                         <RouterLink to="/">
-                            {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                            {{ $t('navbar_component.home_route') }}
+                            <FontAwesomeIcon icon="fa-house" />
                         </RouterLink>
                     </li>
-                    <li>
+                    <li class="hover:bg-gray-200">
                         <a v-on:click="HandleUniqueCode">
-                            {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                            {{ $t('navbar_component.unique_code') }}
+                            <FontAwesomeIcon icon="fa-key" />
                         </a>
                     </li>
-                    <li>
+                    <li class="hover:bg-gray-200">
                         <RouterLink to="/history">
-                            {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                            {{ $t('navbar_component.history_route') }}
+                            <FontAwesomeIcon icon="fa-bars" />
                         </RouterLink>
                     </li>
-                    <li>
+                    <!-- <li class="hover:bg-gray-200">
                         <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                            {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
+                            {{ $t('navbar_component.green_theme') }}
+                            <FontAwesomeIcon icon="fa-leaf" />
                         </a>
                         <a v-else v-on:click="setTheme('yellow')">
-                            {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
+                            {{ $t('navbar_component.yellow_theme') }}
+                            <FontAwesomeIcon icon="fa-sun" />
                         </a>
-                    </li>
-                    <li v-for="(lang, i) in langs" :key="`Lang${i}`" v-on:click="setLang(lang)">
-                        <strong>{{ lang }}</strong>
+                    </li> -->
+                    <li>
+                        <a>{{ $t('navbar_component.pick_language') }}</a>
+                        <ul class="p-2">
+                            <li>
+                            <li v-on:click="setLang('en')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>EN</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/uk_flag.png" alt="" width="20" />
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="setLang('nl')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>NL</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/nl_flag.png" alt="" width="20" />
+                                    </div>
+                                </div>
+                            </li>
                     </li>
                 </ul>
+                </li>
+                </ul>
             </div>
-
-            <img src="/LeftNavIcon.png" alt="" width="50"/>
         </div>
+
         <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1 text-xl font-bold text-gray-500">
+            <ul class="menu menu-horizontal px-1">
                 <li>
                     <RouterLink to="/">
-                        {{ $t('navbar_component.home_route') }} <FontAwesomeIcon icon="fa-house" />
+                        {{ $t('navbar_component.home_route') }}
+                        <FontAwesomeIcon icon="fa-house" />
                     </RouterLink>
                 </li>
                 <li>
                     <a v-on:click="HandleUniqueCode">
-                        {{ $t('navbar_component.unique_code') }} <FontAwesomeIcon icon="fa-key" />
+                        {{ $t('navbar_component.unique_code') }}
+                        <FontAwesomeIcon icon="fa-key" />
                     </a>
                 </li>
                 <li>
                     <RouterLink to="/history">
-                        {{ $t('navbar_component.history_route') }} <FontAwesomeIcon icon="fa-bars" />
+                        {{ $t('navbar_component.history_route') }}
+                        <FontAwesomeIcon icon="fa-bars" />
                     </RouterLink>
                 </li>
-                <li>
+                <!-- <li>
                     <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                        {{ $t('navbar_component.green_theme') }} <FontAwesomeIcon icon="fa-leaf" />
+                        {{ $t('navbar_component.green_theme') }}
+                        <FontAwesomeIcon icon="fa-leaf" />
                     </a>
                     <a v-else v-on:click="setTheme('yellow')">
-                        {{ $t('navbar_component.yellow_theme') }} <FontAwesomeIcon icon="fa-sun" />
+                        {{ $t('navbar_component.yellow_theme') }}
+                        <FontAwesomeIcon icon="fa-sun" />
                     </a>
-                </li>
+                </li> -->
                 <li>
-                    <div class="dropdown">
+                    <div class="dropdown dropdown-hover">
                         <div tabindex="0" role="button">
-                            {{ $i18n.locale }} <FontAwesomeIcon icon="fa-caret-down" />
+                            <strong>{{ $i18n.locale == 'en' ? 'EN ' : 'NL ' }}</strong>
+                            <FontAwesomeIcon icon="fa-caret-down" />
                         </div>
-                        <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
-                            <li v-for="(lang, i) in langs" :key="`Lang${i}`" v-on:click="setLang(lang)">
-                                <strong>{{ lang }}</strong>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-100 rounded-box w-28">
+                            <li v-on:click="setLang('en')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>EN</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/uk_flag.png" alt="" width="20" />
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="setLang('nl')">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>NL</strong>
+                                    </div>
+                                    <div class="col">
+                                        <img src="/nl_flag.png" alt="" width="20" />
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -79,7 +136,7 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <img src="/RightNavIcon.png" alt="" width="140"/>
+            <img src="/RightNavIcon.png" alt="" width="140" />
         </div>
     </div>
 </template>
@@ -92,11 +149,6 @@ import i18n from '../i18n/index.js';
 
 export default {
     name: 'NavbarComponent',
-    data() {
-        return {
-            langs: ['en', 'nl']
-        }
-    },
     methods: {
         setTheme(theme) {
             localStorage.setItem('theme', theme);
@@ -104,6 +156,7 @@ export default {
         },
         setLang(lang) {
             this.$i18n.locale = lang;
+            localStorage.setItem('lang', lang);
         },
         async HandleUniqueCode() {
             const steps = ['1', '2', '3']
@@ -122,6 +175,7 @@ export default {
                     autocapitalize: 'off',
                     placeholder: '4374860b-c6ab-403e-8c9e-1ccd2b6ece20'
                 },
+                heightAuto: false,
                 currentProgressStep: 0,
                 showCancelButton: true,
                 allowOutsideClick: () => false,
@@ -143,6 +197,7 @@ export default {
                     Queue.fire({
                         title: i18n.global.t('utils.loading'),
                         currentProgressStep: 1,
+                        heightAuto: false,
                         allowOutsideClick: () => false,
                         willOpen: () => {
                             Swal.showLoading();
@@ -165,6 +220,7 @@ export default {
                             showCancelButton: true,
                             showConfirmButton: true,
                             confirmButtonText: isEditable ? i18n.global.t('utils.edit') : i18n.global.t('utils.view'),
+                            heightAuto: false,
                             preConfirm: (result) => {
                                 if (result) {
                                     this.$router.push(RouteList.Result + "/" + scanUuid);
@@ -195,5 +251,34 @@ export default {
             return theme;
         }
     },
+    mounted() {
+        var lang = localStorage.getItem('lang');
+
+        if (lang) {
+            this.$i18n.locale = lang;
+        }
+    }
 }
 </script>
+
+<style scoped>
+@media screen and (max-width: 768px) {
+    .navbar-end img {
+        width: 100px;
+    }
+
+    .navbar-start img {
+        width: 40px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .navbar-end img {
+        width: 60px;
+    }
+
+    .navbar-start img {
+        width: 20px;
+    }
+}
+</style>

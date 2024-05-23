@@ -1,3 +1,5 @@
+import { maxLength } from "@vuelidate/validators";
+
 export default {
     navbar_component: {
         home_route: "Thuis",
@@ -9,6 +11,7 @@ export default {
         scan_code_is_valid: "Scan code is geldig",
         scan_visitable: "U kunt nu de scan bezoeken",
         scan_editable: "U kunt nu de scan bewerken",
+        pick_language: "Kies een taal",
     },
     summary_component: {
         all_in_one: "Alles-in-één platform",
@@ -52,6 +55,13 @@ export default {
         low_score: "Helemaal niet van toepassing",
         high_score: "Volledig van toepassing",
         give_extra_feedback: "Geef extra feedback",
+        score_text_1: "Niet van toepassing",
+        score_text_2: "Minder van toepassing",
+        score_text_3: "Gedeeltelijk van toepassing",
+        score_text_4: "Meestal van toepassing",
+        score_text_5: "Volledig van toepassing",
+        i_dont_know: "Weet ik niet",
+        not_applicable: "Niet van toepassing",
     },
     results_page: {
         main_header: "Rapport Circulaire scan",
@@ -59,6 +69,11 @@ export default {
         main_text: "Bedankt voor het invullen van de circulaire scan. In dit document kun u uw resultaten vinden. Het rapport is ingedeeld in de 6 hoofd categorieën van de test innovatie, productie, ketensamenwerking, arbeid, facilitair en ambitie. Het model kunt u hieronder vinden. Hoe hoger u op een categorie scoort, hoe beter u al bezig bent met de circulaire economie op dat gebied.",
         you_scored: "U scoorde",
         out_of: "van de",
+        top_answers: "Top antwoorden",
+        lowest_answers: "Laagste antwoorden",
+        dont_know_answers: "Weet niet antwoorden",
+        tips_to_improve: "Tips om te verbeteren",
+        additional_tools: "Extra tools",
     },
     history_page: {
         last_codes: "De unieke codes van uw laatste scan",
@@ -67,12 +82,16 @@ export default {
         no_scans: "Geen scans gevonden",
     },
     fields: {
+        name: "Naam",
+        your_name: "Uw naam",
         first_name: "Voornaam",
         your_first_name: "Uw voornaam",
         last_name: "Achternaam",
         your_last_name: "Uw achternaam",
         email: "E-mail",
         your_email: "Uw e-mail",
+        sector: "Sector",
+        your_sector: "Uw sector",
         phone_number: "Telefoonnummer",
         your_phone_number: "Uw telefoonnummer",
         subject: "Onderwerp",
@@ -82,7 +101,9 @@ export default {
         scan_name: "Scan naam",
         somebodys_scan: "'s scan",
         statement: "Verklaring",
+        statement_c: "VERKLARING",
         question: "Vraag",
+        question_c: "VRAAG",
         questions: "Vragen",
         answers: "Antwoorden",
         comments: "Opmerkingen",
@@ -97,6 +118,7 @@ export default {
         cancel: "Annuleren",
         fill_in_ucode: "Vul uw scan code in",
         next: "Volgende",
+        previous: "Vorige",
         view: "Bekijken",
         loading: "Laden...",
         copy: "Kopiëren",
@@ -106,6 +128,10 @@ export default {
         copied_to_clipboard: "Gekopieerd naar klembord",
         no_comment: "Geen opmerking",
         edit_score: "Score bewerken 1-5",
+        i_aggree_to: "Ik ga ak",
+        terms_and_conditions: "met de algemene voorwaarden",
+        required_fields: "Verplichte velden",
+        select_option: "Selecteer een optie",
     },
     errors: {
         error: "Fout",
@@ -114,6 +140,11 @@ export default {
         invalid_email: "Voer een geldig e-mailadres in",
         missing_ucode: "Vul een unieke code in",
         mail_not_sent: "Mail kon niet worden verzonden",
+    },
+    validation: {
+        required: "Dit veld is verplicht",
+        email: "Ongeldig e-mailadres",
+        maxLength: "Dit veld moet minder dan 100 tekens bevatten",
     },
     success: {
         success: "Succes",

@@ -1,12 +1,37 @@
 <template>
     <LoadingTemplate :isLoading="isLoadingResults" :center="true" :size="'4x'">
+        <!-- TEMPORARY -->
+
+        <div v-if="$i18n.locale === 'en'">
+            <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">
+                    Attention Finance and Control Students
+                </h1>
+                <p class="text-base md:text-lg">
+                    Once you've finished using the tool, we kindly ask you to fill in our survey. Your feedback is invaluable to us. Thank you!
+                </p>
+                <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Go to Survey</a>
+            </div>
+        </div>
+        <div v-else>
+            <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4">
+                    Attentie Financiën en Controle Studenten
+                </h1>
+                <p class="text-base md:text-lg">
+                    Zodra je klaar bent met het gebruik van de tool, vragen we je vriendelijk om onze enquête in te vullen. Jouw feedback is van onschatbare waarde voor ons. Dank je wel!
+                </p>
+                <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Ga naar Enquête</a>
+            </div>
+        </div>
+
         <div class="hero mt-10">
             <h1 class="text-4xl font-bold">
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
         <!-- <div class="hero mt-10">
-            <PrimaryButton :label="$t('results_page.download_pdf')" />  TODO
+            <PrimaryButton :label="$t('results_page.download_pdf')" />
         </div> -->
         <div class="hero mt-10">
             <p class="text-lg">
@@ -16,22 +41,25 @@
         <div class="hero mt-10">
             <img src="/info.png" width="700" alt="No image provided" />
         </div>
-        <div class="card mt-10 bg-base-100 shadow-xl">
+        <div class="card mt-10 bg-gray-100 shadow-xl">
             <div class="items-center text-center md:p-10">
                 <Bar v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
-        <CategoryQuestionTableComponent v-if="scan" :data="scan.data" :categories="categoriesWithMeans" />
-        <div v-if="plotData" class="results-container mt-10">
-            <div class="result-card bg-white shadow-md rounded-lg p-4 mb-4" v-for="(label, index) in plotData.labels" :key="index">
-                <h3 class="result-label text-lg font-semibold mb-2">{{ label }}</h3>
-                <p class="result-score text-gray-600">
-                    {{ $t('results_page.you_scored') }}
-                    <strong class="text-blue-600">{{ parseFloat(plotData.datasets[0].data[index]).toFixed(2) }}</strong>
-                    {{ $t('results_page.out_of') }} 5.
-                </p>
-            </div>
+
+        <div id="CategoryQuestionTable">
+            <CategoryQuestionTableComponent ref="CategoryQuestionTableComponent"
+                v-if="scan" :data="scan.data" :categories="categoriesWithMeans"
+                @answerUpdated = "updateScanResults"
+            />
         </div>
+
+        <CategoryDetailInfo v-if="plotData"
+            :data="plotData" class="mt-10"
+            :allLabelsWithCategoryUuid="allLabelsWithCategoryUuid"
+            :categories="scan.data"
+        />
+
         <ContactInfoComponent class="mt-10" />
     </LoadingTemplate>
 </template>
@@ -45,18 +73,21 @@ import LoadingTemplate from '@/components/utils/LoadingTemplate.vue';
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
+import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default {
     components: {
         Bar, LoadingTemplate, PrimaryButton, ContactInfoComponent, CategoryQuestionTableComponent,
+        CategoryDetailInfo,
     },
     data() {
         return {
             categories: [],
             scan: null,
             plotData: null,
+            allLabelsWithCategoryUuid: [],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -85,8 +116,19 @@ export default {
                     data[this.$i18n.locale].name :
                     data['nl'].name;
         },
-        loadScanWithResults(uuid) {
+        updateScanResults(groupIndex) {
+            this.loadScanWithResults(this.$route.params.uuid, () => {
+                this.$nextTick(() => {
+                    document.getElementById('CategoryQuestionTable').scrollIntoView({ behavior: 'smooth' });
+
+                    this.$refs.CategoryQuestionTableComponent.selectGroupByIndex(groupIndex);
+                });
+            });
+        },
+        loadScanWithResults(uuid, cbck = () => {}) {
             this.isLoadingResults = true;
+
+            this.allLabelsWithCategoryUuid = [];
 
             axios.get(`/api/scans/${uuid}`, {
 
@@ -112,6 +154,12 @@ export default {
                     allLabels.push(
                         this.getLocalizedCategoryName(data)
                     );
+
+                    this.allLabelsWithCategoryUuid.push({
+                        label: this.getLocalizedCategoryName(data),
+                        uuid: category.category_uuid,
+                    });
+
                     allData.push(category.mean);
 
                     this.categoriesWithMeans.push({
@@ -157,6 +205,8 @@ export default {
                 });
             }).finally(() => {
                 this.isLoadingResults = false;
+
+                cbck();
             });
         },
         reloadBarChartTranslations() {
@@ -179,12 +229,12 @@ export default {
                 labels: allLabels,
                 datasets: copy.datasets
             }
-        }
+        },
     },
     watch: {
         '$i18n.locale': function() {
             this.reloadBarChartTranslations();
-        }
+        },
     },
     mounted() {
         this.loadScanWithResults(this.$route.params.uuid);
