@@ -172,10 +172,10 @@ class PDFGenerator {
             });
 
             doc.setFontSize(16);
-            doc.text("I Don't Know Questions", 40, 100);
+            doc.text(i18n.global.t('fields.dont_know_questions'), 40, 100);
             doc.autoTable({
                 startY: 110,
-                head: [['Answer', 'Question']],
+                head: [[i18n.global.t('fields.answer'), i18n.global.t('fields.question')]],
                 body: dontKnowData,
                 theme: 'striped',
                 didParseCell: function (data) {
@@ -189,10 +189,10 @@ class PDFGenerator {
             });
 
             doc.setFontSize(16);
-            doc.text("Lowest Score Questions", 40, doc.previousAutoTable.finalY + 25);
+            doc.text(i18n.global.t('fields.low_score_questions'), 40, doc.previousAutoTable.finalY + 25);
             doc.autoTable({
                 startY: doc.previousAutoTable.finalY + 30,
-                head: [['Answer', 'Question']],
+                head: [[i18n.global.t('fields.answer'), i18n.global.t('fields.question')]],
                 body: lowAnswerData,
                 theme: 'striped',
                 didParseCell: function (data) {
@@ -206,10 +206,10 @@ class PDFGenerator {
             });
 
             doc.setFontSize(16);
-            doc.text("Top Score Questions", 40, doc.previousAutoTable.finalY + 25);
+            doc.text(i18n.global.t('fields.top_score_questions'), 40, doc.previousAutoTable.finalY + 25);
             doc.autoTable({
                 startY: doc.previousAutoTable.finalY + 30,
-                head: [['Answer', 'Question']],
+                head: [[i18n.global.t('fields.answer'), i18n.global.t('fields.question')]],
                 body: topAnswerData,
                 theme: 'striped',
                 didParseCell: function (data) {
@@ -218,19 +218,15 @@ class PDFGenerator {
                 styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
             });
 
-            let tricksData = [
-                ["Trick 1: Some dummy text..."],
-                ["Trick 2: Some dummy text..."],
-                ["Trick 3: Some dummy text..."],
-                ["Trick 4: Some dummy text..."],
-                ["Trick 4: Some dummy text..."],
-            ];
+            let tricksData = categoryStats.advices.map(advice => {
+                return [advice];
+            });
 
             doc.setFontSize(16);
-            doc.text("Tricks to improve", 40, doc.previousAutoTable.finalY + 25);
+            doc.text(i18n.global.t('fields.tricks_tips'), 40, doc.previousAutoTable.finalY + 25);
             doc.autoTable({
                 startY: doc.previousAutoTable.finalY + 30,
-                head: [['Tricks']],
+                head: [[i18n.global.t('fields.elements')]],
                 body: tricksData,
                 theme: 'striped',
                 didParseCell: function (data) {
@@ -239,19 +235,15 @@ class PDFGenerator {
                 styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
             });
 
-            let linksData = [
-                ["Link 1: https://www.google.com"],
-                ["Link 2: https://www.google.com"],
-                ["Link 3: https://www.google.com"],
-                ["Link 4: https://www.google.com"],
-                ["Link 5: https://www.google.com"],
-            ];
+            let linksData = categoryStats.links.map(link => {
+                return [link.name, link.href];
+            });
 
             doc.setFontSize(16);
-            doc.text("Usefull Links", 40, doc.previousAutoTable.finalY + 25);
+            doc.text(i18n.global.t('fields.useful_links'), 40, doc.previousAutoTable.finalY + 25);
             doc.autoTable({
                 startY: doc.previousAutoTable.finalY + 30,
-                head: [['Links']],
+                head: [[i18n.global.t('fields.tool_name'), i18n.global.t('fields.link')]],
                 body: linksData,
                 theme: 'striped',
                 didParseCell: function (data) {
