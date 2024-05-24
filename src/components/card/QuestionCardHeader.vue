@@ -8,7 +8,7 @@
                             v-on:click="() => { jumpToCategory(c.uuid) }"
                             class="rounded-lg px-2 py-1 m-1"
                             :style="`
-                                background-color: ${colors[index]}; color: white;
+                                background-color: ${colors[c.color]}; color: white;
                             `"
                         >
                             <template v-if="isCategoryPicked(c)">
@@ -73,14 +73,14 @@ export default {
     },
     data() {
         return {
-            colors: [ // TEMPORARY
-                '#f287b7',
-                '#1ebcc5',
-                '#ffcb05',
-                '#b1d249',
-                '#84d0d9',
-                '#f16682',
-            ]
+            colors: {
+                'goud': '#ffcb05',
+                'appelgroen': '#45b97c',
+                'lichtroze': '#f287b7',
+                'blauw': '#84D0D9',
+                'lichtblauw': '#84D0D9',
+                'donkerroze': '#f16682'
+            }
         }
     },
     methods: {

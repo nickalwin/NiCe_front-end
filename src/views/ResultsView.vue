@@ -1,8 +1,6 @@
 <template>
     <LoadingTemplate :isLoading="isLoadingResults" :center="true" :size="'4x'">
-        <!-- TEMPORARY -->
-
-        <div v-if="$i18n.locale === 'en'">
+        <!-- <div v-if="$i18n.locale === 'en'">
             <div class="mt-10 bg-red-500 text-white rounded-lg shadow-lg p-10 leading-normal">
                 <h1 class="text-2xl md:text-3xl font-bold mb-4">
                     Attention Finance and Control Students
@@ -23,16 +21,18 @@
                 </p>
                 <a href="https://forms.gle/siGiSVgDgkE4QfJKA" class="mt-4 inline-block bg-white text-red-500 px-5 py-2 rounded font-bold text-lg">Ga naar Enquête</a>
             </div>
-        </div>
+        </div> -->
 
         <div class="hero mt-10">
             <h1 class="text-4xl font-bold">
                 {{ $t('results_page.main_header') }}
             </h1>
         </div>
-        <!-- <div class="hero mt-10">
-            <PrimaryButton :label="$t('results_page.download_pdf')" />
-        </div> -->
+        <div class="hero mt-10">
+            <PrimaryButton :label="$t('results_page.download_pdf')"
+                @onClick="generatePDF"
+            />
+        </div>
         <div class="hero mt-10">
             <p class="text-lg">
                 {{ $t('results_page.main_text') }}
@@ -43,24 +43,31 @@
         </div>
         <div class="card mt-10 bg-gray-100 shadow-xl">
             <div class="items-center text-center md:p-10">
-                <Bar v-if="plotData" :data="plotData" :options="options" />
+                <Bar id="plot" v-if="plotData" :data="plotData" :options="options" />
             </div>
         </div>
 
         <div id="CategoryQuestionTable">
             <CategoryQuestionTableComponent ref="CategoryQuestionTableComponent"
-                v-if="scan" :data="scan.data" :categories="categoriesWithMeans"
-                @answerUpdated = "updateScanResults"
+                v-if="scan" :data="scan.data" :categories="categoriesWithMeans" :isEditable="isEditable"
+                @answerUpdated="updateScanResults"
             />
         </div>
 
         <CategoryDetailInfo v-if="plotData"
+            ref="CategoryDetailInfo"
             :data="plotData" class="mt-10"
             :allLabelsWithCategoryUuid="allLabelsWithCategoryUuid"
             :categories="scan.data"
         />
 
-        <ContactInfoComponent class="mt-10" />
+        <span v-if="isEditable" v-on:click="removeContactInfo" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg" style="float: right;">
+            <FontAwesomeIcon icon="fa-trash" color="red" />
+        </span>
+
+        <div class="mt-10">
+            <FooterComponent />
+        </div>
     </LoadingTemplate>
 </template>
 
@@ -72,15 +79,17 @@ import PopupHelper from "@/helpers/PopupHelper.js";
 import LoadingTemplate from '@/components/utils/LoadingTemplate.vue';
 import PrimaryButton from '@/components/buttons/PrimaryButton.vue';
 import ContactInfoComponent from "@/components/ContactInfoComponent.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
 import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
+import PDFGenerator from '@/helpers/PDFGenerator';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default {
     components: {
         Bar, LoadingTemplate, PrimaryButton, ContactInfoComponent, CategoryQuestionTableComponent,
-        CategoryDetailInfo,
+        CategoryDetailInfo, FooterComponent
     },
     data() {
         return {
@@ -108,6 +117,7 @@ export default {
             },
             isLoadingResults: false,
             categoriesWithMeans: null,
+            isEditable: false,
         }
     },
     methods: {
@@ -230,6 +240,38 @@ export default {
                 datasets: copy.datasets
             }
         },
+        generatePDF() {
+            var answersData = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
+            var perCategoryData = this.$refs.CategoryDetailInfo.getDisplayData();
+            var generator = new PDFGenerator(answersData, perCategoryData);
+
+            generator.generatePDF();
+        },
+        removeContactInfo() {
+            PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
+                axios.delete(`/api/scans/${this.$route.params.uuid}/deleteContactInfo`, {
+
+                }).then(() => {
+                    PopupHelper.DisplaySuccessPopup("Contact information removed.", () => {
+                        localStorage.removeItem('lastCodes');
+                        localStorage.removeItem('contactInfo');
+
+                        this.$router.push(RouteList.Home);
+                    });
+                }).catch(error => {
+                    PopupHelper.DisplayErrorPopup("Failed to remove contact information.");
+                });
+            });
+        },
+        validateScanCode() {
+            axios.get(`/api/scan-codes/${this.$route.params.code}`, {
+
+            }).then((response) => {
+                this.isEditable = response.data.editable;
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup(error.response.data.message);
+            });
+        }
     },
     watch: {
         '$i18n.locale': function() {
@@ -237,7 +279,10 @@ export default {
         },
     },
     mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+
         this.loadScanWithResults(this.$route.params.uuid);
+        this.validateScanCode();
     }
 }
 </script>

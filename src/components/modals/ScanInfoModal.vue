@@ -58,7 +58,7 @@
                 <div class="flex flex-col w-full mb-2">
                     <div class="grid h-10 flex-grow card rounded-box place-items-center">
                         <div class="w-3/4 flex flex-row items-center justify-center">
-                            <input id="agreed" v-model="rulesAccepted" type="checkbox" class="checkbox" />
+                            <input id="agreed" v-model="rulesAccepted" type="checkbox" />
 
                             <span class="label-text mr-2 pb-3">
                                 <FontAwesomeIcon class="mr-6" icon="fa-asterisk" style="color: red" size="2xs" />

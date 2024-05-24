@@ -12,8 +12,11 @@
                 <FontAwesomeIcon icon="fa-industry" class="text-blue-900 mr-2"/>
                 <span class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl truncate max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg">{{ getLocalizedSectorName(selectedSector) }}</span>
             </div>
-            <span v-on:click="edit" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-blue-200 rounded-lg">
+            <span v-on:click="edit" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg">
                 <FontAwesomeIcon icon="fa-edit" />
+            </span>
+            <span v-on:click="deleteRecords" class="hover:text-gray-400 font-bold py-2 px-4 cursor-pointer hover:bg-gray-200 rounded-lg">
+                <FontAwesomeIcon icon="fa-trash" color="red" />
             </span>
         </div>
         <ScanInfoUpdateModal ref="ScanInfoUpdateModal"
@@ -26,6 +29,8 @@
 <script>
 import LocalStorage from "@/helpers/LocalStorage";
 import ScanInfoUpdateModal from "@/components/modals/ScanInfoUpdateModal.vue";
+import PopupHelper from "@/helpers/PopupHelper.js";
+import RouteList from "@/helpers/RouteList.js";
 
 export default {
     name: "ContactInfoCard",
@@ -58,6 +63,13 @@ export default {
                 this.email = data.email;
                 this.selectedSector = data.sector;
             }
+        },
+        deleteRecords() {
+            PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
+                LocalStorage.ClearScanResults();
+                LocalStorage.ClearContactInfo();
+                this.$router.push(RouteList.Home);
+            });
         }
     },
     mounted() {

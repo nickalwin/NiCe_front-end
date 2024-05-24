@@ -28,5 +28,8 @@ export default {
     components: {
         PrimaryRouterLink,
     },
+    mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+    }
 };
 </script>

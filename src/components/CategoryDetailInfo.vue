@@ -83,9 +83,12 @@
                         <strong>{{ $t('results_page.tips_to_improve') }}</strong>
                     </h1>
                     <ul class="list-disc pl-5">
-                        <li>Tip 1</li>
-                        <li>Tip 2</li>
-                        <li>Tip 3</li>
+                        <li v-for="(advice, index) in element.advices" :key="index"
+                            class="result-answer text-gray-600 mb-2">
+                            <span class="font-medium">
+                                {{ advice }}
+                            </span>
+                        </li>
                     </ul>
                 </div>
                 <div>
@@ -93,19 +96,9 @@
                         <strong>{{ $t('results_page.additional_tools') }}</strong>
                     </h1>
                     <ul class="list-disc pl-5">
-                        <li>
-                            <a href="" target="_blank" class="text-blue-600">
-                                https://www.google.com
-                            </a>
-                        </li>
-                        <li>
-                            <a href="" target="_blank" class="text-blue-600">
-                                https://www.google.com
-                            </a>
-                        </li>
-                        <li>
-                            <a href="" target="_blank" class="text-blue-600">
-                                https://www.google.com
+                        <li v-for="(link, index) in element.links" :key="index">
+                            <a :href="link.href" target="_blank" class="text-blue-600">
+                                {{ link.name }} - {{ link.href }}
                             </a>
                         </li>
                     </ul>
@@ -154,6 +147,7 @@ export default {
                 let dontKnownAnswers = answers.filter((answer) => answer.answer === -1);
                 let topAnswers = [];
                 let lowestAnswers = [];
+                let advices = [];
 
                 answers = answers.filter((answer) => answer.answer !== -1)
                                  .sort((a, b) => b.answer - a.answer);
@@ -164,12 +158,20 @@ export default {
                 for (let i = answers.length - 1; i >= answers.length - qa; i--)
                     lowestAnswers.push(answers[i]);
 
+                for (const answer of category.grouped_answers) {
+                    if (answer.advice != "") {
+                        advices.push(this.getLocalizedAdvice(answer.advice));
+                    }
+                }
+
                 this.displayData.push({
                     mean: this.data.datasets[0].data[i++],
                     label: label.label,
+                    links: category.category_links,
                     topAnswers: topAnswers,
                     lowestAnswers: lowestAnswers,
-                    dontKnownAnswers: dontKnownAnswers
+                    dontKnownAnswers: dontKnownAnswers,
+                    advices: advices
                 });
             });
         },
@@ -183,6 +185,16 @@ export default {
                     questionData[this.$i18n.locale].question :
                     questionData['nl'].question
         },
+        getLocalizedAdvice(adviceData) {
+            adviceData = JSON.parse(adviceData);
+
+            return adviceData[this.$i18n.locale] ?
+                    adviceData[this.$i18n.locale].data :
+                    adviceData['nl'].data
+        },
+        getDisplayData() {
+            return this.displayData;
+        }
     },
     mounted() {
         this.sortQuestions();

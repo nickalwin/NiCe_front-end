@@ -28,7 +28,7 @@
         </div>
 
         <div class="mt-10">
-            <SummaryComponent />
+            <FooterComponent />
         </div>
         <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
     </LoadingTemplate>
@@ -39,10 +39,16 @@
             this.$refs.ScanInfoModal.close();
         }"
     />
+
+    <CaptchaModal ref="CaptchaModal"
+        @onContinue="() => this.onScanCompleted()"
+        @onCancel="() => this.$refs.CaptchaModal.close()"
+    />
+
 </template>
 
 <script>
-import SummaryComponent from "@/components/SummaryComponent.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
 import PopupHelper from "@/helpers/PopupHelper.js";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import LoadingTemplate from "@/components/utils/LoadingTemplate.vue";
@@ -52,11 +58,12 @@ import QuestionCardHeader from "@/components/card/QuestionCardHeader.vue";
 import QuestionCardBody from "@/components/card/QuestionCardBody.vue";
 import ScanInfoModal from "@/components/modals/ScanInfoModal.vue";
 import ContactInfoCard from "@/components/ContactInfoCard.vue";
+import CaptchaModal from "@/components/modals/CaptchaModal.vue";
 
 export default {
     components: {
-        SummaryComponent, FontAwesomeIcon, LoadingTemplate, QuestionCardHeader, QuestionCardBody,
-        ScanInfoModal, ContactInfoCard,
+        FooterComponent, FontAwesomeIcon, LoadingTemplate, QuestionCardHeader, QuestionCardBody,
+        ScanInfoModal, ContactInfoCard, CaptchaModal,
     },
     data() {
         return {
@@ -73,6 +80,8 @@ export default {
         },
         jumpToCategory(categoryUuid) {
             this.current_category = this.categories.find((c) => c.uuid === categoryUuid);
+
+            document.documentElement.setAttribute("data-theme", this.current_category.color);
 
             if (this.areAllQuestionsFromCategoryAnswered(this.current_category)) {
                 this.current_question = this.current_category.questions[0];
@@ -107,7 +116,7 @@ export default {
             this.current_category.is_completed = true;
 
             if (this.areAllCategoriesCompleted()) {
-                this.onScanCompleted();
+                this.$refs.CaptchaModal.open();
             } else {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
@@ -135,60 +144,18 @@ export default {
             var answers = this.categories.map((c) => {
                 return {
                     category_uuid: c.uuid,
-                    category_data: c.data,
                     is_completed: c.is_completed,
                     questions: c.questions.map((q) => {
                         return {
                             question_uuid: q.uuid,
                             answer: q.answer,
                             comment: q.comment ?? null,
-                            is_statement: q.is_statement,
-                            data: q.data,
-                            image: q.image,
                         }
                     })
                 }
             });
 
             LocalStorage.SetScanResults(answers);
-        },
-        loadQuestions() {
-            var answers = LocalStorage.GetScanResults();
-
-            if (answers) {
-                this.loadQuestionsFromLocalStorage(answers);
-            } else {
-                this.loadQuestionsFromApi();
-            }
-        },
-        loadQuestionsFromLocalStorage(answers) {
-            this.totalQuestions = 0;
-
-            answers.forEach((c) => {
-                var category = {
-                    uuid: c.category_uuid,
-                    data: c.category_data,
-                    is_completed: c.is_completed,
-                    questions: c.questions.map((q) => {
-                        this.totalQuestions++;
-
-                        return {
-                            id: this.totalQuestions,
-                            uuid: q.question_uuid,
-                            answer: q.answer,
-                            comment: q.comment,
-                            is_statement: q.is_statement,
-                            data: q.data,
-                            image: q.image,
-                        }
-                    })
-                }
-
-                this.categories.push(category);
-            });
-
-            this.current_category = this.getFirstNonCompletedCategory();
-            this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
         },
         loadQuestionsFromApi() {
             this.loadingQuestions = true;
@@ -200,7 +167,7 @@ export default {
 
                 this.totalQuestions = 0;
 
-                questions.forEach((q) => {
+                for (const q of questions) {
                     var questionData = JSON.parse(q.data);
 
                     this.totalQuestions++;
@@ -208,7 +175,7 @@ export default {
                     var question = {
                         id: this.totalQuestions,
                         uuid: q.uuid,
-                        image: q.image,
+                        image: q.image_data,
                         is_statement: q.statement,
                         data: questionData,
                         answer: -2,
@@ -223,16 +190,40 @@ export default {
                         category = {
                             uuid: q.category_uuid,
                             data: JSON.parse(q.category_data),
+                            color: q.category_color,
                             is_completed: false,
                             questions: [question]
                         }
 
                         this.categories.push(category);
                     }
-                });
+                }
+
+                // check for previous answers
+                var answers = LocalStorage.GetScanResults();
+
+                if (answers) {
+                    answers.forEach((c) => {
+                        var category = this.categories.find((cat) => cat.uuid === c.category_uuid);
+
+                        if (category) {
+                            category.is_completed = c.is_completed;
+
+                            c.questions.forEach((q) => {
+                                var question = category.questions.find((qu) => qu.uuid === q.question_uuid);
+
+                                if (question) {
+                                    question.answer = q.answer;
+                                    question.comment = q.comment;
+                                }
+                            });
+                        }
+                    });
+                }
             }).then(() => {
                 this.current_category = this.getFirstNonCompletedCategory();
                 this.current_question = this.getFirstNonAnsweredQuestion(this.current_category);
+                document.documentElement.setAttribute("data-theme", this.current_category.color);
 
                 this.loadingQuestions = false;
             }).catch(() => {
@@ -274,7 +265,7 @@ export default {
                         readonly: response.data.view_code
                     });
 
-                    this.$router.push(RouteList.Result + "/" + response.data.uuid);
+                    this.$router.push(RouteList.Result + "/" + response.data.uuid + "/" + response.data.edit_code);
                 });
             }).catch((error) => {
                 PopupHelper.DisplayErrorPopup(error.response.data.message);
@@ -303,8 +294,9 @@ export default {
                     question.answer = Math.floor(Math.random() * 6) - 1;
                 });
             });
-            this.onScanCompleted();
-        },
+
+            this.$refs.CaptchaModal.open();
+        }
     },
     mounted() {
         LocalStorage.ActiveCheck();
@@ -313,7 +305,7 @@ export default {
             this.$refs.ScanInfoModal.open();
         }
 
-        this.loadQuestions();
+        this.loadQuestionsFromApi();
     }
 }
 </script>

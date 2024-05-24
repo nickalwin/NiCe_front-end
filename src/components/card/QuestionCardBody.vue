@@ -1,15 +1,17 @@
 <template>
     <div class="container">
-        <!-- <h1 class="text-xl sm:text-2xl md:text-3xl">
-            <strong>Dummy header</strong>
-        </h1> -->
+        <h1 class="text-xl sm:text-2xl md:text-3xl">
+            <strong>
+                {{ getLocalizedHeader() }}
+            </strong>
+        </h1>
 
         <p class="text-xs sm:text-sm md:text-base">
             {{ getLocalizedQuestion() }}
         </p>
 
         <div class="flex justify-center my-6">
-            <img :src="question.image" class="lg:w-full" alt="No image provided" />
+            <img :src="question.image" class="lg:w-full" height="200" />
         </div>
 
         <QuestionRating :question="question" @onChange="question.answer = $event" />
@@ -75,6 +77,11 @@ export default {
             return this.question.data[this.$i18n.locale] ?
                     this.question.data[this.$i18n.locale].question :
                     this.question.data['nl'].question
+        },
+        getLocalizedHeader() {
+            return this.question.data[this.$i18n.locale] ?
+                    this.question.data[this.$i18n.locale].header :
+                    this.question.data['nl'].header
         },
         toggleEye(isOpen) {
             this.isEyeOpen = isOpen;

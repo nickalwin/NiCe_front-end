@@ -5,6 +5,7 @@ import i18n from '../i18n/index.js';
  * Helper class for displaying Swal popups.
  */
 class SwalHelper {
+
     /**
      * Displays a success popup with the given text.
      * @param {string} [text='Operation was successful!'] - The text to display in the popup.
@@ -20,6 +21,22 @@ class SwalHelper {
             heightAuto: false,
         }).then((result) => {
             if (result.isConfirmed) {
+                afterCallback();
+            }
+        })
+    }
+
+    static DisplayDangerousDeleteQuestionPopup(afterCallback = () => {}) {
+        Swal.fire({
+            title: i18n.global.t('utils.danger'),
+            text: i18n.global.t('utils.are_you_sure_delete'),
+            icon: 'warning',
+            confirmButtonText: 'No',
+            denyButtonText: 'Yes',
+            showDenyButton: true,
+            heightAuto: false,
+        }).then((result) => {
+            if (result.isDenied) {
                 afterCallback();
             }
         })

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-if="$i18n.locale === 'en'">
+        <div id="privacy-policy" class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-if="$i18n.locale === 'en'">
             <h1 class="text-4xl font-bold mb-4">Privacy Policy</h1>
 
             <div class="mb-4">
@@ -215,7 +215,7 @@
                 </p>
             </div>
         </div>
-        <div class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-else>
+        <div id="privacy-policy" class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-else>
             <h1 class="text-4xl font-bold mb-4">Privacy beleid</h1>
 
             <div class="mb-4">
@@ -497,7 +497,7 @@
 
         </div>
 
-        <div class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-if="$i18n.locale === 'en'">
+        <div id="cookie-policy" class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-if="$i18n.locale === 'en'">
             <h1 class="text-4xl font-bold mb-4">Cookie Policy</h1>
 
             <div class="mb-4">
@@ -560,7 +560,7 @@
                 </p>
             </div>
         </div>
-        <div class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-else>
+        <div id="cookie-policy" class="mt-4 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" v-else>
             <h1 class="text-4xl font-bold mb-4">Cookie beleid</h1>
 
             <div class="mb-4">
@@ -635,5 +635,8 @@ export default {
     components: {
         ContactInfoComponent,
     },
+    mounted() {
+        document.documentElement.setAttribute("data-theme", "goud");
+    }
 };
 </script>

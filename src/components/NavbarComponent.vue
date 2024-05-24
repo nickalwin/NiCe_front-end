@@ -3,6 +3,7 @@
         <div class="navbar-start">
             <img src="/LeftNavIcon.png" alt="" width="80" />
 
+            <!-- Small -->
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -32,22 +33,12 @@
                             <FontAwesomeIcon icon="fa-bars" />
                         </RouterLink>
                     </li>
-                    <!-- <li class="hover:bg-gray-200">
-                        <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                            {{ $t('navbar_component.green_theme') }}
-                            <FontAwesomeIcon icon="fa-leaf" />
-                        </a>
-                        <a v-else v-on:click="setTheme('yellow')">
-                            {{ $t('navbar_component.yellow_theme') }}
-                            <FontAwesomeIcon icon="fa-sun" />
-                        </a>
-                    </li> -->
                     <li>
                         <a>{{ $t('navbar_component.pick_language') }}</a>
                         <ul class="p-2">
                             <li>
                             <li v-on:click="setLang('en')">
-                                <div class="row">
+                                <div class="row hover:bg-gray-200">
                                     <div class="col">
                                         <strong>EN</strong>
                                     </div>
@@ -57,7 +48,7 @@
                                 </div>
                             </li>
                             <li v-on:click="setLang('nl')">
-                                <div class="row">
+                                <div class="row hover:bg-gray-200">
                                     <div class="col">
                                         <strong>NL</strong>
                                     </div>
@@ -73,6 +64,7 @@
             </div>
         </div>
 
+        <!-- Big -->
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
                 <li>
@@ -93,16 +85,6 @@
                         <FontAwesomeIcon icon="fa-bars" />
                     </RouterLink>
                 </li>
-                <!-- <li>
-                    <a v-if="theme == 'yellow'" v-on:click="setTheme('green')">
-                        {{ $t('navbar_component.green_theme') }}
-                        <FontAwesomeIcon icon="fa-leaf" />
-                    </a>
-                    <a v-else v-on:click="setTheme('yellow')">
-                        {{ $t('navbar_component.yellow_theme') }}
-                        <FontAwesomeIcon icon="fa-sun" />
-                    </a>
-                </li> -->
                 <li>
                     <div class="dropdown dropdown-hover">
                         <div tabindex="0" role="button">
@@ -210,6 +192,7 @@ export default {
                     }).then((response) => {
                         let data = response.data;
                         let scanUuid = data.scan_uuid;
+                        let scanCode = data.scan_code;
                         let isEditable = data.editable;
 
                         Queue.fire({
@@ -223,7 +206,7 @@ export default {
                             heightAuto: false,
                             preConfirm: (result) => {
                                 if (result) {
-                                    this.$router.push(RouteList.Result + "/" + scanUuid);
+                                    this.$router.push(RouteList.Result + "/" + scanUuid + "/" + scanCode);
                                 } else {
                                     Swal.close();
                                 }
