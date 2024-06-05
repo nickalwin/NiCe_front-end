@@ -291,7 +291,11 @@ export default {
             this.categories.forEach((category) => {
                 category.is_completed = true;
                 category.questions.forEach((question) => {
-                    question.answer = Math.floor(Math.random() * 6) - 1;
+                    if (question.is_statement) {
+                        question.answer = Math.floor(Math.random() * 2) * 5;
+                    } else {
+                        question.answer = Math.floor(Math.random() * 6) - 1;
+                    }
                 });
             });
 
