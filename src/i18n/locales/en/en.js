@@ -77,6 +77,8 @@ export default {
         score_text_5: "Fully applicable",
         i_dont_know: "I don't know",
         not_applicable: "Not applicable",
+        agree: "Agree",
+        disagree: "Disagree",
     },
     results_page: {
         main_header: "Circularity scan report",

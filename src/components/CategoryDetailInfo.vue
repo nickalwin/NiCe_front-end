@@ -1,7 +1,7 @@
 <template>
     <div v-if="data" class="results-container mt-10">
         <div v-for="(element, index) in displayData"
-            class="collapse bg-white shadow-md rounded-lg p-4 mb-4 bg-white-200"
+            class="collapse bg-white shadow-md rounded-lg p-4 mb-4 bg-white-200 overflow-x-auto"
         >
             <input type="checkbox" class="peer" />
 
@@ -34,9 +34,6 @@
                             <span class="font-medium">
                                 {{ getLocalizedQuestion(answer.question_data) }}
                             </span>
-                            <!-- <td class="border px-4 py-2 text-center rounded-lg">
-
-                            </td> -->
                         </li>
                     </ul>
 

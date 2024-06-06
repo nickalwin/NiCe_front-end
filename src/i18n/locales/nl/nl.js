@@ -77,6 +77,8 @@ export default {
         score_text_5: "Volledig van toepassing",
         i_dont_know: "Weet ik niet",
         not_applicable: "Niet van toepassing",
+        agree: "Eens",
+        disagree: "Oneens",
     },
     results_page: {
         main_header: "Rapport Circulaire scan",

@@ -37,6 +37,14 @@
                                 <template v-if="question.answer == -1">
                                     <FontAwesomeIcon icon="fa-question" />
                                 </template>
+                                <template v-else-if="question.is_statement">
+                                    <div v-if="question.answer == 1" class="text-red-500">
+                                        {{ $t('scan_page.disagree') }}
+                                    </div>
+                                    <div v-else-if="question.answer == 5" class="text-green-500">
+                                        {{ $t('scan_page.agree') }}
+                                    </div>
+                                </template>
                                 <template v-else>
                                     <div :class="`radial-progress ${getColorForAnswer(question.answer)}`"
                                         :style="`--value: ${question.answer * 20}`" role="progressbar"

@@ -30,7 +30,7 @@
         <div class="mt-10">
             <FooterComponent />
         </div>
-        <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button>
+        <!-- <button v-on:click="debugAnswerAllQuestions" class="btn btn-primary">Answer all questions</button> -->
     </LoadingTemplate>
 
     <ScanInfoModal ref="ScanInfoModal"
@@ -291,7 +291,11 @@ export default {
             this.categories.forEach((category) => {
                 category.is_completed = true;
                 category.questions.forEach((question) => {
-                    question.answer = Math.floor(Math.random() * 6) - 1;
+                    if (question.is_statement) {
+                        question.answer = Math.floor(Math.random() * 2) * 5;
+                    } else {
+                        question.answer = Math.floor(Math.random() * 6) - 1;
+                    }
                 });
             });
 

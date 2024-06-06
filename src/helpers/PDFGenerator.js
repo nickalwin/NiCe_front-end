@@ -59,10 +59,14 @@ class PDFGenerator {
 
     getBodyRowsForTables(questions) {
         return questions.grouped_answers.map((question, index) => {
+            let answer = question.is_statement ? (
+                question.answer == 1 ? i18n.global.t('scan_page.agree') : i18n.global.t('scan_page.disagree')
+            ) : question.answer != -1 ? question.answer : '?';
+
             return {
                 number: index + 1,
                 question: this.getLocalizedQuestion(question),
-                answer: question.answer != -1 ? question.answer : '?',
+                answer: answer,
                 comment: question.comment ?? "None",
             }
         });
@@ -72,10 +76,16 @@ class PDFGenerator {
         if (data.column.index !== index)
             return;
 
-        if (data.cell.raw === '?')
-            data.cell.styles.fillColor = [255, 0, 0];
+        // if (data.cell.raw === '?')
+            // data.cell.styles.fillColor = [255, 0, 0];
 
-        if (isNaN(data.cell.raw))
+        if (data.cell.raw === i18n.global.t('scan_page.agree')) {
+            data.cell.styles.fillColor = [16, 185, 129];
+            return;
+        } else if (data.cell.raw === i18n.global.t('scan_page.disagree')) {
+            data.cell.styles.fillColor = [185, 28, 28];
+            return;
+        } else if (isNaN(data.cell.raw))
             return;
 
         data.cell.styles.fillColor = ColorHelper.GetRGBColorForAnswer(data.cell.raw);
@@ -125,35 +135,8 @@ class PDFGenerator {
 
         doc.addImage(ctxData, 'PNG', (docWidth - plotWidth) / 2, 400, plotWidth, plotHeight);
 
-        var tablePos = 1080;
 
         let self = this;
-
-        for (const table of this.answersData) {
-            let category = table.category;
-            let questions = table.questions;
-            let categoryName = this.getLocalizedCategory(category);
-
-            doc.autoTable({
-                head: this.getHeadRowsForTables(),
-                body: this.getBodyRowsForTables(questions),
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
-                startY: tablePos,
-                willDrawPage: function (data) {
-                    doc.setFillColor(173, 216, 230);
-                    doc.rect(data.settings.margin.left, 20, docWidth - data.settings.margin.left * 2, 30, 'F');
-
-                    doc.setTextColor(0, 0, 128);
-                    doc.text(categoryName, data.settings.margin.left + 15, 40);
-                },
-                didParseCell: function (data) {
-                    self.colorCell(data, 2);
-                },
-                margin: { top: 60 },
-            })
-
-            tablePos += 1000;
-        }
 
         doc.addPage();
 
@@ -168,7 +151,7 @@ class PDFGenerator {
             doc.text(label + `   ${mean} / 5.00`, 45, 49);
 
             let dontKnowData = categoryStats.dontKnownAnswers.map(dontKnow => {
-                return [dontKnow.answer, this.getLocalizedQuestion(dontKnow)];
+                return ['?', this.getLocalizedQuestion(dontKnow)];
             });
 
             doc.setFontSize(16);
@@ -178,10 +161,7 @@ class PDFGenerator {
                 head: [[i18n.global.t('fields.answer'), i18n.global.t('fields.question')]],
                 body: dontKnowData,
                 theme: 'striped',
-                didParseCell: function (data) {
-                    self.colorCell(data, 0);
-                },
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
             });
 
             let lowAnswerData = categoryStats.lowestAnswers.map(lowAnswer => {
@@ -198,7 +178,7 @@ class PDFGenerator {
                 didParseCell: function (data) {
                     self.colorCell(data, 0);
                 },
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
             });
 
             let topAnswerData = categoryStats.topAnswers.map(topAnswer => {
@@ -215,7 +195,7 @@ class PDFGenerator {
                 didParseCell: function (data) {
                     self.colorCell(data, 0);
                 },
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
             });
 
             let tricksData = categoryStats.advices.map(advice => {
@@ -232,7 +212,7 @@ class PDFGenerator {
                 didParseCell: function (data) {
                     self.colorCell(data, 0);
                 },
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
             });
 
             let linksData = categoryStats.links.map(link => {
@@ -249,8 +229,33 @@ class PDFGenerator {
                 didParseCell: function (data) {
                     self.colorCell(data, 0);
                 },
-                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 1 },
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
             });
+
+            doc.addPage();
+        }
+
+        for (const table of this.answersData) {
+            let category = table.category;
+            let questions = table.questions;
+            let categoryName = this.getLocalizedCategory(category);
+
+            doc.autoTable({
+                head: this.getHeadRowsForTables(),
+                body: this.getBodyRowsForTables(questions),
+                styles: { halign: 'center', fillColor: [235, 235, 235], textColor: [0, 0, 0], lineWidth: 2 },
+                willDrawPage: function (data) {
+                    doc.setFillColor(173, 216, 230);
+                    doc.rect(data.settings.margin.left, 20, docWidth - data.settings.margin.left * 2, 30, 'F');
+
+                    doc.setTextColor(0, 0, 128);
+                    doc.text(categoryName, data.settings.margin.left + 15, 40);
+                },
+                didParseCell: function (data) {
+                    self.colorCell(data, 2);
+                },
+                margin: { top: 60 },
+            })
 
             doc.addPage();
         }
