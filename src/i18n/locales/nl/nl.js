@@ -91,6 +91,8 @@ export default {
         dont_know_answers: "Weet niet antwoorden",
         tips_to_improve: "Tips om te verbeteren",
         additional_tools: "Extra tools",
+        your_results: "Uw resultaten (aan de linkerkant)",
+        average_results: "Gemiddelde resultaten (aan de rechterkant)",
     },
     pdf_report: {
         main_header: "Circulaire scan PDF-rapport",

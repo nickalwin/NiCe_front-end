@@ -4,7 +4,7 @@ import 'jspdf-autotable';
 import ColorHelper from './ColorHelper.js';
 
 class PDFGenerator {
-    constructor(answersData, perCategoryData) {
+    constructor(answersData, perCategoryData, locales) {
         this.Config = {
             pdfBackgroundColor: "#fff578",
             headerFontSize: 40,
@@ -14,6 +14,7 @@ class PDFGenerator {
         }
         this.answersData = answersData;
         this.perCategoryData = perCategoryData;
+        this.locales = locales;
     }
 
     async loadImage(path) {
@@ -57,6 +58,14 @@ class PDFGenerator {
             data.en.name;
     }
 
+    getLocalizedPdfSegment(data) {
+        var locale = i18n.global.locale.value;
+
+        return data[locale] ?
+            data[locale].data :
+            data.en.data;
+    }
+
     getBodyRowsForTables(questions) {
         return questions.grouped_answers.map((question, index) => {
             let answer = question.is_statement ? (
@@ -98,7 +107,7 @@ class PDFGenerator {
         doc.setTextColor(0, 0, 0);
 
         doc.setFontSize(this.Config.headerFontSize);
-        var mainHeader = i18n.global.t('pdf_report.main_header');
+        var mainHeader = this.getLocalizedPdfSegment(this.locales.Title);
         var width = doc.getTextWidth(mainHeader);
 
         doc.setDrawColor(0);
@@ -108,17 +117,22 @@ class PDFGenerator {
         doc.setTextColor(0, 0, 128);
         doc.text(mainHeader, (docWidth - width) / 2, 40);
 
-        var mainText = i18n.global.t('pdf_report.main_text');
+        var mainText = this.getLocalizedPdfSegment(this.locales.Introduction);
         var lines = doc.splitTextToSize(mainText, docWidth * 2.5);
 
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(this.Config.mainTextFontSize);
         doc.text(this.Config.leftMargin, 70, lines, {lineSpacing: 10});
 
-        const imgData = await this.loadImage('/info.png');
+        const imgData = this.locales.Image;
         const imgWidth = 1078 / 2.5;
         const imgHeight = 522 / 2.5;
         doc.addImage(imgData, "PNG", (docWidth - imgWidth) / 2, 130, imgWidth, imgHeight);
+
+        var beforePlotText = this.getLocalizedPdfSegment(this.locales.BeforePlot);
+        var beforePlotLines = doc.splitTextToSize(beforePlotText, docWidth);
+
+        doc.text(this.Config.leftMargin, 130 + imgHeight + 20, beforePlotLines, {lineSpacing: 10});
 
         var ctx = document.getElementById('plot').getContext('2d');
         var ctxData = ctx.canvas.toDataURL('image/png');
@@ -133,7 +147,12 @@ class PDFGenerator {
         let plotLeftMargin = 20;
         plotWidth -= plotLeftMargin;
 
-        doc.addImage(ctxData, 'PNG', (docWidth - plotWidth) / 2, 400, plotWidth, plotHeight);
+        doc.addImage(ctxData, 'PNG', (docWidth - plotWidth) / 2, 430, plotWidth, plotHeight);
+
+        var afterPlotText = this.getLocalizedPdfSegment(this.locales.AfterPlot);
+        var afterPlotLines = doc.splitTextToSize(afterPlotText, docWidth);
+
+        doc.text(this.Config.leftMargin, 430 + plotHeight + 60, afterPlotLines, {lineSpacing: 10});
 
 
         let self = this;

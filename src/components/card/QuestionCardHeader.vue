@@ -77,7 +77,7 @@ export default {
                 'goud': '#ffcb05',
                 'appelgroen': '#45b97c',
                 'lichtroze': '#f287b7',
-                'blauw': '#84D0D9',
+                'blauw': '#4594d3',
                 'lichtblauw': '#84D0D9',
                 'donkerroze': '#f16682'
             }

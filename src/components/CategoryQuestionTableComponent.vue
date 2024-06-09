@@ -1,8 +1,19 @@
 <template>
     <div class="w-full flex justify-center mt-10">
         <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-8">
+            <div v-if="selectedGroup" class="flex justify-center">
+                <p class="bg-blue-500 text-white font-bold px-4 rounded mb-2">
+                    {{ getLocalizedCategoryName(selectedGroup.category) }}
+                </p>
+            </div>
             <div class="flex overflow-x-auto mb-4 space-x-4">
-                <button v-for="(group, index) in groupedQuestions" :key="index" @click="selectedGroup = group" :class="selectedGroup === group ? 'bg-indigo-700' : 'bg-indigo-500'" class="text-white font-bold py-2 px-4 rounded">
+                <button v-for="(group, index) in groupedQuestions"
+                    :key="index"
+                    @click="selectedGroup = group"
+                    :class="selectedGroup === group ? 'bg-indigo-700' : 'bg-indigo-500'"
+                    class="text-white font-bold py-2 px-4 rounded"
+                    :style="`background-color: ${group.category.color}`"
+                >
                     {{ getLocalizedCategoryName(group.category) }}
                 </button>
             </div>

@@ -91,6 +91,8 @@ export default {
         dont_know_answers: "Don't know answers",
         tips_to_improve: "Tips to improve",
         additional_tools: "Additional tools",
+        your_results: "Your results (on the left)",
+        average_results: "Average results (on the right)",
     },
     pdf_report: {
         main_header: "Circularity scan PDF report",

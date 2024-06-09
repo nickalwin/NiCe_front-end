@@ -83,6 +83,7 @@ import FooterComponent from "@/components/FooterComponent.vue";
 import CategoryQuestionTableComponent from "@/components/CategoryQuestionTableComponent.vue";
 import CategoryDetailInfo from '@/components/CategoryDetailInfo.vue';
 import PDFGenerator from '@/helpers/PDFGenerator';
+import i18n from '@/i18n';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -93,6 +94,14 @@ export default {
     },
     data() {
         return {
+            colors: {
+                'goud': '#ffcb05',
+                'appelgroen': '#45b97c',
+                'lichtroze': '#f287b7',
+                'blauw': '#4594d3',
+                'lichtblauw': '#84D0D9',
+                'donkerroze': '#f16682'
+            },
             categories: [],
             scan: null,
             plotData: null,
@@ -146,6 +155,12 @@ export default {
                 this.scan = response.data;
                 let results = JSON.parse(this.scan.results);
 
+                var getColorForCategory = (category) => {
+                    return this.scan.data.find((data) => {
+                        return data.category_uuid === category.category_uuid;
+                    }).color;
+                }
+
                 results.forEach((category) => {
                     this.categories.push({
                         uuid: category.category_uuid,
@@ -155,6 +170,7 @@ export default {
 
                 let allLabels = [];
                 let allData = [];
+                let allDataColors = [];
 
                 this.categoriesWithMeans = [];
 
@@ -171,9 +187,13 @@ export default {
                     });
 
                     allData.push(category.mean);
+                    allDataColors.push(this.colors[getColorForCategory(category)]);
 
                     this.categoriesWithMeans.push({
-                        category: category,
+                        category: {
+                            ...category,
+                            color: this.colors[getColorForCategory(category)],
+                        },
                     });
                 });
 
@@ -192,14 +212,14 @@ export default {
                 var datasets = [];
 
                 datasets.push({
-                    label: "Your results",
-                    backgroundColor: ['#FFFF00', '#FFEA00', '#FFD700', '#FFC400', '#FFB200', '#FFA000', '#FF8E00', '#FF7C00'],
+                    label: i18n.global.t('results_page.your_results'),
+                    backgroundColor: allDataColors,
                     data: allData
                 });
 
                 if (averageResults.length > 0) {
                     datasets.push({
-                        label: "Average results",
+                        label: i18n.global.t('results_page.average_results'),
                         backgroundColor: ['#FF0000', '#EA0000', '#D70000', '#C40000', '#B20000', '#A00000', '#8E0000', '#7C0000'],
                         data: averageData
                     });
@@ -241,11 +261,26 @@ export default {
             }
         },
         generatePDF() {
-            var answersData = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
-            var perCategoryData = this.$refs.CategoryDetailInfo.getDisplayData();
-            var generator = new PDFGenerator(answersData, perCategoryData);
+            axios.get('/api/pdf', {
 
-            generator.generatePDF();
+            }).then((response) => {
+                var locales = {
+                    Title: JSON.parse(response.data.title),
+                    Introduction: JSON.parse(response.data.introduction),
+                    Image: response.data.imageData,
+                    BeforePlot: JSON.parse(response.data.beforePlotText),
+                    AfterPlot: JSON.parse(response.data.afterPlotText),
+                };
+
+                var answersData = this.$refs.CategoryQuestionTableComponent.getGroupedQuestions();
+                var perCategoryData = this.$refs.CategoryDetailInfo.getDisplayData();
+                var generator = new PDFGenerator(answersData, perCategoryData, locales);
+
+                generator.generatePDF();
+
+            }).catch((error) => {
+                PopupHelper.DisplayErrorPopup("Failed to generate PDF.");
+            });
         },
         removeContactInfo() {
             PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
