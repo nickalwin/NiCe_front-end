@@ -283,7 +283,7 @@ export default {
             });
         },
         removeContactInfo() {
-            PopupHelper.DisplayDangerousDeleteQuestionPopup(() => {
+            PopupHelper.DeleteContactInfoFromScanPopup(() => {
                 axios.delete(`/api/scans/${this.$route.params.uuid}/deleteContactInfo`, {
 
                 }).then(() => {

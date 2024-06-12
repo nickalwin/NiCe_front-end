@@ -130,7 +130,7 @@ class PDFGenerator {
         doc.addImage(imgData, "PNG", (docWidth - imgWidth) / 2, 130, imgWidth, imgHeight);
 
         var beforePlotText = this.getLocalizedPdfSegment(this.locales.BeforePlot);
-        var beforePlotLines = doc.splitTextToSize(beforePlotText, docWidth);
+        var beforePlotLines = doc.splitTextToSize(beforePlotText, docWidth - 10);
 
         doc.text(this.Config.leftMargin, 130 + imgHeight + 20, beforePlotLines, {lineSpacing: 10});
 
@@ -150,7 +150,7 @@ class PDFGenerator {
         doc.addImage(ctxData, 'PNG', (docWidth - plotWidth) / 2, 430, plotWidth, plotHeight);
 
         var afterPlotText = this.getLocalizedPdfSegment(this.locales.AfterPlot);
-        var afterPlotLines = doc.splitTextToSize(afterPlotText, docWidth);
+        var afterPlotLines = doc.splitTextToSize(afterPlotText, docWidth - 10);
 
         doc.text(this.Config.leftMargin, 430 + plotHeight + 60, afterPlotLines, {lineSpacing: 10});
 
