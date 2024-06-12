@@ -42,6 +42,22 @@ class SwalHelper {
         })
     }
 
+    static DeleteContactInfoFromScanPopup(afterCallback = () => {}) {
+        Swal.fire({
+            title: i18n.global.t('utils.are_you_sure_delete_contact_info'),
+            text: i18n.global.t('utils.are_you_sure_delete_contact_info_details'),
+            icon: 'warning',
+            confirmButtonText: 'No',
+            denyButtonText: 'Yes',
+            showDenyButton: true,
+            heightAuto: false,
+        }).then((result) => {
+            if (result.isDenied) {
+                afterCallback();
+            }
+        })
+    }
+
     /**
      * Displays an error popup with the given text.
      * @param {string} [text='Oh no, something went wrong!'] - The text to display in the popup.

@@ -29,16 +29,16 @@ export default {
                     "--color-background": "#f287b7",
                 },
                 blauw: {
-                    "--color-primary": "#1ebcc5",
-                    "--color-secondary": "#4594d3",
-                    "--color-tertiary": "#4594d3",
-                    "--color-background": "#1ebcc5",
-                },
-                lichtblauw: {
-                    "--color-primary": "#84D0D9",
+                    "--color-primary": "#4594d3",
                     "--color-secondary": "#1ebcc5",
                     "--color-tertiary": "#1ebcc5",
-                    "--color-background": "#84D0D9",
+                    "--color-background": "#4594d3",
+                },
+                lichtblauw: {
+                    "--color-primary": "#1ebcc5",
+                    "--color-secondary": "#84D0D9",
+                    "--color-tertiary": "#84D0D9",
+                    "--color-background": "#1ebcc5",
                 },
                 donkerroze: {
                     "--color-primary": "#f16682",

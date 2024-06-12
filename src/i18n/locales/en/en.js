@@ -91,6 +91,8 @@ export default {
         dont_know_answers: "Don't know answers",
         tips_to_improve: "Tips to improve",
         additional_tools: "Additional tools",
+        your_results: "Your results (on the left)",
+        average_results: "Average results (on the right)",
     },
     pdf_report: {
         main_header: "Circularity scan PDF report",
@@ -170,6 +172,8 @@ export default {
         select_option: "Select an option",
         danger: "Danger",
         are_you_sure_delete: "Are you sure you want to delete this?",
+        are_you_sure_delete_contact_info: "Are you sure you want to delete this contact information?",
+        are_you_sure_delete_contact_info_details: "This means your name, email and comments provided into the scan! This action cannot be undone!",
     },
     errors: {
         error: "Error",

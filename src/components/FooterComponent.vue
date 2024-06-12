@@ -7,7 +7,7 @@
 
             <!-- Contact Information -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="flex flex-col">
+                <!-- <div class="flex flex-col">
                     <h1 class="text-lg font-bold">
                         <FontAwesomeIcon icon="fa-phone" class="mr-2" />
                         {{ $t('footer_component.phone') }}
@@ -16,19 +16,19 @@
                     <p class="text-base mt-2">
                         {{ $t('footer_component.when_to_call') }}
                     </p>
-                </div>
-                <div class="flex flex-col">
+                </div> -->
+                <!-- <div class="flex flex-col">
                     <h1 class="text-lg font-bold"><FontAwesomeIcon icon="fa-brands fa-whatsapp" class="mr-2" /> Whatsapp</h1>
                     <p class="text-base mt-2">
                         <a href="https://www.windesheim.nl">
                             {{ $t('footer_component.respond_1_hour') }}
                         </a>
                     </p>
-                </div>
+                </div> -->
                 <div class="flex flex-col">
                     <h1 class="text-lg font-bold"><FontAwesomeIcon icon="fa-envelope" class="mr-2" />Mail</h1>
                     <p class="text-base mt-2">
-                        <a href="mailto:lectoraatnice@windesheim.nl">
+                        <a href="mailto:mailto:lectoraatnice@windesheim.nl">
                             {{ $t('footer_component.respond_24_hour') }}
                         </a>
                     </p>

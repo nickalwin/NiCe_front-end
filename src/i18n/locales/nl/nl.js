@@ -91,6 +91,8 @@ export default {
         dont_know_answers: "Weet niet antwoorden",
         tips_to_improve: "Tips om te verbeteren",
         additional_tools: "Extra tools",
+        your_results: "Uw resultaten (aan de linkerkant)",
+        average_results: "Gemiddelde resultaten (aan de rechterkant)",
     },
     pdf_report: {
         main_header: "Circulaire scan PDF-rapport",
@@ -170,6 +172,8 @@ export default {
         select_option: "Selecteer een optie",
         danger: "Gevaar",
         are_you_sure_delete: "Weet u zeker dat u dit wilt verwijderen?",
+        are_you_sure_delete_contact_info: "Weet u zeker dat u deze contactinformatie wilt verwijderen?",
+        are_you_sure_delete_contact_info_details: "Dit betekent dat uw naam, e-mail en opmerkingen die in de scan zijn verstrekt, worden verwijderd! Deze actie kan niet ongedaan worden gemaakt!",
     },
     errors: {
         error: "Fout",

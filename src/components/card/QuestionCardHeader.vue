@@ -39,18 +39,22 @@
             </div>
         </div>
 
+
         <div class="tooltip tooltip-info tooltip-right rounded-lg px-2 py-2 text-xs mt-2"
             :data-tip="getLocalizedTooltip()">
-            <div class="flex justify-between">
-                <div v-if="question.data" class="px-5 py-2 bg-blue-400 rounded-badge">
-                    <p class="gap-2 rounded-full text-base font-medium">
-                        {{
-                            question.is_statement ?
-                            $t('fields.statement_c') :
-                            $t('fields.question_c')
+
+        <div class="flex justify-between">
+            <div v-if="question.data" class="px-5 py-2 bg-blue-400 rounded-badge">
+                <p class="gap-2 rounded-full text-base font-medium">
+                    {{
+                        question.is_statement ?
+                        $t('fields.statement_c') :
+                        $t('fields.question_c')
                         }}
 
                         <strong>{{ question.id }} / {{ totalQuestions }}</strong>
+
+                        <FontAwesomeIcon v-if="getLocalizedTooltip()" class="ml-2" icon="info" />
                     </p>
                 </div>
 
@@ -77,7 +81,7 @@ export default {
                 'goud': '#ffcb05',
                 'appelgroen': '#45b97c',
                 'lichtroze': '#f287b7',
-                'blauw': '#84D0D9',
+                'blauw': '#4594d3',
                 'lichtblauw': '#84D0D9',
                 'donkerroze': '#f16682'
             }

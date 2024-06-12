@@ -9,15 +9,13 @@
             </p>
             <p class="mb-4">
                 <FontAwesomeIcon icon="fa-envelope" class="mr-2" />
-                <a href="mailto:a.van.vulpen@windesheim.nl">a.van.vulpen@windesheim.nl</a>
-            </p>
-            <p class="mb-4">
-                <FontAwesomeIcon icon="fa-phone" class="mr-2" />
-                <a href="callto:+31612345678">+31 6 12345678</a>
+                <a href="mailto:lectoraatnice@windesheim.nl">lectoraatnice@windesheim.nl</a>
             </p>
             <p class="mb-4">
                 <FontAwesomeIcon icon="fa-map-marker-alt" class="mr-2" />
-                123 Main St, Deventer, NL
+                <a href="https://www.windesheim.nl/nice">
+                    Windesheim Campus 2, Zwolle, Overijssel 8017, NL
+                </a>
             </p>
         </div>
         <div class="card-body w-full md:w-3/5 bg-white">
