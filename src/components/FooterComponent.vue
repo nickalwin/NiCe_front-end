@@ -26,16 +26,10 @@
                     </p>
                 </div> -->
                 <div class="flex flex-col">
-                    <h1 class="text-lg font-bold"><FontAwesomeIcon icon="fa-envelope" class="mr-2" />Mail</h1>
-                    <p class="text-base mt-2">
-                        <a href="mailto:mailto:lectoraatnice@windesheim.nl">
-                            {{ $t('footer_component.respond_24_hour') }}
-                        </a>
-                    </p>
+                    <h1 class="text-lg font-bold"><a href="mailto:mailto:lectoraatnice@windesheim.nl"><FontAwesomeIcon icon="fa-envelope" class="mr-2" />Mail</a></h1>
                 </div>
                 <div class="flex flex-col">
-                    <h1 class="text-lg font-bold"><FontAwesomeIcon icon="fa-brands fa-linkedin" class="mr-2" />LinkedIn</h1>
-                    <p class="text-base mt-2"><a href="https://nl.linkedin.com/company/lectoraat-netwerken-in-een-circulaire-economie">LinkedIn</a></p>
+                    <h1 class="text-lg font-bold"><a href="https://nl.linkedin.com/company/lectoraat-netwerken-in-een-circulaire-economie"><FontAwesomeIcon icon="fa-brands fa-linkedin" class="mr-2" />LinkedIn</a></h1>
                 </div>
             </div>
 
@@ -55,9 +49,7 @@
                         {{ $t('footer_component.quick_links') }}
                     </h1>
                     <p class="text-base mt-2"><a href="https://www.windesheim.nl">Hogeschool Windesheim</a></p>
-                    <p class="text-base mt-2"><a href="https://www.windesheim.tech/technologie-trends/green-it/">Windesheim Green IT projects</a></p>
-                    <p class="text-base mt-2"><a href="https://www.windesheim.nl/onderzoek/lectoraten/netwerken-in-een-circulaire-economie">Doctorate Networking in Circulair Economies</a></p>
-                    <p class="text-base mt-2"><a href="https://www.windesheim.nl/onderzoek/lectoraten/energietransitie">Doctorate Energy transition</a></p>
+                    <p class="text-base mt-2"><a href="https://www.windesheim.nl/onderzoek/lectoraten/netwerken-in-een-circulaire-economie">Lectoraat Netwerken in een Circulaire Economie</a></p>
                 </div>
                 <div class="flex flex-col">
                     <h1 class="text-lg font-bold">
