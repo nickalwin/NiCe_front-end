@@ -41,7 +41,7 @@ export default {
         phone: "Bel",
         when_to_call: "Op werkdagen van 9.00 tot 17.00 uur",
         respond_1_hour: "Reageert binnen 1 uur",
-        respond_24_hour: "Reageert binnen 24 uur",
+        respond_24_hour: "",
         other_scanning_tools: "Andere scan tools",
         quick_links: "Snelle links",
         policies: "Beleid",
